@@ -1,5 +1,4 @@
-﻿
-    :root {
+﻿:root {
       --primary: #2563eb;
       --primary-dark: #1d4ed8;
       --secondary: #64748b;
@@ -202,8 +201,9 @@
     .hero-section {
       position: relative;
       height: 300px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark)),
-                  url('messi.jpg') center/cover;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      background-size: cover;
+      background-position: center;
       border-radius: 12px;
       margin-bottom: 24px;
       overflow: hidden;
@@ -552,4 +552,96 @@
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
-  
+
+    /* Buttons */
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-danger { background: var(--error); color: white; }
+    .btn-danger:hover { background: #dc2626; }
+    .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+    .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+    .btn-outline:hover { background: var(--primary); color: white; }
+
+    /* Editable table cells (admin) */
+    .modern-table td[contenteditable="true"] {
+      outline: none;
+      border-radius: 4px;
+      transition: background-color 0.15s ease;
+    }
+    .modern-table td[contenteditable="true"]:hover {
+      background-color: var(--surface-hover);
+      cursor: text;
+    }
+    .modern-table td[contenteditable="true"]:focus {
+      background-color: #eff6ff;
+      box-shadow: inset 0 0 0 2px var(--primary);
+    }
+    .table-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .col-actions { width: 44px; text-align: center; }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+    .badge-win { background: #d1fae5; color: #065f46; }
+    .badge-loss { background: #fee2e2; color: #991b1b; }
+    .badge-draw { background: #fef3c7; color: #92400e; }
+
+    /* Public nav for user view */
+    .role-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.18);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    .empty-state {
+      color: var(--text-secondary);
+      font-style: italic;
+      padding: 16px 0;
+    }
+
+    .form-inline {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .form-inline input,
+    .form-inline select {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+    .form-inline input { flex: 1; min-width: 140px; }
