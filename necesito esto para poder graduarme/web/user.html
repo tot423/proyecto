@@ -53,10 +53,22 @@
           </div>
 
           <div class="stats-grid">
-            <div class="stat-card"><div class="stat-value" id="statEquipos">14</div><div class="stat-label">Equipos</div></div>
-            <div class="stat-card"><div class="stat-value" id="statPartidos">48</div><div class="stat-label">Partidos</div></div>
-            <div class="stat-card"><div class="stat-value" id="statGoles">168</div><div class="stat-label">Goles</div></div>
-            <div class="stat-card"><div class="stat-value" id="statJornadas">12</div><div class="stat-label">Jornadas</div></div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-shield-halved"></i></div>
+              <div class="stat-body"><div class="stat-value" id="statEquipos">14</div><div class="stat-label">Equipos</div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-calendar-days"></i></div>
+              <div class="stat-body"><div class="stat-value" id="statPartidos">48</div><div class="stat-label">Partidos</div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-futbol"></i></div>
+              <div class="stat-body"><div class="stat-value" id="statGoles">168</div><div class="stat-label">Goles</div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-flag-checkered"></i></div>
+              <div class="stat-body"><div class="stat-value" id="statJornadas">12</div><div class="stat-label">Jornadas</div></div>
+            </div>
           </div>
 
           <div class="section-card">
@@ -264,9 +276,10 @@
       if (!data.length) { body.innerHTML = '<tr><td colspan="10" class="empty-state">Aún no hay equipos registrados.</td></tr>'; return; }
       data.forEach((row, idx) => {
         const { pj, pts, dg } = computeRow(row);
+        const rankClass = idx < 3 ? ` rank-${idx + 1}` : '';
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td class="position" style="text-align:center;">${idx + 1}</td>
+          <td class="position"><span class="rank-badge${rankClass}">${idx + 1}</span></td>
           <td class="team-name">${row.team}</td>
           <td style="text-align:center;">${pj}</td>
           <td style="text-align:center;">${row.g}</td>
