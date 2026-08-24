@@ -62,6 +62,9 @@
   <script>
     document.getElementById('loginForm').addEventListener('submit', function (event) {
       event.preventDefault();
+      const formData = new FormData(event.currentTarget);
+      localStorage.setItem('role', 'admin');
+      localStorage.setItem('userEmail', formData.get('email'));
       window.location.href = 'index.html';
     });
   </script>

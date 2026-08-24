@@ -658,8 +658,15 @@
       function selectAdminPage(id) {
         window.currentAdminPageId = id;
         localStorage.setItem('currentAdminPage', id);
+        ['inicio', 'equipos', 'eventos', 'multimedia'].forEach(section => {
+          const element = document.getElementById(`editable-${section}`);
+          if (!element) return;
+          const pageSaved = localStorage.getItem(`text-${id}-${section}`);
+          const globalSaved = localStorage.getItem(`text-${section}`);
+          if (pageSaved !== null) element.innerHTML = pageSaved;
+          else if (globalSaved !== null) element.innerHTML = globalSaved;
+        });
         renderPagesList();
-        // Load page-specific content if needed
       }
 
       // Create page form
