@@ -12,6 +12,9 @@
 </head>
 <body>
   <div class="login-page">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+
     <div class="login-card">
       <div class="brand">
         <div class="brand-icon">
@@ -19,25 +22,36 @@
         </div>
         <div>
           <h2>Torneo Fútbol</h2>
-          <p>Panel administrativo</p>
+          <p>Panel de gestión</p>
         </div>
       </div>
 
       <div class="login-header">
         <h1>Iniciar sesión</h1>
-        <p>Accede para gestionar competiciones, equipos y contenido.</p>
+        <p>Consulta la tabla de posiciones, resultados y toda la información del torneo.</p>
       </div>
 
       <form id="loginForm" class="login-form">
         <label class="field">
           <span>Correo electrónico</span>
-          <input type="email" name="email" placeholder="usuario@correo.com" required>
+          <div class="input-icon">
+            <i class="fas fa-envelope"></i>
+            <input type="email" name="email" placeholder="usuario@correo.com" required>
+          </div>
         </label>
 
         <label class="field">
           <span>Contraseña</span>
-          <input type="password" name="password" placeholder="••••••••" required>
+          <div class="input-icon">
+            <i class="fas fa-lock"></i>
+            <input type="password" name="password" placeholder="••••••••" required>
+            <button type="button" class="toggle-pass" id="togglePass" aria-label="Mostrar contraseña">
+              <i class="far fa-eye"></i>
+            </button>
+          </div>
         </label>
+
+        <input type="hidden" name="role" id="roleInput" value="user">
 
         <div class="options-row">
           <label class="remember-me">
@@ -51,7 +65,14 @@
           <i class="fas fa-sign-in-alt"></i>
           Entrar
         </button>
+
+        <button type="button" class="admin-toggle" id="adminToggle">
+          <i class="fas fa-user-shield"></i>
+          <span id="adminToggleText">¿Eres administrador? Ingresa aquí</span>
+        </button>
       </form>
+
+      <p id="loginError" class="login-error"></p>
 
       <div class="login-footer">
         <p>¿No tienes cuenta? <a href="#">Contacta al administrador</a></p>
@@ -60,12 +81,46 @@
   </div>
 
   <script>
+    const roleInput = document.getElementById('roleInput');
+    const adminToggle = document.getElementById('adminToggle');
+    const adminToggleText = document.getElementById('adminToggleText');
+    const loginCard = document.querySelector('.login-card');
+
+    adminToggle.addEventListener('click', () => {
+      const isAdmin = roleInput.value === 'admin';
+      roleInput.value = isAdmin ? 'user' : 'admin';
+      adminToggleText.textContent = isAdmin
+        ? '¿Eres administrador? Ingresa aquí'
+        : 'Ingresando como administrador · cambiar a usuario';
+      adminToggle.classList.toggle('is-admin', !isAdmin);
+      loginCard.classList.toggle('admin-mode', !isAdmin);
+    });
+
+    const togglePass = document.getElementById('togglePass');
+    const passInput = document.querySelector('input[name="password"]');
+    togglePass.addEventListener('click', () => {
+      const isHidden = passInput.type === 'password';
+      passInput.type = isHidden ? 'text' : 'password';
+      togglePass.innerHTML = isHidden ? '<i class="far fa-eye-slash"></i>' : '<i class="far fa-eye"></i>';
+    });
+
     document.getElementById('loginForm').addEventListener('submit', function (event) {
       event.preventDefault();
-      const formData = new FormData(event.currentTarget);
-      localStorage.setItem('role', 'admin');
-      localStorage.setItem('userEmail', formData.get('email'));
-      window.location.href = 'index.html';
+      const data = new FormData(this);
+      const email = data.get('email').trim();
+      const password = data.get('password');
+      const role = data.get('role');
+      const errorEl = document.getElementById('loginError');
+
+      if (!email || !password) {
+        errorEl.textContent = 'Ingresa tu correo y contraseña.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      localStorage.setItem('role', role);
+      localStorage.setItem('userEmail', email);
+      window.location.href = role === 'admin' ? 'index.html' : 'user.html';
     });
   </script>
 </body>
