@@ -212,11 +212,14 @@
     }
 
     function loadStats() {
-      const stats = JSON.parse(localStorage.getItem('homeStats') || '{}');
-      document.getElementById('statEquipos').textContent = stats.equipos ?? '14';
-      document.getElementById('statPartidos').textContent = stats.partidos ?? '48';
-      document.getElementById('statGoles').textContent = stats.goles ?? '168';
-      document.getElementById('statJornadas').textContent = stats.jornadas ?? '12';
+      const roster = JSON.parse(localStorage.getItem('teamsRoster') || 'null') || [];
+      const standings = getStandings();
+      const totalGoles = standings.reduce((sum, r) => sum + (r.gf || 0), 0);
+      const totalPj = standings.reduce((sum, r) => sum + computeRow(r).pj, 0);
+      document.getElementById('statEquipos').textContent = roster.length || standings.length;
+      document.getElementById('statPartidos').textContent = Math.round(totalPj / 2);
+      document.getElementById('statGoles').textContent = totalGoles;
+      document.getElementById('statJornadas').textContent = localStorage.getItem('statJornadas') || '1';
     }
 
     function loadTexts() {
@@ -229,16 +232,29 @@
     }
 
     const defaultStandings = [
-      { team: 'Construservicios', pj: 12, g: 9, e: 3, p: 0, gf: 35, gc: 8, pts: 31 },
-      { team: 'UPTC - Medic Salud', pj: 12, g: 9, e: 2, p: 1, gf: 39, gc: 13, pts: 30 },
-      { team: 'Club Deportivo San Jose', pj: 12, g: 9, e: 1, p: 2, gf: 27, gc: 9, pts: 29 },
-      { team: 'Reserva Activa', pj: 12, g: 9, e: 0, p: 3, gf: 35, gc: 15, pts: 27 },
-      { team: 'Amigos Edwin Rodriguez', pj: 12, g: 8, e: 0, p: 4, gf: 34, gc: 28, pts: 24 },
-      { team: 'Radiadores la Valle', pj: 12, g: 7, e: 2, p: 3, gf: 32, gc: 20, pts: 23 }
+      { team: 'Construservicios', g: 9, e: 3, p: 0, gf: 35, gc: 8 },
+      { team: 'UPTC - Medic Salud', g: 9, e: 2, p: 1, gf: 39, gc: 13 },
+      { team: 'Club Deportivo San Jose', g: 9, e: 1, p: 2, gf: 27, gc: 9 },
+      { team: 'Reserva Activa', g: 9, e: 0, p: 3, gf: 35, gc: 15 },
+      { team: 'Amigos Edwin Rodriguez', g: 8, e: 0, p: 4, gf: 34, gc: 28 },
+      { team: 'Radiadores la Valle', g: 7, e: 2, p: 3, gf: 32, gc: 20 }
     ];
 
+    function computeRow(row) {
+      const pj = (row.g || 0) + (row.e || 0) + (row.p || 0);
+      const pts = (row.g || 0) * 3 + (row.e || 0);
+      const dg = (row.gf || 0) - (row.gc || 0);
+      return { pj, pts, dg };
+    }
+
     function getStandings() {
-      return JSON.parse(localStorage.getItem('standings') || 'null') || defaultStandings.slice();
+      const data = JSON.parse(localStorage.getItem('standings') || 'null') || defaultStandings.slice();
+      return data.slice().sort((a, b) => {
+        const ca = computeRow(a), cb = computeRow(b);
+        if (cb.pts !== ca.pts) return cb.pts - ca.pts;
+        if (cb.dg !== ca.dg) return cb.dg - ca.dg;
+        return (b.gf || 0) - (a.gf || 0);
+      });
     }
 
     function loadStandings() {
@@ -247,19 +263,19 @@
       body.innerHTML = '';
       if (!data.length) { body.innerHTML = '<tr><td colspan="10" class="empty-state">Aún no hay equipos registrados.</td></tr>'; return; }
       data.forEach((row, idx) => {
-        const dg = row.gf - row.gc;
+        const { pj, pts, dg } = computeRow(row);
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td class="position" style="text-align:center;">${idx + 1}</td>
           <td class="team-name">${row.team}</td>
-          <td style="text-align:center;">${row.pj}</td>
+          <td style="text-align:center;">${pj}</td>
           <td style="text-align:center;">${row.g}</td>
           <td style="text-align:center;">${row.e}</td>
           <td style="text-align:center;">${row.p}</td>
           <td style="text-align:center;">${row.gf}</td>
           <td style="text-align:center;">${row.gc}</td>
           <td style="text-align:center;">${dg >= 0 ? '+' + dg : dg}</td>
-          <td class="points" style="text-align:center;">${row.pts}</td>`;
+          <td class="points" style="text-align:center;">${pts}</td>`;
         body.appendChild(tr);
       });
       loadTeamStats(data);
@@ -270,13 +286,14 @@
       body.innerHTML = '';
       if (!data.length) { body.innerHTML = '<tr><td colspan="6" class="empty-state">Aún no hay equipos registrados.</td></tr>'; return; }
       data.forEach(row => {
-        const promedio = row.pj ? (row.gf / row.pj).toFixed(2) : '0.00';
-        const efectividad = row.pj ? Math.round((row.pts / (row.pj * 3)) * 100) : 0;
+        const { pj, pts } = computeRow(row);
+        const promedio = pj ? (row.gf / pj).toFixed(2) : '0.00';
+        const efectividad = pj ? Math.round((pts / (pj * 3)) * 100) : 0;
         const badgeColor = efectividad >= 60 ? 'var(--success)' : efectividad >= 40 ? 'var(--warning)' : 'var(--error)';
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td class="team-name">${row.team}</td>
-          <td style="text-align:center;">${row.pj}</td>
+          <td style="text-align:center;">${pj}</td>
           <td style="text-align:center;">${row.gf}</td>
           <td style="text-align:center;">${row.gc}</td>
           <td style="text-align:center;">${promedio}</td>
@@ -339,8 +356,8 @@
 
     function loadEvents() {
       const upcoming = JSON.parse(localStorage.getItem('upcomingMatches') || 'null') || [
-        { fecha: '20-jul', equipos: 'Semillitas vs Vidrierías' },
-        { fecha: '20-jul', equipos: 'Radiadores vs Amigos Edwin' }
+        { fecha: '20-jul', home: 'Construservicios', away: 'Reserva Activa', hora: '3:00 pm' },
+        { fecha: '20-jul', home: 'Radiadores la Valle', away: 'Amigos Edwin Rodriguez', hora: '4:30 pm' }
       ];
       const upcomingBox = document.getElementById('upcomingList');
       upcomingBox.innerHTML = '';
@@ -348,13 +365,13 @@
       upcoming.forEach(m => {
         const row = document.createElement('div');
         row.style.cssText = 'display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border);';
-        row.innerHTML = `<span><strong>${m.fecha}</strong> — ${m.equipos}</span> ${m.hora ? '<span style="color:var(--text-secondary);">' + m.hora + '</span>' : ''}`;
+        row.innerHTML = `<span><strong>${m.fecha}</strong> — ${m.home} vs ${m.away}</span> ${m.hora ? '<span style="color:var(--text-secondary);">' + m.hora + '</span>' : ''}`;
         upcomingBox.appendChild(row);
       });
 
       const results = JSON.parse(localStorage.getItem('recentResults') || 'null') || [
-        { fecha: '18/03', equipos: 'Construservicios vs UPTC', marcador: '3 - 1', tipo: 'win' },
-        { fecha: '17/03', equipos: 'SD San Jose vs Reserva Activa', marcador: '2 - 2', tipo: 'draw' }
+        { fecha: '18/03', home: 'Construservicios', away: 'UPTC - Medic Salud', marcador: '3 - 1', tipo: 'win' },
+        { fecha: '17/03', home: 'Club Deportivo San Jose', away: 'Reserva Activa', marcador: '2 - 2', tipo: 'draw' }
       ];
       const labels = { win: 'Victoria local', draw: 'Empate', loss: 'Victoria visitante' };
       const colors = { win: 'var(--success)', draw: 'var(--warning)', loss: 'var(--error)' };
@@ -365,7 +382,7 @@
         const card = document.createElement('div');
         card.className = 'data-card';
         card.innerHTML = `
-          <div class="data-card-header">${r.fecha} · ${r.equipos}</div>
+          <div class="data-card-header">${r.fecha} · ${r.home} vs ${r.away}</div>
           <div class="data-card-content">
             <div style="text-align:center; font-size:2rem; font-weight:700; color:${colors[r.tipo] || 'var(--primary)'}; margin-bottom:8px;">${r.marcador}</div>
             <div style="text-align:center; color:var(--text-secondary);">${labels[r.tipo] || ''}</div>
