@@ -23,7 +23,6 @@
         <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('equipos', event)"><i class="fas fa-users"></i> Equipos</a></div>
         <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('eventos', event)"><i class="fas fa-calendar"></i> Eventos</a></div>
         <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('multimedia', event)"><i class="fas fa-images"></i> Multimedia</a></div>
-        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('paginas', event)"><i class="fas fa-cog"></i> Páginas</a></div>
         <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('datos', event)"><i class="fas fa-database"></i> Datos</a></div>
       </nav>
 
@@ -64,10 +63,10 @@
           </div>
 
           <div class="stats-grid">
-            <div class="stat-card"><div class="stat-value" contenteditable="true" data-stat="equipos">14</div><div class="stat-label">Equipos</div></div>
-            <div class="stat-card"><div class="stat-value" contenteditable="true" data-stat="partidos">48</div><div class="stat-label">Partidos</div></div>
-            <div class="stat-card"><div class="stat-value" contenteditable="true" data-stat="goles">168</div><div class="stat-label">Goles</div></div>
-            <div class="stat-card"><div class="stat-value" contenteditable="true" data-stat="jornadas">12</div><div class="stat-label">Jornadas</div></div>
+            <div class="stat-card stat-auto"><div class="stat-value" id="statEquipos">0</div><div class="stat-label">Equipos</div><span class="auto-tag"><i class="fas fa-bolt"></i> Automático</span></div>
+            <div class="stat-card stat-auto"><div class="stat-value" id="statPartidos">0</div><div class="stat-label">Partidos</div><span class="auto-tag"><i class="fas fa-bolt"></i> Automático</span></div>
+            <div class="stat-card stat-auto"><div class="stat-value" id="statGoles">0</div><div class="stat-label">Goles</div><span class="auto-tag"><i class="fas fa-bolt"></i> Automático</span></div>
+            <div class="stat-card"><div class="stat-value" contenteditable="true" id="statJornadas">1</div><div class="stat-label">Jornadas</div></div>
           </div>
 
           <div class="section-card">
@@ -85,21 +84,25 @@
 
         <!-- Competencias -->
         <section id="competencias" class="section">
+          <div class="roster-panel">
+            <h3><i class="fas fa-shield-halved"></i> Equipos del torneo</h3>
+            <p>Regístralos aquí una sola vez. Luego aparecerán como opción en la tabla de posiciones, goleadores, disciplina y partidos — así no hay que volver a escribir el nombre y nunca queda mal digitado.</p>
+            <form id="rosterForm" class="form-inline" style="margin:0;">
+              <input type="text" id="rosterInput" placeholder="Nombre del equipo" required>
+              <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar equipo</button>
+            </form>
+            <div class="roster-chips" id="rosterChips"></div>
+          </div>
+
           <div class="section-card">
             <div class="card-header">
               <h2><i class="fas fa-trophy"></i> Tabla de Posiciones</h2>
-              <p>Clasificación actual del torneo — haz clic en cualquier celda para editarla</p>
+              <p>Se ordena sola por puntos — solo registra partidos ganados, empatados, perdidos y goles</p>
             </div>
             <div class="card-content">
-              <div class="filters">
-                <button class="filter-btn active" onclick="filterTable('todos', event)">Todos</button>
-                <button class="filter-btn" onclick="filterTable('ganados', event)">Ganados</button>
-                <button class="filter-btn" onclick="filterTable('pendientes', event)">Pendientes</button>
-              </div>
-
               <div class="table-toolbar">
-                <span style="color: var(--text-secondary); font-size: 0.85rem;">Doble clic o clic simple en una celda para editar. Los cambios se guardan solos.</span>
-                <button class="btn btn-primary btn-sm" onclick="addStandingRow()"><i class="fas fa-plus"></i> Agregar equipo</button>
+                <span style="color: var(--text-secondary); font-size: 0.85rem;"><i class="fas fa-bolt" style="color:var(--success);"></i> PJ, Pts y DG se calculan solos. Ordenado automáticamente de mayor a menor puntaje.</span>
+                <button class="btn btn-primary btn-sm" onclick="addStandingRow()"><i class="fas fa-plus"></i> Agregar equipo a la tabla</button>
               </div>
 
               <div class="table-container">
@@ -205,15 +208,16 @@
         <!-- Eventos -->
         <section id="eventos" class="section">
           <div class="section-card">
-            <div class="card-header"><h2><i class="fas fa-calendar"></i> Próximos Partidos</h2><p>Agrega la programación de la siguiente jornada</p></div>
+            <div class="card-header"><h2><i class="fas fa-calendar"></i> Próximos Partidos</h2><p>Elige los equipos de la lista — el enfrentamiento se arma solo</p></div>
             <div class="card-content">
               <div id="editable-eventos" class="editable-content" contenteditable="true">
                 Calendario de partidos y resultados más recientes del torneo.
               </div>
               <form class="form-inline" id="upcomingForm">
-                <input type="text" id="upFecha" placeholder="Fecha (ej. 20-jul)" required>
-                <input type="text" id="upEquipos" placeholder="Equipo local vs Equipo visitante" required>
-                <input type="text" id="upHora" placeholder="Hora (ej. 3:00 pm)">
+                <input type="text" id="upFecha" placeholder="Fecha (ej. 20-jul)" required style="max-width:140px;">
+                <select id="upHome" required></select>
+                <select id="upAway" required></select>
+                <input type="text" id="upHora" placeholder="Hora (ej. 3:00 pm)" style="max-width:140px;">
                 <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar</button>
               </form>
               <div id="upcomingList"></div>
@@ -224,9 +228,10 @@
             <div class="card-header"><h2><i class="fas fa-flag-checkered"></i> Resultados Recientes</h2><p>Últimos partidos jugados</p></div>
             <div class="card-content">
               <form class="form-inline" id="resultForm">
-                <input type="text" id="resFecha" placeholder="Fecha (ej. 18/03)" required>
-                <input type="text" id="resEquipos" placeholder="Equipo A vs Equipo B" required>
-                <input type="text" id="resMarcador" placeholder="Marcador (ej. 3 - 1)" required>
+                <input type="text" id="resFecha" placeholder="Fecha (ej. 18/03)" required style="max-width:120px;">
+                <select id="resHome" required></select>
+                <select id="resAway" required></select>
+                <input type="text" id="resMarcador" placeholder="Marcador (ej. 3 - 1)" required style="max-width:130px;">
                 <select id="resTipo">
                   <option value="win">Victoria local</option>
                   <option value="draw">Empate</option>
@@ -261,38 +266,20 @@
           </div>
         </section>
 
-        <!-- Páginas -->
-        <section id="paginas" class="section">
-          <div class="section-card">
-            <div class="card-header"><h2><i class="fas fa-cog"></i> Gestión de Páginas</h2><p>Administra las páginas del torneo</p></div>
-            <div class="card-content">
-              <form id="createPageForm" class="form-inline">
-                <input id="pageName" placeholder="Nombre de la página" required>
-                <select id="pageType">
-                  <option value="futbol11">Fútbol 11</option>
-                  <option value="futbol8">Fútbol 8</option>
-                </select>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Crear Página</button>
-              </form>
-              <div id="pagesList" style="margin-bottom: 16px;"></div>
-              <div>Página seleccionada: <strong id="selectedPageName">Ninguna</strong></div>
-              <p style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 8px;">Al crear y seleccionar una página, los cambios de esta sección se guardan para ese torneo específico.</p>
-            </div>
-          </div>
-        </section>
-
         <!-- Datos -->
         <section id="datos" class="section">
           <div class="section-card">
-            <div class="card-header"><h2><i class="fas fa-database"></i> Gestión de Datos</h2><p>Sube y administra archivos Excel con datos del torneo</p></div>
+            <div class="card-header"><h2><i class="fas fa-database"></i> Importar desde Excel</h2><p>Sube tu archivo y, si trae la tabla de posiciones, se aplica con un clic</p></div>
             <div class="card-content">
-              <div style="margin-bottom: 24px;">
-                <label class="file-upload">
-                  <span class="file-upload-label"><i class="fas fa-file-excel"></i> Seleccionar archivo Excel</span>
-                  <input type="file" id="excelInput" accept=".xlsx,.xls">
-                </label>
+              <div class="import-hint">
+                <i class="fas fa-circle-info"></i>
+                <span>Si tu hoja tiene columnas <strong>Equipo, G, E, P, GF, GC</strong> (en cualquier orden), el sistema la reconoce sola y te deja aplicarla directo a la tabla de posiciones — sin retipear nada. Cualquier otra hoja se muestra abajo para editarla libremente.</span>
               </div>
-              <div id="tablesContainer" style="overflow: auto;"></div>
+              <label class="file-upload">
+                <span class="file-upload-label"><i class="fas fa-file-excel"></i> Seleccionar archivo Excel</span>
+                <input type="file" id="excelInput" accept=".xlsx,.xls">
+              </label>
+              <div id="tablesContainer" style="overflow: auto; margin-top: 20px;"></div>
             </div>
           </div>
         </section>
@@ -309,14 +296,14 @@
         return;
       }
       initHero();
-      initStats();
       initEditableTexts();
+      initRoster();
       initStandings();
       initTeamsExtra();
       initEvents();
       initGallery();
-      initPages();
       initExcel();
+      refreshHomeStats();
     });
 
     function logout() {
@@ -338,7 +325,7 @@
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       const el = document.getElementById(sectionId);
       if (el) el.classList.add('active');
-      const titles = { inicio:'Inicio', competencias:'Competencias', equipos:'Equipos', eventos:'Eventos', multimedia:'Multimedia', paginas:'Páginas', datos:'Datos' };
+      const titles = { inicio: 'Inicio', competencias: 'Competencias', equipos: 'Equipos', eventos: 'Eventos', multimedia: 'Multimedia', datos: 'Datos' };
       document.getElementById('pageTitle').textContent = titles[sectionId] || 'Panel';
     }
 
@@ -365,20 +352,21 @@
         };
         reader.readAsDataURL(file);
       });
+
+      const jornadas = document.getElementById('statJornadas');
+      jornadas.textContent = localStorage.getItem('statJornadas') || jornadas.textContent;
+      jornadas.addEventListener('input', () => localStorage.setItem('statJornadas', jornadas.textContent));
     }
 
-    /* ---------- Stats ---------- */
-    function initStats() {
-      const saved = JSON.parse(localStorage.getItem('homeStats') || '{}');
-      document.querySelectorAll('[data-stat]').forEach(el => {
-        const key = el.dataset.stat;
-        if (saved[key] !== undefined) el.textContent = saved[key];
-        el.addEventListener('input', () => {
-          const data = JSON.parse(localStorage.getItem('homeStats') || '{}');
-          data[key] = el.textContent;
-          localStorage.setItem('homeStats', JSON.stringify(data));
-        });
-      });
+    /* ---------- Stats automáticas de Inicio ---------- */
+    function refreshHomeStats() {
+      const roster = getRoster();
+      const standings = getStandings();
+      const totalGoles = standings.reduce((sum, r) => sum + (r.gf || 0), 0);
+      const totalPj = standings.reduce((sum, r) => sum + computeRow(r).pj, 0);
+      document.getElementById('statEquipos').textContent = roster.length;
+      document.getElementById('statGoles').textContent = totalGoles;
+      document.getElementById('statPartidos').textContent = Math.round(totalPj / 2);
     }
 
     /* ---------- Textos editables ---------- */
@@ -392,23 +380,119 @@
       });
     }
 
+    /* ---------- Roster de equipos ---------- */
+    const defaultRoster = ['Construservicios', 'UPTC - Medic Salud', 'Club Deportivo San Jose', 'Reserva Activa', 'Amigos Edwin Rodriguez', 'Radiadores la Valle'];
+
+    function getRoster() {
+      return JSON.parse(localStorage.getItem('teamsRoster') || 'null') || defaultRoster.slice();
+    }
+    function saveRoster(list) {
+      localStorage.setItem('teamsRoster', JSON.stringify(list));
+    }
+
+    function initRoster() {
+      renderRoster();
+      document.getElementById('rosterForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const input = document.getElementById('rosterInput');
+        const name = input.value.trim();
+        if (!name) return;
+        const roster = getRoster();
+        if (roster.some(t => t.toLowerCase() === name.toLowerCase())) {
+          input.value = '';
+          return;
+        }
+        roster.push(name);
+        saveRoster(roster);
+        renderRoster();
+        refreshAllTeamSelects();
+        refreshHomeStats();
+        input.value = '';
+        input.focus();
+      });
+    }
+
+    function renderRoster() {
+      const roster = getRoster();
+      const box = document.getElementById('rosterChips');
+      box.innerHTML = '';
+      if (!roster.length) {
+        box.innerHTML = '<span class="empty-state">Aún no hay equipos registrados.</span>';
+        return;
+      }
+      roster.forEach((team, idx) => {
+        const chip = document.createElement('span');
+        chip.className = 'roster-chip';
+        chip.innerHTML = `${team} <button title="Quitar de la lista" onclick="removeRosterTeam(${idx})"><i class="fas fa-xmark"></i></button>`;
+        box.appendChild(chip);
+      });
+    }
+
+    function removeRosterTeam(idx) {
+      const roster = getRoster();
+      const name = roster[idx];
+      if (!confirm(`Quitar "${name}" de la lista de equipos? (No borra sus datos ya guardados en otras tablas)`)) return;
+      roster.splice(idx, 1);
+      saveRoster(roster);
+      renderRoster();
+      refreshAllTeamSelects();
+      refreshHomeStats();
+    }
+
+    function populateTeamSelect(select, selectedValue) {
+      const roster = getRoster();
+      const options = roster.slice();
+      if (selectedValue && !options.includes(selectedValue)) options.push(selectedValue);
+      select.innerHTML = options.map(t => `<option value="${t}" ${t === selectedValue ? 'selected' : ''}>${t}</option>`).join('')
+        || '<option value="">Agrega equipos primero</option>';
+    }
+
+    function refreshAllTeamSelects() {
+      renderStandings();
+      renderPeopleTable('topScorers', 'topScorersBody');
+      renderPeopleTable('topAssists', 'topAssistsBody');
+      renderDiscipline();
+      populateTeamSelect(document.getElementById('upHome'));
+      populateTeamSelect(document.getElementById('upAway'));
+      populateTeamSelect(document.getElementById('resHome'));
+      populateTeamSelect(document.getElementById('resAway'));
+    }
+
     /* ---------- Tabla de posiciones ---------- */
     const defaultStandings = [
-      { team: 'Construservicios', pj: 12, g: 9, e: 3, p: 0, gf: 35, gc: 8, pts: 31 },
-      { team: 'UPTC - Medic Salud', pj: 12, g: 9, e: 2, p: 1, gf: 39, gc: 13, pts: 30 },
-      { team: 'Club Deportivo San Jose', pj: 12, g: 9, e: 1, p: 2, gf: 27, gc: 9, pts: 29 },
-      { team: 'Reserva Activa', pj: 12, g: 9, e: 0, p: 3, gf: 35, gc: 15, pts: 27 },
-      { team: 'Amigos Edwin Rodriguez', pj: 12, g: 8, e: 0, p: 4, gf: 34, gc: 28, pts: 24 },
-      { team: 'Radiadores la Valle', pj: 12, g: 7, e: 2, p: 3, gf: 32, gc: 20, pts: 23 }
+      { team: 'Construservicios', g: 9, e: 3, p: 0, gf: 35, gc: 8 },
+      { team: 'UPTC - Medic Salud', g: 9, e: 2, p: 1, gf: 39, gc: 13 },
+      { team: 'Club Deportivo San Jose', g: 9, e: 1, p: 2, gf: 27, gc: 9 },
+      { team: 'Reserva Activa', g: 9, e: 0, p: 3, gf: 35, gc: 15 },
+      { team: 'Amigos Edwin Rodriguez', g: 8, e: 0, p: 4, gf: 34, gc: 28 },
+      { team: 'Radiadores la Valle', g: 7, e: 2, p: 3, gf: 32, gc: 20 }
     ];
 
+    function computeRow(row) {
+      const pj = (row.g || 0) + (row.e || 0) + (row.p || 0);
+      const pts = (row.g || 0) * 3 + (row.e || 0);
+      const dg = (row.gf || 0) - (row.gc || 0);
+      return { pj, pts, dg };
+    }
+
+    function sortStandings(data) {
+      return data.slice().sort((a, b) => {
+        const ca = computeRow(a), cb = computeRow(b);
+        if (cb.pts !== ca.pts) return cb.pts - ca.pts;
+        if (cb.dg !== ca.dg) return cb.dg - ca.dg;
+        return (b.gf || 0) - (a.gf || 0);
+      });
+    }
+
     function getStandings() {
-      return JSON.parse(localStorage.getItem('standings') || 'null') || defaultStandings.slice();
+      const data = JSON.parse(localStorage.getItem('standings') || 'null') || defaultStandings.slice();
+      return sortStandings(data);
     }
     function saveStandings(data) {
-      localStorage.setItem('standings', JSON.stringify(data));
+      localStorage.setItem('standings', JSON.stringify(sortStandings(data)));
       renderTeamStats();
       renderHomePreviews();
+      refreshHomeStats();
     }
 
     function initStandings() {
@@ -421,27 +505,41 @@
       const data = getStandings();
       const body = document.getElementById('standingsBody');
       body.innerHTML = '';
+      if (!data.length) {
+        body.innerHTML = '<tr><td colspan="11" class="empty-state">Agrega equipos con el botón de arriba.</td></tr>';
+        return;
+      }
       data.forEach((row, idx) => {
-        const dg = row.gf - row.gc;
+        const { pj, pts, dg } = computeRow(row);
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td class="position" style="text-align:center;">${idx + 1}</td>
-          <td class="team-name" contenteditable="true" data-field="team">${row.team}</td>
-          <td style="text-align:center;" contenteditable="true" data-field="pj">${row.pj}</td>
+          <td class="team-name"></td>
+          <td class="cell-computed">${pj}</td>
           <td style="text-align:center;" contenteditable="true" data-field="g">${row.g}</td>
           <td style="text-align:center;" contenteditable="true" data-field="e">${row.e}</td>
           <td style="text-align:center;" contenteditable="true" data-field="p">${row.p}</td>
           <td style="text-align:center;" contenteditable="true" data-field="gf">${row.gf}</td>
           <td style="text-align:center;" contenteditable="true" data-field="gc">${row.gc}</td>
-          <td style="text-align:center;">${dg >= 0 ? '+' + dg : dg}</td>
-          <td class="points" style="text-align:center;" contenteditable="true" data-field="pts">${row.pts}</td>
+          <td class="cell-computed">${dg >= 0 ? '+' + dg : dg}</td>
+          <td class="points cell-computed">${pts}</td>
           <td class="col-actions"><button class="btn btn-danger btn-sm" title="Eliminar" onclick="deleteStandingRow(${idx})"><i class="fas fa-trash"></i></button></td>
         `;
+        const teamCell = tr.querySelector('.team-name');
+        const select = document.createElement('select');
+        populateTeamSelect(select, row.team);
+        select.addEventListener('change', () => {
+          const current = getStandings();
+          current[idx].team = select.value;
+          saveStandings(current);
+          renderStandings();
+        });
+        teamCell.appendChild(select);
+
         tr.querySelectorAll('[contenteditable]').forEach(cell => {
           cell.addEventListener('blur', () => {
             const field = cell.dataset.field;
-            const numeric = ['pj', 'g', 'e', 'p', 'gf', 'gc', 'pts'].includes(field);
-            const value = numeric ? (parseInt(cell.textContent) || 0) : cell.textContent.trim();
+            const value = parseInt(cell.textContent) || 0;
             const current = getStandings();
             current[idx][field] = value;
             saveStandings(current);
@@ -453,8 +551,15 @@
     }
 
     function addStandingRow() {
+      const roster = getRoster();
+      if (!roster.length) {
+        alert('Primero agrega al menos un equipo en el panel "Equipos del torneo".');
+        return;
+      }
       const current = getStandings();
-      current.push({ team: 'Nuevo Equipo', pj: 0, g: 0, e: 0, p: 0, gf: 0, gc: 0, pts: 0 });
+      const usedTeams = current.map(r => r.team);
+      const freeTeam = roster.find(t => !usedTeams.includes(t)) || roster[0];
+      current.push({ team: freeTeam, g: 0, e: 0, p: 0, gf: 0, gc: 0 });
       saveStandings(current);
       renderStandings();
     }
@@ -465,17 +570,6 @@
       renderStandings();
     }
 
-    function filterTable(filter, event) {
-      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-      if (event && event.target) event.target.classList.add('active');
-      document.querySelectorAll('#standingsTable tbody tr').forEach(row => {
-        const pts = parseInt(row.querySelector('.points')?.textContent || 0);
-        if (filter === 'todos') row.style.display = '';
-        else if (filter === 'ganados') row.style.display = pts >= 27 ? '' : 'none';
-        else if (filter === 'pendientes') row.style.display = pts < 27 ? '' : 'none';
-      });
-    }
-
     /* ---------- Estadísticas de equipo (derivadas) ---------- */
     function renderTeamStats() {
       const data = getStandings();
@@ -483,13 +577,14 @@
       body.innerHTML = '';
       if (!data.length) { body.innerHTML = '<tr><td colspan="6" class="empty-state">Agrega equipos en la tabla de posiciones.</td></tr>'; return; }
       data.forEach(row => {
-        const promedio = row.pj ? (row.gf / row.pj).toFixed(2) : '0.00';
-        const efectividad = row.pj ? Math.round((row.pts / (row.pj * 3)) * 100) : 0;
+        const { pj, pts } = computeRow(row);
+        const promedio = pj ? (row.gf / pj).toFixed(2) : '0.00';
+        const efectividad = pj ? Math.round((pts / (pj * 3)) * 100) : 0;
         const badgeColor = efectividad >= 60 ? 'var(--success)' : efectividad >= 40 ? 'var(--warning)' : 'var(--error)';
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td class="team-name">${row.team}</td>
-          <td style="text-align:center;">${row.pj}</td>
+          <td style="text-align:center;">${pj}</td>
           <td style="text-align:center;">${row.gf}</td>
           <td style="text-align:center;">${row.gc}</td>
           <td style="text-align:center;">${promedio}</td>
@@ -515,7 +610,7 @@
       const data = getUpcoming().slice(0, 3);
       box.innerHTML = data.map((m, i) => `
         <div style="display:flex; justify-content:space-between; padding:8px 0; ${i < data.length - 1 ? 'border-bottom:1px solid var(--border);' : ''}">
-          <span>${m.fecha}</span><span>${m.equipos}</span>
+          <span>${m.fecha}</span><span>${m.home} vs ${m.away}</span>
         </div>`).join('') || '<p class="empty-state">Sin partidos programados.</p>';
     }
 
@@ -548,8 +643,8 @@
     function saveDiscipline(data) { localStorage.setItem('discipline', JSON.stringify(data)); }
 
     function initTeamsExtra() {
-      renderPeopleTable('topScorers', 'topScorersBody', 'Goles');
-      renderPeopleTable('topAssists', 'topAssistsBody', 'Asist.');
+      renderPeopleTable('topScorers', 'topScorersBody');
+      renderPeopleTable('topAssists', 'topAssistsBody');
       renderDiscipline();
     }
 
@@ -562,10 +657,20 @@
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td contenteditable="true" data-field="player">${row.player}</td>
-          <td contenteditable="true" data-field="team">${row.team}</td>
+          <td class="team-cell"></td>
           <td style="text-align:center;" contenteditable="true" data-field="value">${row.value}</td>
           <td class="col-actions"><button class="btn btn-danger btn-sm" onclick="deletePersonRow('${key}', ${idx})"><i class="fas fa-trash"></i></button></td>
         `;
+        const teamCell = tr.querySelector('.team-cell');
+        const select = document.createElement('select');
+        populateTeamSelect(select, row.team);
+        select.addEventListener('change', () => {
+          const current = getPeople(key);
+          current[idx].team = select.value;
+          savePeople(key, current);
+        });
+        teamCell.appendChild(select);
+
         tr.querySelectorAll('[contenteditable]').forEach(cell => {
           cell.addEventListener('blur', () => {
             const field = cell.dataset.field;
@@ -580,8 +685,10 @@
     }
 
     function addPersonRow(key) {
+      const roster = getRoster();
+      if (!roster.length) { alert('Primero agrega equipos en Competencias.'); return; }
       const data = getPeople(key);
-      data.push({ player: 'Nuevo Jugador', team: 'Equipo', value: 0 });
+      data.push({ player: 'Nuevo Jugador', team: roster[0], value: 0 });
       savePeople(key, data);
       renderPeopleTable(key, key === 'topScorers' ? 'topScorersBody' : 'topAssistsBody');
     }
@@ -600,16 +707,26 @@
       data.forEach((row, idx) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td contenteditable="true" data-field="team">${row.team}</td>
+          <td class="team-cell"></td>
           <td style="text-align:center;" contenteditable="true" data-field="yellow">${row.yellow}</td>
           <td style="text-align:center;" contenteditable="true" data-field="red">${row.red}</td>
           <td class="col-actions"><button class="btn btn-danger btn-sm" onclick="deleteDisciplineRow(${idx})"><i class="fas fa-trash"></i></button></td>
         `;
+        const teamCell = tr.querySelector('.team-cell');
+        const select = document.createElement('select');
+        populateTeamSelect(select, row.team);
+        select.addEventListener('change', () => {
+          const current = getDiscipline();
+          current[idx].team = select.value;
+          saveDiscipline(current);
+        });
+        teamCell.appendChild(select);
+
         tr.querySelectorAll('[contenteditable]').forEach(cell => {
           cell.addEventListener('blur', () => {
             const field = cell.dataset.field;
             const current = getDiscipline();
-            current[idx][field] = field === 'team' ? cell.textContent.trim() : (parseInt(cell.textContent) || 0);
+            current[idx][field] = parseInt(cell.textContent) || 0;
             saveDiscipline(current);
             renderDiscipline();
           });
@@ -618,8 +735,10 @@
       });
     }
     function addDisciplineRow() {
+      const roster = getRoster();
+      if (!roster.length) { alert('Primero agrega equipos en Competencias.'); return; }
       const data = getDiscipline();
-      data.push({ team: 'Nuevo Equipo', yellow: 0, red: 0 });
+      data.push({ team: roster[0], yellow: 0, red: 0 });
       saveDiscipline(data);
       renderDiscipline();
     }
@@ -632,13 +751,12 @@
 
     /* ---------- Eventos ---------- */
     const defaultUpcoming = [
-      { fecha: '20-jul', equipos: 'Semillitas vs Vidrierías' },
-      { fecha: '20-jul', equipos: 'Radiadores vs Amigos Edwin' },
-      { fecha: '20-jul', equipos: 'Comuneros vs CDA Ecoauto' }
+      { fecha: '20-jul', home: 'Construservicios', away: 'Reserva Activa', hora: '3:00 pm' },
+      { fecha: '20-jul', home: 'Radiadores la Valle', away: 'Amigos Edwin Rodriguez', hora: '4:30 pm' }
     ];
     const defaultResults = [
-      { fecha: '18/03', equipos: 'Construservicios vs UPTC', marcador: '3 - 1', tipo: 'win' },
-      { fecha: '17/03', equipos: 'SD San Jose vs Reserva Activa', marcador: '2 - 2', tipo: 'draw' }
+      { fecha: '18/03', home: 'Construservicios', away: 'UPTC - Medic Salud', marcador: '3 - 1', tipo: 'win' },
+      { fecha: '17/03', home: 'Club Deportivo San Jose', away: 'Reserva Activa', marcador: '2 - 2', tipo: 'draw' }
     ];
 
     function getUpcoming() { return JSON.parse(localStorage.getItem('upcomingMatches') || 'null') || defaultUpcoming.slice(); }
@@ -647,34 +765,46 @@
     function saveResults(data) { localStorage.setItem('recentResults', JSON.stringify(data)); }
 
     function initEvents() {
+      populateTeamSelect(document.getElementById('upHome'));
+      populateTeamSelect(document.getElementById('upAway'));
+      populateTeamSelect(document.getElementById('resHome'));
+      populateTeamSelect(document.getElementById('resAway'));
       renderUpcomingList();
       renderResultsList();
 
       document.getElementById('upcomingForm').addEventListener('submit', e => {
         e.preventDefault();
         const fecha = document.getElementById('upFecha').value.trim();
-        const equipos = document.getElementById('upEquipos').value.trim();
+        const home = document.getElementById('upHome').value;
+        const away = document.getElementById('upAway').value;
         const hora = document.getElementById('upHora').value.trim();
-        if (!fecha || !equipos) return;
+        if (!fecha || !home || !away) return;
+        if (home === away) { alert('Elige dos equipos distintos.'); return; }
         const data = getUpcoming();
-        data.unshift({ fecha, equipos, hora });
+        data.unshift({ fecha, home, away, hora });
         saveUpcoming(data);
         renderUpcomingList();
         e.target.reset();
+        populateTeamSelect(document.getElementById('upHome'));
+        populateTeamSelect(document.getElementById('upAway'));
       });
 
       document.getElementById('resultForm').addEventListener('submit', e => {
         e.preventDefault();
         const fecha = document.getElementById('resFecha').value.trim();
-        const equipos = document.getElementById('resEquipos').value.trim();
+        const home = document.getElementById('resHome').value;
+        const away = document.getElementById('resAway').value;
         const marcador = document.getElementById('resMarcador').value.trim();
         const tipo = document.getElementById('resTipo').value;
-        if (!fecha || !equipos || !marcador) return;
+        if (!fecha || !home || !away || !marcador) return;
+        if (home === away) { alert('Elige dos equipos distintos.'); return; }
         const data = getResults();
-        data.unshift({ fecha, equipos, marcador, tipo });
+        data.unshift({ fecha, home, away, marcador, tipo });
         saveResults(data);
         renderResultsList();
         e.target.reset();
+        populateTeamSelect(document.getElementById('resHome'));
+        populateTeamSelect(document.getElementById('resAway'));
       });
     }
 
@@ -686,7 +816,7 @@
       data.forEach((m, idx) => {
         const row = document.createElement('div');
         row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);';
-        row.innerHTML = `<span><strong>${m.fecha}</strong> — ${m.equipos} ${m.hora ? '· ' + m.hora : ''}</span>
+        row.innerHTML = `<span><strong>${m.fecha}</strong> — ${m.home} vs ${m.away} ${m.hora ? '· ' + m.hora : ''}</span>
           <button class="btn btn-danger btn-sm" onclick="deleteUpcoming(${idx})"><i class="fas fa-trash"></i></button>`;
         list.appendChild(row);
       });
@@ -710,7 +840,7 @@
         card.className = 'data-card';
         card.innerHTML = `
           <div class="data-card-header" style="display:flex; justify-content:space-between; align-items:center;">
-            <span>${r.fecha} · ${r.equipos}</span>
+            <span>${r.fecha} · ${r.home} vs ${r.away}</span>
             <button class="btn btn-danger btn-sm" onclick="deleteResult(${idx})"><i class="fas fa-trash"></i></button>
           </div>
           <div class="data-card-content">
@@ -781,71 +911,36 @@
       renderGallery();
     }
 
-    /* ---------- Gestión de páginas ---------- */
-    function initPages() {
-      window.allTournamentPages = JSON.parse(localStorage.getItem('tournamentPages') || '[]');
-      window.adminPages = window.allTournamentPages.filter(p => p.owner === localStorage.getItem('userEmail'));
-      window.currentAdminPageId = localStorage.getItem('currentAdminPage');
+    /* ---------- Excel: importación inteligente ---------- */
+    const STANDINGS_COLUMN_ALIASES = {
+      team: ['equipo', 'team', 'club'],
+      g: ['g', 'ganados', 'victorias', 'pg'],
+      e: ['e', 'empates', 'pe'],
+      p: ['p', 'perdidos', 'derrotas', 'pp'],
+      gf: ['gf', 'goles a favor', 'golesafavor', 'gol favor'],
+      gc: ['gc', 'goles en contra', 'golesencontra', 'gol contra']
+    };
 
-      function renderPagesList() {
-        const container = document.getElementById('pagesList');
-        const selectedName = document.getElementById('selectedPageName');
-        container.innerHTML = '';
-        if (!window.adminPages.length) {
-          container.innerHTML = '<p class="empty-state">No hay páginas creadas todavía.</p>';
-          selectedName.textContent = 'Ninguna';
-          return;
-        }
-        window.adminPages.forEach(page => {
-          const div = document.createElement('div');
-          div.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:12px; border:1px solid var(--border); border-radius:8px; margin-bottom:8px; background:var(--surface);';
-          div.innerHTML = `
-            <div><strong>${page.name}</strong> <span style="color:var(--text-secondary);">(${page.type})</span></div>
-            <div>
-              <button data-id="${page.id}" class="btn btn-primary btn-sm select-page">Seleccionar</button>
-              <button data-id="${page.id}" class="btn btn-danger btn-sm delete-page">Eliminar</button>
-            </div>`;
-          container.appendChild(div);
-        });
-        selectedName.textContent = window.currentAdminPageId
-          ? (window.adminPages.find(p => p.id === window.currentAdminPageId)?.name || 'Ninguna')
-          : 'Ninguna';
-
-        container.querySelectorAll('.select-page').forEach(btn => btn.addEventListener('click', () => selectAdminPage(btn.getAttribute('data-id'))));
-        container.querySelectorAll('.delete-page').forEach(btn => btn.addEventListener('click', () => {
-          const id = btn.getAttribute('data-id');
-          window.allTournamentPages = window.allTournamentPages.filter(p => p.id !== id);
-          localStorage.setItem('tournamentPages', JSON.stringify(window.allTournamentPages));
-          window.adminPages = window.allTournamentPages.filter(p => p.owner === localStorage.getItem('userEmail'));
-          if (window.currentAdminPageId === id) { window.currentAdminPageId = null; localStorage.removeItem('currentAdminPage'); }
-          renderPagesList();
-        }));
-      }
-
-      function selectAdminPage(id) {
-        window.currentAdminPageId = id;
-        localStorage.setItem('currentAdminPage', id);
-        renderPagesList();
-      }
-
-      document.getElementById('createPageForm').addEventListener('submit', e => {
-        e.preventDefault();
-        const name = document.getElementById('pageName').value.trim();
-        const type = document.getElementById('pageType').value;
-        if (!name) return;
-        const page = { id: String(Date.now()), name, type, owner: localStorage.getItem('userEmail') };
-        window.allTournamentPages.push(page);
-        localStorage.setItem('tournamentPages', JSON.stringify(window.allTournamentPages));
-        window.adminPages = window.allTournamentPages.filter(p => p.owner === localStorage.getItem('userEmail'));
-        renderPagesList();
-        selectAdminPage(page.id);
-        e.target.reset();
-      });
-
-      renderPagesList();
+    function normalizeHeader(text) {
+      return String(text || '').toLowerCase().trim()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     }
 
-    /* ---------- Excel ---------- */
+    function detectStandingsColumns(headerRow) {
+      const map = {};
+      headerRow.forEach((cell, idx) => {
+        const norm = normalizeHeader(cell);
+        for (const field in STANDINGS_COLUMN_ALIASES) {
+          if (STANDINGS_COLUMN_ALIASES[field].includes(norm) && map[field] === undefined) {
+            map[field] = idx;
+          }
+        }
+      });
+      const requiredFields = ['team', 'g', 'e', 'p', 'gf', 'gc'];
+      const complete = requiredFields.every(f => map[f] !== undefined);
+      return complete ? map : null;
+    }
+
     function initExcel() {
       let currentExcelData = {};
 
@@ -875,15 +970,58 @@
         return table;
       }
 
+      function applySheetToStandings(sheet, colMap) {
+        const rows = [];
+        for (let r = 1; r < sheet.length; r++) {
+          const raw = sheet[r];
+          if (!raw || !raw[colMap.team]) continue;
+          rows.push({
+            team: String(raw[colMap.team]).trim(),
+            g: parseInt(raw[colMap.g]) || 0,
+            e: parseInt(raw[colMap.e]) || 0,
+            p: parseInt(raw[colMap.p]) || 0,
+            gf: parseInt(raw[colMap.gf]) || 0,
+            gc: parseInt(raw[colMap.gc]) || 0
+          });
+        }
+        if (!rows.length) { alert('No se encontraron filas de datos en esta hoja.'); return; }
+
+        const roster = getRoster();
+        rows.forEach(r => {
+          if (!roster.some(t => t.toLowerCase() === r.team.toLowerCase())) roster.push(r.team);
+        });
+        saveRoster(roster);
+        saveStandings(rows);
+        renderRoster();
+        refreshAllTeamSelects();
+        renderStandings();
+        alert(`Se aplicaron ${rows.length} equipos a la tabla de posiciones. Ya puedes verla en Competencias.`);
+      }
+
       function distributeData(data) {
         const container = document.getElementById('tablesContainer');
         container.innerHTML = '';
         for (const sheetName in data) {
+          const sheet = data[sheetName];
           const title = document.createElement('h3');
           title.textContent = sheetName;
           title.style.cssText = 'color: var(--primary); margin: 24px 0 12px 0;';
           container.appendChild(title);
-          container.appendChild(createTable(data[sheetName], sheetName));
+
+          const colMap = sheet.length ? detectStandingsColumns(sheet[0]) : null;
+          if (colMap) {
+            const banner = document.createElement('div');
+            banner.className = 'import-match-banner';
+            banner.innerHTML = `<span><i class="fas fa-circle-check" style="color:#059669;"></i> <strong>Esta hoja coincide</strong> con el formato de tabla de posiciones.</span>`;
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-primary btn-sm';
+            btn.innerHTML = '<i class="fas fa-bolt"></i> Aplicar a la tabla de posiciones';
+            btn.addEventListener('click', () => applySheetToStandings(sheet, colMap));
+            banner.appendChild(btn);
+            container.appendChild(banner);
+          }
+
+          container.appendChild(createTable(sheet, sheetName));
         }
       }
 
