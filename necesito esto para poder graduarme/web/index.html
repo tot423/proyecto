@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel Administrador - Torneo FÃºtbol</title>
+  <title>Panel Administrador - Torneo Fútbol</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
@@ -13,60 +13,25 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-header">
-        <h1><i class="fas fa-trophy"></i> Torneo FÃºtbol</h1>
+        <h1><i class="fas fa-trophy"></i> Torneo Fútbol</h1>
         <p>Panel Administrativo</p>
       </div>
 
       <nav class="sidebar-nav">
-        <div class="nav-item">
-          <a href="#" class="nav-link active" onclick="showSection('inicio', event)">
-            <i class="fas fa-home"></i>
-            Inicio
-          </a>
-        </div>
-        <div class="nav-item">
-          <a href="#" class="nav-link" onclick="showSection('competencias', event)">
-            <i class="fas fa-table"></i>
-            Competencias
-          </a>
-        </div>
-        <div class="nav-item">
-          <a href="#" class="nav-link" onclick="showSection('equipos', event)">
-            <i class="fas fa-users"></i>
-            Equipos
-          </a>
-        </div>
-        <div class="nav-item">
-          <a href="#" class="nav-link" onclick="showSection('eventos', event)">
-            <i class="fas fa-calendar"></i>
-            Eventos
-          </a>
-        </div>
-        <div class="nav-item">
-          <a href="#" class="nav-link" onclick="showSection('multimedia', event)">
-            <i class="fas fa-images"></i>
-            Multimedia
-          </a>
-        </div>
-        <div class="nav-item">
-          <a href="#" class="nav-link" onclick="showSection('paginas', event)">
-            <i class="fas fa-cog"></i>
-            PÃ¡ginas
-          </a>
-        </div>
-        <div class="nav-item">
-          <a href="#" class="nav-link" onclick="showSection('datos', event)">
-            <i class="fas fa-database"></i>
-            Datos
-          </a>
-        </div>
+        <div class="nav-item"><a href="#" class="nav-link active" onclick="showSection('inicio', event)"><i class="fas fa-home"></i> Inicio</a></div>
+        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('competencias', event)"><i class="fas fa-table"></i> Competencias</a></div>
+        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('equipos', event)"><i class="fas fa-users"></i> Equipos</a></div>
+        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('eventos', event)"><i class="fas fa-calendar"></i> Eventos</a></div>
+        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('multimedia', event)"><i class="fas fa-images"></i> Multimedia</a></div>
+        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('paginas', event)"><i class="fas fa-cog"></i> Páginas</a></div>
+        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('datos', event)"><i class="fas fa-database"></i> Datos</a></div>
       </nav>
 
       <div class="sidebar-footer">
-        <button class="logout-btn" onclick="logout()">
-          <i class="fas fa-sign-out-alt"></i>
-          Cerrar SesiÃ³n
-        </button>
+        <a href="user.html" class="btn btn-outline btn-sm" style="width:100%; justify-content:center; margin-bottom:10px; text-decoration:none;">
+          <i class="fas fa-eye"></i> Ver vista pública
+        </a>
+        <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
       </div>
     </aside>
 
@@ -75,73 +40,55 @@
       <header class="topbar">
         <h1 class="topbar-title" id="pageTitle">Inicio</h1>
         <div class="topbar-actions">
-          <span class="user-info">
-            <i class="fas fa-user-circle"></i>
-            Administrador
-          </span>
+          <span class="user-info"><i class="fas fa-user-circle"></i> Administrador</span>
         </div>
       </header>
 
       <div class="content">
-        <!-- Inicio Section -->
+        <!-- Inicio -->
         <section id="inicio" class="section active">
           <div class="hero-section">
             <div class="hero-overlay"></div>
             <div class="hero-content">
               <div class="hero-text">
-                <h1>Bienvenido al Panel</h1>
-                <p>Gestiona tu torneo de fÃºtbol profesional</p>
+                <h1 id="heroTitle" contenteditable="true">Bienvenido al Panel</h1>
+                <p id="heroSubtitle" contenteditable="true">Gestiona tu torneo de fútbol profesional</p>
               </div>
             </div>
             <div class="hero-controls">
               <label class="file-upload">
-                <span class="file-upload-label">
-                  <i class="fas fa-camera"></i>
-                  Cambiar imagen
-                </span>
+                <span class="file-upload-label"><i class="fas fa-camera"></i> Cambiar imagen</span>
                 <input type="file" id="heroImage" accept="image/*">
               </label>
             </div>
           </div>
 
           <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-value">14</div>
-              <div class="stat-label">Equipos</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">48</div>
-              <div class="stat-label">Partidos</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">168</div>
-              <div class="stat-label">Goles</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">12</div>
-              <div class="stat-label">Jornadas</div>
-            </div>
+            <div class="stat-card"><div class="stat-value" contenteditable="true" data-stat="equipos">14</div><div class="stat-label">Equipos</div></div>
+            <div class="stat-card"><div class="stat-value" contenteditable="true" data-stat="partidos">48</div><div class="stat-label">Partidos</div></div>
+            <div class="stat-card"><div class="stat-value" contenteditable="true" data-stat="goles">168</div><div class="stat-label">Goles</div></div>
+            <div class="stat-card"><div class="stat-value" contenteditable="true" data-stat="jornadas">12</div><div class="stat-label">Jornadas</div></div>
           </div>
 
           <div class="section-card">
             <div class="card-header">
               <h2><i class="fas fa-edit"></i> Contenido de Inicio</h2>
-              <p>Edita el texto que aparecerÃ¡ en la pÃ¡gina principal</p>
+              <p>Edita el texto que aparecerá en la página principal</p>
             </div>
             <div class="card-content">
               <div id="editable-inicio" class="editable-content" contenteditable="true">
-                Contenido inicial editable para la pÃ¡gina de inicio del torneo.
+                Sigue de cerca cada jornada del torneo: resultados, tabla de posiciones y lo mejor de nuestros equipos.
               </div>
             </div>
           </div>
         </section>
 
-        <!-- Competencias Section -->
+        <!-- Competencias -->
         <section id="competencias" class="section">
           <div class="section-card">
             <div class="card-header">
               <h2><i class="fas fa-trophy"></i> Tabla de Posiciones</h2>
-              <p>ClasificaciÃ³n actual del torneo</p>
+              <p>Clasificación actual del torneo — haz clic en cualquier celda para editarla</p>
             </div>
             <div class="card-content">
               <div class="filters">
@@ -150,84 +97,24 @@
                 <button class="filter-btn" onclick="filterTable('pendientes', event)">Pendientes</button>
               </div>
 
+              <div class="table-toolbar">
+                <span style="color: var(--text-secondary); font-size: 0.85rem;">Doble clic o clic simple en una celda para editar. Los cambios se guardan solos.</span>
+                <button class="btn btn-primary btn-sm" onclick="addStandingRow()"><i class="fas fa-plus"></i> Agregar equipo</button>
+              </div>
+
               <div class="table-container">
-                <table class="modern-table">
+                <table class="modern-table" id="standingsTable">
                   <thead>
                     <tr>
-                      <th style="text-align: center;">Pos</th>
-                      <th>Equipo</th>
-                      <th style="text-align: center;">PJ</th>
-                      <th style="text-align: center;">G</th>
-                      <th style="text-align: center;">E</th>
-                      <th style="text-align: center;">P</th>
-                      <th style="text-align: center;">GF</th>
-                      <th style="text-align: center;">GC</th>
-                      <th style="text-align: center;">DG</th>
-                      <th style="text-align: center;">Pts</th>
+                      <th style="text-align:center;">Pos</th><th>Equipo</th>
+                      <th style="text-align:center;">PJ</th><th style="text-align:center;">G</th>
+                      <th style="text-align:center;">E</th><th style="text-align:center;">P</th>
+                      <th style="text-align:center;">GF</th><th style="text-align:center;">GC</th>
+                      <th style="text-align:center;">DG</th><th style="text-align:center;">Pts</th>
+                      <th class="col-actions"></th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td class="position">1</td>
-                      <td class="team-name">Construservicios</td>
-                      <td style="text-align: center;">12</td>
-                      <td style="text-align: center;">9</td>
-                      <td style="text-align: center;">3</td>
-                      <td style="text-align: center;">0</td>
-                      <td style="text-align: center;">35</td>
-                      <td style="text-align: center;">8</td>
-                      <td style="text-align: center;">+27</td>
-                      <td class="points">31</td>
-                    </tr>
-                    <tr>
-                      <td class="position">2</td>
-                      <td class="team-name">UPTC - Medic Salud</td>
-                      <td style="text-align: center;">12</td>
-                      <td style="text-align: center;">9</td>
-                      <td style="text-align: center;">2</td>
-                      <td style="text-align: center;">1</td>
-                      <td style="text-align: center;">39</td>
-                      <td style="text-align: center;">13</td>
-                      <td style="text-align: center;">+26</td>
-                      <td class="points">30</td>
-                    </tr>
-                    <tr>
-                      <td class="position">3</td>
-                      <td class="team-name">Club Deportivo San Jose</td>
-                      <td style="text-align: center;">12</td>
-                      <td style="text-align: center;">9</td>
-                      <td style="text-align: center;">1</td>
-                      <td style="text-align: center;">2</td>
-                      <td style="text-align: center;">27</td>
-                      <td style="text-align: center;">9</td>
-                      <td style="text-align: center;">+18</td>
-                      <td class="points">29</td>
-                    </tr>
-                    <tr>
-                      <td class="position">4</td>
-                      <td class="team-name">Reserva Activa</td>
-                      <td style="text-align: center;">12</td>
-                      <td style="text-align: center;">9</td>
-                      <td style="text-align: center;">0</td>
-                      <td style="text-align: center;">3</td>
-                      <td style="text-align: center;">35</td>
-                      <td style="text-align: center;">15</td>
-                      <td style="text-align: center;">+20</td>
-                      <td class="points">27</td>
-                    </tr>
-                    <tr>
-                      <td class="position">5</td>
-                      <td class="team-name">Amigos Edwin Rodriguez</td>
-                      <td style="text-align: center;">12</td>
-                      <td style="text-align: center;">8</td>
-                      <td style="text-align: center;">0</td>
-                      <td style="text-align: center;">4</td>
-                      <td style="text-align: center;">34</td>
-                      <td style="text-align: center;">28</td>
-                      <td style="text-align: center;">+6</td>
-                      <td class="points">24</td>
-                    </tr>
-                  </tbody>
+                  <tbody id="standingsBody"></tbody>
                 </table>
               </div>
             </div>
@@ -235,203 +122,173 @@
 
           <div class="cards-grid">
             <div class="data-card">
-              <div class="data-card-header">
-                <i class="fas fa-calendar"></i> PrÃ³ximos Partidos
-              </div>
-              <div class="data-card-content">
-                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
-                  <span>20-jul</span>
-                  <span>C.D Semillitas vs VidrierÃ­a Tellez</span>
-                  <span class="badge" style="background: var(--success); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem;">1-0</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
-                  <span>20-jul</span>
-                  <span>Radiadores vs Amigos Edwin</span>
-                  <span class="badge" style="background: var(--error); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem;">1-2</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding: 8px 0;">
-                  <span>20-jul</span>
-                  <span>Comuneros vs CDA Ecoauto</span>
-                  <span class="badge" style="background: var(--success); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem;">0-2</span>
-                </div>
-              </div>
+              <div class="data-card-header"><i class="fas fa-calendar"></i> Próximos Partidos</div>
+              <div class="data-card-content" id="homeUpcomingPreview"></div>
             </div>
-
             <div class="data-card">
-              <div class="data-card-header">
-                <i class="fas fa-users"></i> Equipos Participantes
-              </div>
-              <div class="data-card-content">
-                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
-                  <span class="position">1</span>
-                  <span>VidrierÃ­a Tellez - Constructora Oicata</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
-                  <span class="position">2</span>
-                  <span>Radiadores la Valle</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
-                  <span class="position">3</span>
-                  <span>Comuneros - Blinda Tec</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding: 8px 0;">
-                  <span class="position">4</span>
-                  <span>Reserva Activa</span>
-                </div>
-              </div>
+              <div class="data-card-header"><i class="fas fa-users"></i> Equipos Participantes</div>
+              <div class="data-card-content" id="homeTeamsPreview"></div>
             </div>
           </div>
         </section>
 
-        <!-- Equipos Section -->
+        <!-- Equipos -->
         <section id="equipos" class="section">
           <div class="section-card">
             <div class="card-header">
-              <h2><i class="fas fa-users"></i> InformaciÃ³n de Equipos</h2>
-              <p>EstadÃ­sticas y datos de los equipos participantes</p>
+              <h2><i class="fas fa-users"></i> Información de Equipos</h2>
+              <p>Estadísticas calculadas automáticamente a partir de la tabla de posiciones</p>
             </div>
             <div class="card-content">
               <div id="editable-equipos" class="editable-content" contenteditable="true">
-                InformaciÃ³n detallada sobre los equipos del torneo.
+                Los equipos compiten a lo largo de la temporada por el título del torneo.
               </div>
-
               <div class="table-container">
                 <table class="modern-table">
                   <thead>
                     <tr>
-                      <th>Equipo</th>
-                      <th style="text-align: center;">Partidos</th>
-                      <th style="text-align: center;">Goles a Favor</th>
-                      <th style="text-align: center;">Goles en Contra</th>
-                      <th style="text-align: center;">Promedio</th>
-                      <th style="text-align: center;">Efectividad</th>
+                      <th>Equipo</th><th style="text-align:center;">Partidos</th>
+                      <th style="text-align:center;">Goles a Favor</th><th style="text-align:center;">Goles en Contra</th>
+                      <th style="text-align:center;">Promedio</th><th style="text-align:center;">Efectividad</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td class="team-name">Construservicios</td>
-                      <td style="text-align: center;">12</td>
-                      <td style="text-align: center;">35</td>
-                      <td style="text-align: center;">8</td>
-                      <td style="text-align: center;">2.92</td>
-                      <td style="text-align: center;"><span class="badge" style="background: var(--success); color: white;">91.7%</span></td>
-                    </tr>
-                    <tr>
-                      <td class="team-name">UPTC - Medic Salud</td>
-                      <td style="text-align: center;">12</td>
-                      <td style="text-align: center;">39</td>
-                      <td style="text-align: center;">13</td>
-                      <td style="text-align: center;">3.25</td>
-                      <td style="text-align: center;"><span class="badge" style="background: var(--success); color: white;">88.5%</span></td>
-                    </tr>
-                  </tbody>
+                  <tbody id="teamStatsBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="cards-grid">
+            <div class="data-card">
+              <div class="data-card-header"><i class="fas fa-futbol"></i> Máximo Goleador</div>
+              <div class="data-card-content">
+                <div class="table-toolbar"><span style="color:var(--text-secondary); font-size:0.82rem;">El primero de la lista aparece destacado</span>
+                  <button class="btn btn-primary btn-sm" onclick="addPersonRow('topScorers')"><i class="fas fa-plus"></i> Agregar</button>
+                </div>
+                <table class="modern-table" style="margin:0;">
+                  <thead><tr><th>Jugador</th><th>Equipo</th><th style="text-align:center;">Goles</th><th class="col-actions"></th></tr></thead>
+                  <tbody id="topScorersBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="data-card">
+              <div class="data-card-header"><i class="fas fa-shoe-prints"></i> Mayor Asistidor</div>
+              <div class="data-card-content">
+                <div class="table-toolbar"><span style="color:var(--text-secondary); font-size:0.82rem;">El primero de la lista aparece destacado</span>
+                  <button class="btn btn-primary btn-sm" onclick="addPersonRow('topAssists')"><i class="fas fa-plus"></i> Agregar</button>
+                </div>
+                <table class="modern-table" style="margin:0;">
+                  <thead><tr><th>Jugador</th><th>Equipo</th><th style="text-align:center;">Asist.</th><th class="col-actions"></th></tr></thead>
+                  <tbody id="topAssistsBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="card-header"><h2><i class="fas fa-flag"></i> Disciplina</h2><p>Tarjetas amarillas y rojas por equipo</p></div>
+            <div class="card-content">
+              <div class="table-toolbar"><span></span>
+                <button class="btn btn-primary btn-sm" onclick="addDisciplineRow()"><i class="fas fa-plus"></i> Agregar equipo</button>
+              </div>
+              <div class="table-container">
+                <table class="modern-table">
+                  <thead><tr><th>Equipo</th><th style="text-align:center;">🟨</th><th style="text-align:center;">🟥</th><th class="col-actions"></th></tr></thead>
+                  <tbody id="disciplineBody"></tbody>
                 </table>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- Eventos Section -->
+        <!-- Eventos -->
         <section id="eventos" class="section">
           <div class="section-card">
-            <div class="card-header">
-              <h2><i class="fas fa-calendar"></i> Resultados Recientes</h2>
-              <p>Ãšltimos partidos y resultados del torneo</p>
-            </div>
+            <div class="card-header"><h2><i class="fas fa-calendar"></i> Próximos Partidos</h2><p>Agrega la programación de la siguiente jornada</p></div>
             <div class="card-content">
               <div id="editable-eventos" class="editable-content" contenteditable="true">
-                InformaciÃ³n sobre los eventos y partidos recientes.
+                Calendario de partidos y resultados más recientes del torneo.
               </div>
+              <form class="form-inline" id="upcomingForm">
+                <input type="text" id="upFecha" placeholder="Fecha (ej. 20-jul)" required>
+                <input type="text" id="upEquipos" placeholder="Equipo local vs Equipo visitante" required>
+                <input type="text" id="upHora" placeholder="Hora (ej. 3:00 pm)">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar</button>
+              </form>
+              <div id="upcomingList"></div>
+            </div>
+          </div>
 
-              <div class="cards-grid">
-                <div class="data-card">
-                  <div class="data-card-header">18/03 - Construservicios vs UPTC</div>
-                  <div class="data-card-content">
-                    <div style="text-align: center; font-size: 2rem; font-weight: 700; color: var(--success); margin-bottom: 8px;">3 - 1</div>
-                    <div style="text-align: center; color: var(--text-secondary);">Victoria local</div>
-                  </div>
-                </div>
-                <div class="data-card">
-                  <div class="data-card-header">17/03 - SD San Jose vs Reserva Activa</div>
-                  <div class="data-card-content">
-                    <div style="text-align: center; font-size: 2rem; font-weight: 700; color: var(--warning); margin-bottom: 8px;">2 - 2</div>
-                    <div style="text-align: center; color: var(--text-secondary);">Empate</div>
-                  </div>
-                </div>
-              </div>
+          <div class="section-card">
+            <div class="card-header"><h2><i class="fas fa-flag-checkered"></i> Resultados Recientes</h2><p>Últimos partidos jugados</p></div>
+            <div class="card-content">
+              <form class="form-inline" id="resultForm">
+                <input type="text" id="resFecha" placeholder="Fecha (ej. 18/03)" required>
+                <input type="text" id="resEquipos" placeholder="Equipo A vs Equipo B" required>
+                <input type="text" id="resMarcador" placeholder="Marcador (ej. 3 - 1)" required>
+                <select id="resTipo">
+                  <option value="win">Victoria local</option>
+                  <option value="draw">Empate</option>
+                  <option value="loss">Victoria visitante</option>
+                </select>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar</button>
+              </form>
+              <div class="cards-grid" id="resultsList"></div>
             </div>
           </div>
         </section>
 
-        <!-- Multimedia Section -->
+        <!-- Multimedia -->
         <section id="multimedia" class="section">
           <div class="section-card">
-            <div class="card-header">
-              <h2><i class="fas fa-images"></i> GalerÃ­a del Torneo</h2>
-              <p>ImÃ¡genes y momentos destacados</p>
-            </div>
+            <div class="card-header"><h2><i class="fas fa-images"></i> Galería del Torneo</h2><p>Imágenes y momentos destacados</p></div>
             <div class="card-content">
               <div id="editable-multimedia" class="editable-content" contenteditable="true">
-                DescripciÃ³n de la galerÃ­a multimedia.
+                Los mejores momentos capturados en cada jornada.
               </div>
-
-              <div id="carousel-controls" style="display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
-                <!-- Controls will be added by JS -->
+              <div style="margin-bottom:16px;">
+                <label class="file-upload">
+                  <span class="file-upload-label"><i class="fas fa-plus"></i> Agregar foto</span>
+                  <input type="file" id="galleryAdd" accept="image/*">
+                </label>
               </div>
-
+              <div id="carousel-controls" style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px;"></div>
               <div class="carousel">
-                <div class="carousel-track" id="carouselTrack">
-                  <img src="mdr.jpg" alt="Imagen 1">
-                  <img src="mecho.jpg" alt="Imagen 2">
-                  <img src="aoa.webp" alt="Imagen 3">
-                  <img src="fotos/ejemplo4.webp" alt="Imagen 4">
-                  <img src="fotos/ejemplo5.jpeg" alt="Imagen 5">
-                  <img src="mdr.jpg" alt="Imagen 6">
-                  <img src="mecho.jpg" alt="Imagen 7">
-                  <img src="aoa.webp" alt="Imagen 8">
-                </div>
+                <div class="carousel-track" id="carouselTrack"></div>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- PÃ¡ginas Section -->
+        <!-- Páginas -->
         <section id="paginas" class="section">
           <div class="section-card">
-            <div class="card-header">
-              <h2><i class="fas fa-cog"></i> GestiÃ³n de PÃ¡ginas</h2>
-              <p>Administra las pÃ¡ginas del torneo</p>
-            </div>
+            <div class="card-header"><h2><i class="fas fa-cog"></i> Gestión de Páginas</h2><p>Administra las páginas del torneo</p></div>
             <div class="card-content">
-              <form id="createPageForm" style="margin-bottom: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
-                <input id="pageName" placeholder="Nombre de la pÃ¡gina" required style="flex: 1; min-width: 200px; padding: 12px; border: 1px solid var(--border); border-radius: 8px;">
-                <select id="pageType" style="padding: 12px; border: 1px solid var(--border); border-radius: 8px;">
-                  <option value="futbol11">FÃºtbol 11</option>
-                  <option value="futbol8">FÃºtbol 8</option>
+              <form id="createPageForm" class="form-inline">
+                <input id="pageName" placeholder="Nombre de la página" required>
+                <select id="pageType">
+                  <option value="futbol11">Fútbol 11</option>
+                  <option value="futbol8">Fútbol 8</option>
                 </select>
-                <button type="submit" style="padding: 12px 24px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 500; cursor: pointer;">Crear PÃ¡gina</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Crear Página</button>
               </form>
               <div id="pagesList" style="margin-bottom: 16px;"></div>
-              <div>PÃ¡gina seleccionada: <strong id="selectedPageName">Ninguna</strong></div>
-              <p style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 8px;">Al crear y seleccionar una pÃ¡gina, los cambios se guardan para ese torneo especÃ­fico.</p>
+              <div>Página seleccionada: <strong id="selectedPageName">Ninguna</strong></div>
+              <p style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 8px;">Al crear y seleccionar una página, los cambios de esta sección se guardan para ese torneo específico.</p>
             </div>
           </div>
         </section>
 
-        <!-- Datos Section -->
+        <!-- Datos -->
         <section id="datos" class="section">
           <div class="section-card">
-            <div class="card-header">
-              <h2><i class="fas fa-database"></i> GestiÃ³n de Datos</h2>
-              <p>Sube y administra archivos Excel con datos del torneo</p>
-            </div>
+            <div class="card-header"><h2><i class="fas fa-database"></i> Gestión de Datos</h2><p>Sube y administra archivos Excel con datos del torneo</p></div>
             <div class="card-content">
               <div style="margin-bottom: 24px;">
                 <label class="file-upload">
-                  <span class="file-upload-label">
-                    <i class="fas fa-file-excel"></i>
-                    Seleccionar archivo Excel
-                  </span>
+                  <span class="file-upload-label"><i class="fas fa-file-excel"></i> Seleccionar archivo Excel</span>
                   <input type="file" id="excelInput" accept=".xlsx,.xls">
                 </label>
               </div>
@@ -445,160 +302,487 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script>
-    // Navigation
+    /* ---------- Acceso ---------- */
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('role') !== 'admin') {
+        window.location.href = 'login.html';
+        return;
+      }
+      initHero();
+      initStats();
+      initEditableTexts();
+      initStandings();
+      initTeamsExtra();
+      initEvents();
+      initGallery();
+      initPages();
+      initExcel();
+    });
+
+    function logout() {
+      if (confirm('¿Deseas cerrar sesión?')) {
+        localStorage.removeItem('role');
+        localStorage.removeItem('userEmail');
+        window.location.href = 'login.html';
+      }
+    }
+
+    /* ---------- Navegación ---------- */
     function showSection(sectionId, event) {
       if (event) event.preventDefault();
-
-      // Update active nav link
       document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
       if (event && event.target) {
         const link = event.target.closest('.nav-link');
         if (link) link.classList.add('active');
       }
-
-      // Show selected section
-      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-      const sectionElement = document.getElementById(sectionId);
-      if (sectionElement) {
-        sectionElement.classList.add('active');
-      }
-
-      // Update page title
-      const titles = {
-        'inicio': 'Inicio',
-        'competencias': 'Competencias',
-        'equipos': 'Equipos',
-        'eventos': 'Eventos',
-        'multimedia': 'Multimedia',
-        'paginas': 'PÃ¡ginas',
-        'datos': 'Datos'
-      };
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      const el = document.getElementById(sectionId);
+      if (el) el.classList.add('active');
+      const titles = { inicio:'Inicio', competencias:'Competencias', equipos:'Equipos', eventos:'Eventos', multimedia:'Multimedia', paginas:'Páginas', datos:'Datos' };
       document.getElementById('pageTitle').textContent = titles[sectionId] || 'Panel';
     }
 
-    // Logout
-    function logout() {
-      localStorage.removeItem('userRole');
-      localStorage.removeItem('role');
-      localStorage.removeItem('userEmail');
-      window.location.href = 'login.html';
-    }
-
-    // Filter table
-    function filterTable(filter, event) {
-      // Update active filter button
-      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-      if (event && event.target) {
-        event.target.classList.add('active');
-      }
-
-      // Filter table rows
-      const rows = document.querySelectorAll('.modern-table tbody tr');
-      rows.forEach(row => {
-        if (filter === 'todos') {
-          row.style.display = '';
-        } else if (filter === 'ganados') {
-          const points = parseInt(row.querySelector('.points')?.textContent || 0);
-          row.style.display = points >= 30 ? '' : 'none';
-        } else if (filter === 'pendientes') {
-          const points = parseInt(row.querySelector('.points')?.textContent || 0);
-          row.style.display = points < 30 ? '' : 'none';
-        }
-      });
-    }
-
-    // Hero image upload
-    document.getElementById('heroImage').addEventListener('change', function(e) {
-      const file = this.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        document.querySelector('.hero-section').style.backgroundImage = `linear-gradient(135deg, var(--primary), var(--primary-dark)), url(${evt.target.result})`;
-        localStorage.setItem('heroBg', evt.target.result);
-      };
-      reader.readAsDataURL(file);
-    });
-
-    // Editable content save
-    function saveEditableContent(section) {
-      const element = document.getElementById(`editable-${section}`);
-      if (element) {
-        const content = element.innerHTML;
-        const pageKey = window.currentAdminPageId ? `text-${window.currentAdminPageId}-${section}` : `text-${section}`;
-        localStorage.setItem(pageKey, content);
-      }
-    }
-
-    // Initialize
-    document.addEventListener('DOMContentLoaded', function() {
-      // Check admin access
-      const savedRole = localStorage.getItem('role');
-      if (savedRole !== 'admin') {
-        window.location.href = 'login.html';
-        return;
-      }
-
-      // Load saved hero image
+    /* ---------- Hero ---------- */
+    function initHero() {
       const savedHero = localStorage.getItem('heroBg');
       if (savedHero) {
         document.querySelector('.hero-section').style.backgroundImage = `linear-gradient(135deg, var(--primary), var(--primary-dark)), url(${savedHero})`;
       }
+      const title = document.getElementById('heroTitle');
+      const subtitle = document.getElementById('heroSubtitle');
+      title.textContent = localStorage.getItem('heroTitle') || title.textContent;
+      subtitle.textContent = localStorage.getItem('heroSubtitle') || subtitle.textContent;
+      title.addEventListener('input', () => localStorage.setItem('heroTitle', title.textContent));
+      subtitle.addEventListener('input', () => localStorage.setItem('heroSubtitle', subtitle.textContent));
 
-      // Load saved carousel images
-      const savedCarousel = JSON.parse(localStorage.getItem('carouselImgs') || '[]');
-      const track = document.getElementById('carouselTrack');
-      if (track && savedCarousel.length) {
-        track.innerHTML = '';
-        savedCarousel.forEach(url => {
-          const img = document.createElement('img');
-          img.src = url;
-          img.alt = 'Imagen del torneo';
-          track.appendChild(img);
+      document.getElementById('heroImage').addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = evt => {
+          document.querySelector('.hero-section').style.backgroundImage = `linear-gradient(135deg, var(--primary), var(--primary-dark)), url(${evt.target.result})`;
+          localStorage.setItem('heroBg', evt.target.result);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    /* ---------- Stats ---------- */
+    function initStats() {
+      const saved = JSON.parse(localStorage.getItem('homeStats') || '{}');
+      document.querySelectorAll('[data-stat]').forEach(el => {
+        const key = el.dataset.stat;
+        if (saved[key] !== undefined) el.textContent = saved[key];
+        el.addEventListener('input', () => {
+          const data = JSON.parse(localStorage.getItem('homeStats') || '{}');
+          data[key] = el.textContent;
+          localStorage.setItem('homeStats', JSON.stringify(data));
         });
-      }
+      });
+    }
 
-      // Setup carousel controls
-      const trackImgs = document.querySelectorAll('.carousel-track img');
-      const controls = document.getElementById('carousel-controls');
-      if (controls && trackImgs.length) {
-        trackImgs.forEach((img, idx) => {
-          const label = document.createElement('label');
-          label.className = 'file-upload';
-          label.innerHTML = `
-            <span class="file-upload-label">
-              <i class="fas fa-edit"></i>
-              #${idx + 1}
-            </span>
-            <input type="file" accept="image/*">
-          `;
-          const input = label.querySelector('input');
-          input.addEventListener('change', function(ev) {
-            const file = this.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e2) => {
-              img.src = e2.target.result;
-              const arr = Array.from(trackImgs).map(i => i.src);
-              localStorage.setItem('carouselImgs', JSON.stringify(arr));
-            };
-            reader.readAsDataURL(file);
-          });
-          controls.appendChild(label);
-        });
-      }
-
-      // Load editable content
+    /* ---------- Textos editables ---------- */
+    function initEditableTexts() {
       ['inicio', 'equipos', 'eventos', 'multimedia'].forEach(section => {
-        const element = document.getElementById(`editable-${section}`);
-        if (element) {
-          const saved = localStorage.getItem(`text-${section}`);
-          if (saved) element.innerHTML = saved;
-          element.addEventListener('input', () => saveEditableContent(section));
-        }
+        const el = document.getElementById(`editable-${section}`);
+        if (!el) return;
+        const saved = localStorage.getItem(`text-${section}`);
+        if (saved) el.innerHTML = saved;
+        el.addEventListener('input', () => localStorage.setItem(`text-${section}`, el.innerHTML));
+      });
+    }
+
+    /* ---------- Tabla de posiciones ---------- */
+    const defaultStandings = [
+      { team: 'Construservicios', pj: 12, g: 9, e: 3, p: 0, gf: 35, gc: 8, pts: 31 },
+      { team: 'UPTC - Medic Salud', pj: 12, g: 9, e: 2, p: 1, gf: 39, gc: 13, pts: 30 },
+      { team: 'Club Deportivo San Jose', pj: 12, g: 9, e: 1, p: 2, gf: 27, gc: 9, pts: 29 },
+      { team: 'Reserva Activa', pj: 12, g: 9, e: 0, p: 3, gf: 35, gc: 15, pts: 27 },
+      { team: 'Amigos Edwin Rodriguez', pj: 12, g: 8, e: 0, p: 4, gf: 34, gc: 28, pts: 24 },
+      { team: 'Radiadores la Valle', pj: 12, g: 7, e: 2, p: 3, gf: 32, gc: 20, pts: 23 }
+    ];
+
+    function getStandings() {
+      return JSON.parse(localStorage.getItem('standings') || 'null') || defaultStandings.slice();
+    }
+    function saveStandings(data) {
+      localStorage.setItem('standings', JSON.stringify(data));
+      renderTeamStats();
+      renderHomePreviews();
+    }
+
+    function initStandings() {
+      renderStandings();
+      renderTeamStats();
+      renderHomePreviews();
+    }
+
+    function renderStandings() {
+      const data = getStandings();
+      const body = document.getElementById('standingsBody');
+      body.innerHTML = '';
+      data.forEach((row, idx) => {
+        const dg = row.gf - row.gc;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="position" style="text-align:center;">${idx + 1}</td>
+          <td class="team-name" contenteditable="true" data-field="team">${row.team}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="pj">${row.pj}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="g">${row.g}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="e">${row.e}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="p">${row.p}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="gf">${row.gf}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="gc">${row.gc}</td>
+          <td style="text-align:center;">${dg >= 0 ? '+' + dg : dg}</td>
+          <td class="points" style="text-align:center;" contenteditable="true" data-field="pts">${row.pts}</td>
+          <td class="col-actions"><button class="btn btn-danger btn-sm" title="Eliminar" onclick="deleteStandingRow(${idx})"><i class="fas fa-trash"></i></button></td>
+        `;
+        tr.querySelectorAll('[contenteditable]').forEach(cell => {
+          cell.addEventListener('blur', () => {
+            const field = cell.dataset.field;
+            const numeric = ['pj', 'g', 'e', 'p', 'gf', 'gc', 'pts'].includes(field);
+            const value = numeric ? (parseInt(cell.textContent) || 0) : cell.textContent.trim();
+            const current = getStandings();
+            current[idx][field] = value;
+            saveStandings(current);
+            renderStandings();
+          });
+        });
+        body.appendChild(tr);
+      });
+    }
+
+    function addStandingRow() {
+      const current = getStandings();
+      current.push({ team: 'Nuevo Equipo', pj: 0, g: 0, e: 0, p: 0, gf: 0, gc: 0, pts: 0 });
+      saveStandings(current);
+      renderStandings();
+    }
+    function deleteStandingRow(idx) {
+      const current = getStandings();
+      current.splice(idx, 1);
+      saveStandings(current);
+      renderStandings();
+    }
+
+    function filterTable(filter, event) {
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      if (event && event.target) event.target.classList.add('active');
+      document.querySelectorAll('#standingsTable tbody tr').forEach(row => {
+        const pts = parseInt(row.querySelector('.points')?.textContent || 0);
+        if (filter === 'todos') row.style.display = '';
+        else if (filter === 'ganados') row.style.display = pts >= 27 ? '' : 'none';
+        else if (filter === 'pendientes') row.style.display = pts < 27 ? '' : 'none';
+      });
+    }
+
+    /* ---------- Estadísticas de equipo (derivadas) ---------- */
+    function renderTeamStats() {
+      const data = getStandings();
+      const body = document.getElementById('teamStatsBody');
+      body.innerHTML = '';
+      if (!data.length) { body.innerHTML = '<tr><td colspan="6" class="empty-state">Agrega equipos en la tabla de posiciones.</td></tr>'; return; }
+      data.forEach(row => {
+        const promedio = row.pj ? (row.gf / row.pj).toFixed(2) : '0.00';
+        const efectividad = row.pj ? Math.round((row.pts / (row.pj * 3)) * 100) : 0;
+        const badgeColor = efectividad >= 60 ? 'var(--success)' : efectividad >= 40 ? 'var(--warning)' : 'var(--error)';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="team-name">${row.team}</td>
+          <td style="text-align:center;">${row.pj}</td>
+          <td style="text-align:center;">${row.gf}</td>
+          <td style="text-align:center;">${row.gc}</td>
+          <td style="text-align:center;">${promedio}</td>
+          <td style="text-align:center;"><span class="badge" style="background:${badgeColor}; color:white;">${efectividad}%</span></td>
+        `;
+        body.appendChild(tr);
+      });
+    }
+
+    function renderHomePreviews() {
+      const teamsBox = document.getElementById('homeTeamsPreview');
+      const data = getStandings();
+      teamsBox.innerHTML = data.slice(0, 4).map((row, i) => `
+        <div style="display:flex; justify-content:space-between; padding:8px 0; ${i < 3 ? 'border-bottom:1px solid var(--border);' : ''}">
+          <span class="position">${i + 1}</span><span>${row.team}</span>
+        </div>`).join('') || '<p class="empty-state">Sin equipos aún.</p>';
+      renderUpcomingPreview();
+    }
+
+    function renderUpcomingPreview() {
+      const box = document.getElementById('homeUpcomingPreview');
+      if (!box) return;
+      const data = getUpcoming().slice(0, 3);
+      box.innerHTML = data.map((m, i) => `
+        <div style="display:flex; justify-content:space-between; padding:8px 0; ${i < data.length - 1 ? 'border-bottom:1px solid var(--border);' : ''}">
+          <span>${m.fecha}</span><span>${m.equipos}</span>
+        </div>`).join('') || '<p class="empty-state">Sin partidos programados.</p>';
+    }
+
+    /* ---------- Goleadores / asistidores / disciplina ---------- */
+    const defaultScorers = [
+      { player: 'Carlos López', team: 'Construservicios', value: 12 },
+      { player: 'Jorge Martínez', team: 'UPTC - Medic Salud', value: 11 },
+      { player: 'Diego Rodríguez', team: 'Club Deportivo San Jose', value: 9 }
+    ];
+    const defaultAssists = [
+      { player: 'Miguel Paredes', team: 'UPTC - Medic Salud', value: 8 },
+      { player: 'Fernando López', team: 'Construservicios', value: 7 },
+      { player: 'Roberto Sánchez', team: 'Reserva Activa', value: 6 }
+    ];
+    const defaultDiscipline = [
+      { team: 'Radiadores la Valle', yellow: 8, red: 1 },
+      { team: 'Comuneros', yellow: 6, red: 0 },
+      { team: 'CDA Ecoauto', yellow: 5, red: 2 }
+    ];
+
+    function getPeople(key) {
+      const defaults = key === 'topScorers' ? defaultScorers : defaultAssists;
+      return JSON.parse(localStorage.getItem(key) || 'null') || defaults.slice();
+    }
+    function savePeople(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+
+    function getDiscipline() {
+      return JSON.parse(localStorage.getItem('discipline') || 'null') || defaultDiscipline.slice();
+    }
+    function saveDiscipline(data) { localStorage.setItem('discipline', JSON.stringify(data)); }
+
+    function initTeamsExtra() {
+      renderPeopleTable('topScorers', 'topScorersBody', 'Goles');
+      renderPeopleTable('topAssists', 'topAssistsBody', 'Asist.');
+      renderDiscipline();
+    }
+
+    function renderPeopleTable(key, bodyId) {
+      const data = getPeople(key);
+      const body = document.getElementById(bodyId);
+      body.innerHTML = '';
+      if (!data.length) { body.innerHTML = `<tr><td colspan="4" class="empty-state">Sin registros.</td></tr>`; return; }
+      data.forEach((row, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td contenteditable="true" data-field="player">${row.player}</td>
+          <td contenteditable="true" data-field="team">${row.team}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="value">${row.value}</td>
+          <td class="col-actions"><button class="btn btn-danger btn-sm" onclick="deletePersonRow('${key}', ${idx})"><i class="fas fa-trash"></i></button></td>
+        `;
+        tr.querySelectorAll('[contenteditable]').forEach(cell => {
+          cell.addEventListener('blur', () => {
+            const field = cell.dataset.field;
+            const current = getPeople(key);
+            current[idx][field] = field === 'value' ? (parseInt(cell.textContent) || 0) : cell.textContent.trim();
+            savePeople(key, current);
+            renderPeopleTable(key, bodyId);
+          });
+        });
+        body.appendChild(tr);
+      });
+    }
+
+    function addPersonRow(key) {
+      const data = getPeople(key);
+      data.push({ player: 'Nuevo Jugador', team: 'Equipo', value: 0 });
+      savePeople(key, data);
+      renderPeopleTable(key, key === 'topScorers' ? 'topScorersBody' : 'topAssistsBody');
+    }
+    function deletePersonRow(key, idx) {
+      const data = getPeople(key);
+      data.splice(idx, 1);
+      savePeople(key, data);
+      renderPeopleTable(key, key === 'topScorers' ? 'topScorersBody' : 'topAssistsBody');
+    }
+
+    function renderDiscipline() {
+      const data = getDiscipline();
+      const body = document.getElementById('disciplineBody');
+      body.innerHTML = '';
+      if (!data.length) { body.innerHTML = '<tr><td colspan="4" class="empty-state">Sin registros.</td></tr>'; return; }
+      data.forEach((row, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td contenteditable="true" data-field="team">${row.team}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="yellow">${row.yellow}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="red">${row.red}</td>
+          <td class="col-actions"><button class="btn btn-danger btn-sm" onclick="deleteDisciplineRow(${idx})"><i class="fas fa-trash"></i></button></td>
+        `;
+        tr.querySelectorAll('[contenteditable]').forEach(cell => {
+          cell.addEventListener('blur', () => {
+            const field = cell.dataset.field;
+            const current = getDiscipline();
+            current[idx][field] = field === 'team' ? cell.textContent.trim() : (parseInt(cell.textContent) || 0);
+            saveDiscipline(current);
+            renderDiscipline();
+          });
+        });
+        body.appendChild(tr);
+      });
+    }
+    function addDisciplineRow() {
+      const data = getDiscipline();
+      data.push({ team: 'Nuevo Equipo', yellow: 0, red: 0 });
+      saveDiscipline(data);
+      renderDiscipline();
+    }
+    function deleteDisciplineRow(idx) {
+      const data = getDiscipline();
+      data.splice(idx, 1);
+      saveDiscipline(data);
+      renderDiscipline();
+    }
+
+    /* ---------- Eventos ---------- */
+    const defaultUpcoming = [
+      { fecha: '20-jul', equipos: 'Semillitas vs Vidrierías' },
+      { fecha: '20-jul', equipos: 'Radiadores vs Amigos Edwin' },
+      { fecha: '20-jul', equipos: 'Comuneros vs CDA Ecoauto' }
+    ];
+    const defaultResults = [
+      { fecha: '18/03', equipos: 'Construservicios vs UPTC', marcador: '3 - 1', tipo: 'win' },
+      { fecha: '17/03', equipos: 'SD San Jose vs Reserva Activa', marcador: '2 - 2', tipo: 'draw' }
+    ];
+
+    function getUpcoming() { return JSON.parse(localStorage.getItem('upcomingMatches') || 'null') || defaultUpcoming.slice(); }
+    function saveUpcoming(data) { localStorage.setItem('upcomingMatches', JSON.stringify(data)); renderUpcomingPreview(); }
+    function getResults() { return JSON.parse(localStorage.getItem('recentResults') || 'null') || defaultResults.slice(); }
+    function saveResults(data) { localStorage.setItem('recentResults', JSON.stringify(data)); }
+
+    function initEvents() {
+      renderUpcomingList();
+      renderResultsList();
+
+      document.getElementById('upcomingForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const fecha = document.getElementById('upFecha').value.trim();
+        const equipos = document.getElementById('upEquipos').value.trim();
+        const hora = document.getElementById('upHora').value.trim();
+        if (!fecha || !equipos) return;
+        const data = getUpcoming();
+        data.unshift({ fecha, equipos, hora });
+        saveUpcoming(data);
+        renderUpcomingList();
+        e.target.reset();
       });
 
-      // Page management
+      document.getElementById('resultForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const fecha = document.getElementById('resFecha').value.trim();
+        const equipos = document.getElementById('resEquipos').value.trim();
+        const marcador = document.getElementById('resMarcador').value.trim();
+        const tipo = document.getElementById('resTipo').value;
+        if (!fecha || !equipos || !marcador) return;
+        const data = getResults();
+        data.unshift({ fecha, equipos, marcador, tipo });
+        saveResults(data);
+        renderResultsList();
+        e.target.reset();
+      });
+    }
+
+    function renderUpcomingList() {
+      const list = document.getElementById('upcomingList');
+      const data = getUpcoming();
+      list.innerHTML = '';
+      if (!data.length) { list.innerHTML = '<p class="empty-state">No hay partidos programados.</p>'; return; }
+      data.forEach((m, idx) => {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);';
+        row.innerHTML = `<span><strong>${m.fecha}</strong> — ${m.equipos} ${m.hora ? '· ' + m.hora : ''}</span>
+          <button class="btn btn-danger btn-sm" onclick="deleteUpcoming(${idx})"><i class="fas fa-trash"></i></button>`;
+        list.appendChild(row);
+      });
+    }
+    function deleteUpcoming(idx) {
+      const data = getUpcoming();
+      data.splice(idx, 1);
+      saveUpcoming(data);
+      renderUpcomingList();
+    }
+
+    function renderResultsList() {
+      const list = document.getElementById('resultsList');
+      const data = getResults();
+      list.innerHTML = '';
+      if (!data.length) { list.innerHTML = '<p class="empty-state">No hay resultados registrados.</p>'; return; }
+      const labels = { win: 'Victoria local', draw: 'Empate', loss: 'Victoria visitante' };
+      const colors = { win: 'var(--success)', draw: 'var(--warning)', loss: 'var(--error)' };
+      data.forEach((r, idx) => {
+        const card = document.createElement('div');
+        card.className = 'data-card';
+        card.innerHTML = `
+          <div class="data-card-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <span>${r.fecha} · ${r.equipos}</span>
+            <button class="btn btn-danger btn-sm" onclick="deleteResult(${idx})"><i class="fas fa-trash"></i></button>
+          </div>
+          <div class="data-card-content">
+            <div style="text-align:center; font-size:2rem; font-weight:700; color:${colors[r.tipo] || 'var(--primary)'}; margin-bottom:8px;">${r.marcador}</div>
+            <div style="text-align:center; color:var(--text-secondary);">${labels[r.tipo] || ''}</div>
+          </div>`;
+        list.appendChild(card);
+      });
+    }
+    function deleteResult(idx) {
+      const data = getResults();
+      data.splice(idx, 1);
+      saveResults(data);
+      renderResultsList();
+    }
+
+    /* ---------- Galería ---------- */
+    function initGallery() {
+      renderGallery();
+      document.getElementById('galleryAdd').addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+          const imgs = getGallery();
+          imgs.push(e.target.result);
+          saveGallery(imgs);
+          renderGallery();
+        };
+        reader.readAsDataURL(file);
+        this.value = '';
+      });
+    }
+    function getGallery() {
+      return JSON.parse(localStorage.getItem('carouselImgs') || 'null') || [];
+    }
+    function saveGallery(data) { localStorage.setItem('carouselImgs', JSON.stringify(data)); }
+
+    function renderGallery() {
+      const imgs = getGallery();
+      const track = document.getElementById('carouselTrack');
+      const controls = document.getElementById('carousel-controls');
+      track.innerHTML = '';
+      controls.innerHTML = '';
+      if (!imgs.length) {
+        track.innerHTML = '<p class="empty-state" style="padding:24px;">Aún no has subido fotos. Usa "Agregar foto" arriba.</p>';
+        return;
+      }
+      const doubled = imgs.concat(imgs);
+      doubled.forEach(src => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = 'Imagen del torneo';
+        track.appendChild(img);
+      });
+      imgs.forEach((src, idx) => {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'display:flex; align-items:center; gap:6px; border:1px solid var(--border); border-radius:8px; padding:4px 8px;';
+        wrap.innerHTML = `<img src="${src}" style="width:32px;height:32px;object-fit:cover;border-radius:4px;"> <span style="font-size:0.8rem;">#${idx + 1}</span>
+          <button class="btn btn-danger btn-sm" style="padding:4px 8px;" onclick="deleteGalleryImg(${idx})"><i class="fas fa-trash"></i></button>`;
+        controls.appendChild(wrap);
+      });
+    }
+    function deleteGalleryImg(idx) {
+      const imgs = getGallery();
+      imgs.splice(idx, 1);
+      saveGallery(imgs);
+      renderGallery();
+    }
+
+    /* ---------- Gestión de páginas ---------- */
+    function initPages() {
       window.allTournamentPages = JSON.parse(localStorage.getItem('tournamentPages') || '[]');
       window.adminPages = window.allTournamentPages.filter(p => p.owner === localStorage.getItem('userEmail'));
       window.currentAdminPageId = localStorage.getItem('currentAdminPage');
@@ -607,92 +791,62 @@
         const container = document.getElementById('pagesList');
         const selectedName = document.getElementById('selectedPageName');
         container.innerHTML = '';
-
         if (!window.adminPages.length) {
-          container.innerHTML = '<p style="color: var(--text-secondary);">No hay pÃ¡ginas creadas todavÃ­a.</p>';
+          container.innerHTML = '<p class="empty-state">No hay páginas creadas todavía.</p>';
           selectedName.textContent = 'Ninguna';
           return;
         }
-
         window.adminPages.forEach(page => {
           const div = document.createElement('div');
-          div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; background: var(--surface);';
+          div.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:12px; border:1px solid var(--border); border-radius:8px; margin-bottom:8px; background:var(--surface);';
           div.innerHTML = `
+            <div><strong>${page.name}</strong> <span style="color:var(--text-secondary);">(${page.type})</span></div>
             <div>
-              <strong>${page.name}</strong> <span style="color: var(--text-secondary);">(${page.type})</span>
-            </div>
-            <div>
-              <button data-id="${page.id}" class="select-page" style="padding: 6px 12px; background: var(--primary); color: white; border: none; border-radius: 6px; margin-right: 8px; cursor: pointer;">Seleccionar</button>
-              <button data-id="${page.id}" class="delete-page" style="padding: 6px 12px; background: var(--error); color: white; border: none; border-radius: 6px; cursor: pointer;">Eliminar</button>
-            </div>
-          `;
+              <button data-id="${page.id}" class="btn btn-primary btn-sm select-page">Seleccionar</button>
+              <button data-id="${page.id}" class="btn btn-danger btn-sm delete-page">Eliminar</button>
+            </div>`;
           container.appendChild(div);
         });
+        selectedName.textContent = window.currentAdminPageId
+          ? (window.adminPages.find(p => p.id === window.currentAdminPageId)?.name || 'Ninguna')
+          : 'Ninguna';
 
-        if (window.currentAdminPageId) {
-          const selected = window.adminPages.find(p => p.id === window.currentAdminPageId);
-          selectedName.textContent = selected ? selected.name : 'Ninguna';
-        } else {
-          selectedName.textContent = 'Ninguna';
-        }
-
-        // Event listeners
-        container.querySelectorAll('.select-page').forEach(btn => {
-          btn.addEventListener('click', () => selectAdminPage(btn.getAttribute('data-id')));
-        });
-        container.querySelectorAll('.delete-page').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const id = btn.getAttribute('data-id');
-            window.allTournamentPages = window.allTournamentPages.filter(p => p.id !== id);
-            localStorage.setItem('tournamentPages', JSON.stringify(window.allTournamentPages));
-            window.adminPages = window.allTournamentPages.filter(p => p.owner === localStorage.getItem('userEmail'));
-            if (window.currentAdminPageId === id) {
-              window.currentAdminPageId = null;
-              localStorage.removeItem('currentAdminPage');
-            }
-            renderPagesList();
-          });
-        });
+        container.querySelectorAll('.select-page').forEach(btn => btn.addEventListener('click', () => selectAdminPage(btn.getAttribute('data-id'))));
+        container.querySelectorAll('.delete-page').forEach(btn => btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          window.allTournamentPages = window.allTournamentPages.filter(p => p.id !== id);
+          localStorage.setItem('tournamentPages', JSON.stringify(window.allTournamentPages));
+          window.adminPages = window.allTournamentPages.filter(p => p.owner === localStorage.getItem('userEmail'));
+          if (window.currentAdminPageId === id) { window.currentAdminPageId = null; localStorage.removeItem('currentAdminPage'); }
+          renderPagesList();
+        }));
       }
 
       function selectAdminPage(id) {
         window.currentAdminPageId = id;
         localStorage.setItem('currentAdminPage', id);
-        ['inicio', 'equipos', 'eventos', 'multimedia'].forEach(section => {
-          const element = document.getElementById(`editable-${section}`);
-          if (!element) return;
-          const pageSaved = localStorage.getItem(`text-${id}-${section}`);
-          const globalSaved = localStorage.getItem(`text-${section}`);
-          if (pageSaved !== null) element.innerHTML = pageSaved;
-          else if (globalSaved !== null) element.innerHTML = globalSaved;
-        });
         renderPagesList();
       }
 
-      // Create page form
-      const createPageForm = document.getElementById('createPageForm');
-      if (createPageForm) {
-        createPageForm.addEventListener('submit', e => {
-          e.preventDefault();
-          const name = document.getElementById('pageName').value.trim();
-          const type = document.getElementById('pageType').value;
-          if (!name) return;
-          const page = { id: String(Date.now()), name, type, owner: localStorage.getItem('userEmail') };
-          window.allTournamentPages.push(page);
-          localStorage.setItem('tournamentPages', JSON.stringify(window.allTournamentPages));
-          window.adminPages = window.allTournamentPages.filter(p => p.owner === localStorage.getItem('userEmail'));
-          renderPagesList();
-          selectAdminPage(page.id);
-          createPageForm.reset();
-        });
-      }
+      document.getElementById('createPageForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const name = document.getElementById('pageName').value.trim();
+        const type = document.getElementById('pageType').value;
+        if (!name) return;
+        const page = { id: String(Date.now()), name, type, owner: localStorage.getItem('userEmail') };
+        window.allTournamentPages.push(page);
+        localStorage.setItem('tournamentPages', JSON.stringify(window.allTournamentPages));
+        window.adminPages = window.allTournamentPages.filter(p => p.owner === localStorage.getItem('userEmail'));
+        renderPagesList();
+        selectAdminPage(page.id);
+        e.target.reset();
+      });
 
       renderPagesList();
-      if (!window.currentAdminPageId && window.adminPages.length) {
-        selectAdminPage(window.adminPages[0].id);
-      }
+    }
 
-      // Excel handling
+    /* ---------- Excel ---------- */
+    function initExcel() {
       let currentExcelData = {};
 
       function createTable(sheet, sheetName) {
@@ -714,8 +868,7 @@
             td.contentEditable = true;
             td.addEventListener('input', () => {
               currentExcelData[sheetName][r][td.cellIndex] = td.textContent;
-              const pageKey = window.currentAdminPageId ? `excelData-${window.currentAdminPageId}` : 'excelData';
-              localStorage.setItem(pageKey, JSON.stringify(currentExcelData));
+              localStorage.setItem('excelData', JSON.stringify(currentExcelData));
             });
           });
         }
@@ -724,899 +877,40 @@
 
       function distributeData(data) {
         const container = document.getElementById('tablesContainer');
-        if (container) {
-          container.innerHTML = '';
-          for (const sheetName in data) {
-            const sheet = data[sheetName];
-            const table = createTable(sheet, sheetName);
-            const title = document.createElement('h3');
-            title.textContent = sheetName;
-            title.style.cssText = 'color: var(--primary); margin: 24px 0 12px 0;';
-            container.appendChild(title);
-            container.appendChild(table);
-          }
+        container.innerHTML = '';
+        for (const sheetName in data) {
+          const title = document.createElement('h3');
+          title.textContent = sheetName;
+          title.style.cssText = 'color: var(--primary); margin: 24px 0 12px 0;';
+          container.appendChild(title);
+          container.appendChild(createTable(data[sheetName], sheetName));
         }
       }
 
-      function loadExcelData() {
-        const pageKey = window.currentAdminPageId ? `excelData-${window.currentAdminPageId}` : 'excelData';
-        const saved = localStorage.getItem(pageKey);
-        if (saved) {
-          try {
-            const data = JSON.parse(saved);
-            currentExcelData = data;
-            distributeData(data);
-          } catch (e) {
-            console.error('Error parsing excelData', e);
-          }
-        }
+      const saved = localStorage.getItem('excelData');
+      if (saved) {
+        try { currentExcelData = JSON.parse(saved); distributeData(currentExcelData); }
+        catch (e) { console.error('Error al leer datos de Excel guardados', e); }
       }
 
-      document.getElementById('excelInput').addEventListener('change', function(ev) {
+      document.getElementById('excelInput').addEventListener('change', function () {
         const file = this.files[0];
         if (!file) return;
         const reader = new FileReader();
-        reader.onload = function(evt) {
+        reader.onload = evt => {
           const data = new Uint8Array(evt.target.result);
-          const workbook = XLSX.read(data, {type:'array'});
+          const workbook = XLSX.read(data, { type: 'array' });
           const result = {};
           workbook.SheetNames.forEach(name => {
-            const ws = workbook.Sheets[name];
-            result[name] = XLSX.utils.sheet_to_json(ws, {header:1});
+            result[name] = XLSX.utils.sheet_to_json(workbook.Sheets[name], { header: 1 });
           });
           currentExcelData = result;
-          const pageKey = window.currentAdminPageId ? `excelData-${window.currentAdminPageId}` : 'excelData';
-          localStorage.setItem(pageKey, JSON.stringify(result));
+          localStorage.setItem('excelData', JSON.stringify(result));
           distributeData(result);
         };
-        reader.readAsDataURL(file);
+        reader.readAsArrayBuffer(file);
       });
-
-      loadExcelData();
-    });
+    }
   </script>
 </body>
 </html>
-      --azul-claro: #2d5a8c;
-      --azul-fondo: #e8f0f8;
-      --gris-fondo: #f5f5f5;
-      --blanco: #ffffff;
-      --gris-texto: #333;
-      --gris-claro: #999;
-      --rojo: #e74c3c;
-      --verde: #27ae60;
-      --dorado: #f39c12;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--gris-fondo);
-      color: var(--gris-texto);
-    }
-
-    /* Header */
-    .header {
-      background: linear-gradient(135deg, var(--azul-principal), var(--azul-claro));
-      color: white;
-      padding: 20px 0;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .header-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .header h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-    }
-
-    .header p {
-      font-size: 0.85rem;
-      opacity: 0.9;
-    }
-
-    .logout-btn {
-      background: rgba(255,255,255,0.2);
-      color: white;
-      border: 1px solid white;
-      padding: 8px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: all 0.3s;
-    }
-
-    .logout-btn:hover {
-      background: rgba(255,255,255,0.3);
-    }
-
-    /* NavegaciÃ³n */
-    .navbar {
-      background: var(--blanco);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      display: flex;
-      justify-content: center;
-      gap: 0;
-    }
-
-    .navbar a {
-      flex: 1;
-      max-width: 150px;
-      text-align: center;
-      color: var(--gris-texto);
-      text-decoration: none;
-      padding: 16px 20px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      border-bottom: 3px solid transparent;
-      transition: all 0.3s;
-    }
-
-    .navbar a:hover {
-      color: var(--azul-principal);
-      border-bottom-color: var(--dorado);
-      background: var(--azul-fondo);
-    }
-
-    /* Secciones */
-    .secciones-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    .seccion {
-      display: none;
-      padding: 40px 0;
-      animation: fadeIn 0.3s;
-    }
-
-    .seccion.activa {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    .seccion h2 {
-      color: var(--azul-principal);
-      font-size: 2rem;
-      margin-bottom: 30px;
-      border-bottom: 3px solid var(--dorado);
-      padding-bottom: 10px;
-    }
-
-    /* Hero */
-    .hero {
-      background: linear-gradient(135deg, var(--azul-principal), var(--azul-claro)),
-                  url('messi.jpg') center/cover;
-      color: white;
-      padding: 100px 20px;
-      text-align: center;
-      border-radius: 12px;
-      margin-bottom: 40px;
-      position: relative;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.4);
-      border-radius: 12px;
-    }
-
-    .hero h2 {
-      position: relative;
-      font-size: 2.5rem;
-      margin-bottom: 15px;
-    }
-
-    .hero p {
-      position: relative;
-      font-size: 1.1rem;
-      opacity: 0.95;
-    }
-
-    /* EstadÃ­sticas */
-    .estadisticas {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin-bottom: 40px;
-    }
-
-    .stat-card {
-      background: white;
-      padding: 25px;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      border-top: 4px solid var(--dorado);
-    }
-
-    .stat-value {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--azul-principal);
-      margin-bottom: 8px;
-    }
-
-    .stat-label {
-      font-size: 0.9rem;
-      color: var(--gris-claro);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    /* Tablas */
-    .tabla-moderna {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      margin: 20px 0;
-    }
-
-    .tabla-moderna thead {
-      background: linear-gradient(135deg, var(--azul-principal), var(--azul-claro));
-      color: white;
-    }
-
-    .tabla-moderna thead th {
-      padding: 15px 12px;
-      text-align: left;
-      font-weight: 600;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .tabla-moderna tbody tr {
-      border-bottom: 1px solid #eee;
-      transition: background-color 0.3s;
-    }
-
-    .tabla-moderna tbody tr:hover {
-      background-color: var(--azul-fondo);
-    }
-
-    .tabla-moderna tbody tr:nth-child(even) {
-      background-color: #fafafa;
-    }
-
-    .tabla-moderna tbody td {
-      padding: 14px 12px;
-      font-size: 0.9rem;
-    }
-
-    .posicion {
-      font-weight: 700;
-      color: var(--azul-principal);
-      width: 50px;
-      text-align: center;
-    }
-
-    .equipo-nombre {
-      font-weight: 600;
-      color: var(--azul-principal);
-    }
-
-    .puntos {
-      font-weight: 700;
-      color: var(--dorado);
-      text-align: center;
-    }
-
-    /* Grid de tarjetas */
-    .tarjetas-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 25px;
-      margin: 30px 0;
-    }
-
-    .tarjeta {
-      background: white;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .tarjeta:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    }
-
-    .tarjeta-header {
-      background: linear-gradient(135deg, var(--azul-principal), var(--azul-claro));
-      color: white;
-      padding: 20px;
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-
-    .tarjeta-content {
-      padding: 20px;
-    }
-
-    .evento-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid #eee;
-      font-size: 0.9rem;
-    }
-
-    .evento-item:last-child {
-      border-bottom: none;
-    }
-
-    .evento-fecha {
-      font-weight: 600;
-      color: var(--azul-principal);
-      min-width: 70px;
-    }
-
-    .evento-equipo {
-      flex: 1;
-      margin: 0 15px;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 0.8rem;
-    }
-
-    .badge-ganador {
-      background: #d4edda;
-      color: #155724;
-    }
-
-    .badge-perdedor {
-      background: #f8d7da;
-      color: #721c24;
-    }
-
-    .badge-empate {
-      background: #fff3cd;
-      color: #856404;
-    }
-
-    /* GalerÃ­a */
-    .carrusel {
-      overflow: hidden;
-      background: white;
-      border-radius: 10px;
-      margin: 30px 0;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-
-    .carrusel-track {
-      display: flex;
-      animation: deslizar 30s linear infinite;
-    }
-
-    .carrusel-track img {
-      min-width: 300px;
-      height: 250px;
-      object-fit: cover;
-      margin: 0 10px;
-    }
-
-    .carrusel:hover .carrusel-track {
-      animation-play-state: paused;
-    }
-
-    @keyframes deslizar {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    /* Footer */
-    .footer {
-      background: var(--azul-principal);
-      color: white;
-      text-align: center;
-      padding: 30px 20px;
-      margin-top: 60px;
-      border-top: 3px solid var(--dorado);
-    }
-
-    .footer p {
-      margin: 8px 0;
-      opacity: 0.9;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .header-content {
-        flex-direction: column;
-        gap: 15px;
-      }
-
-      .header h1 {
-        font-size: 1.4rem;
-      }
-
-      .navbar {
-        flex-wrap: wrap;
-      }
-
-      .navbar a {
-        max-width: 100%;
-        flex: 1 1 50%;
-      }
-
-      .hero {
-        padding: 60px 20px;
-      }
-
-      .hero h2 {
-        font-size: 1.8rem;
-      }
-
-      .seccion h2 {
-        font-size: 1.5rem;
-      }
-
-      .tabla-moderna thead th,
-      .tabla-moderna tbody td {
-        padding: 10px 8px;
-        font-size: 0.85rem;
-      }
-    }
-  </style>
-</head>
-<body>
-  <!-- Header -->
-  <header class="header">
-    <div class="header-content">
-      <div>
-        <h1>âš½ Torneo Municipal</h1>
-        <p>FÃºtbol Profesional 2026</p>
-      </div>
-      <button class="logout-btn" onclick="logout()">Cerrar SesiÃ³n</button>
-    </div>
-  </header>
-
-  <!-- NavegaciÃ³n -->
-  <nav class="navbar">
-    <a onclick="mostrarSeccion('inicio')">Inicio</a>
-    <a onclick="mostrarSeccion('competencias')">Competencias</a>
-    <a onclick="mostrarSeccion('equipos')">Equipos</a>
-    <a onclick="mostrarSeccion('eventos')">Eventos</a>
-    <a onclick="mostrarSeccion('multimedia')">GalerÃ­a</a>
-  </nav>
-
-  <!-- Contenido Principal -->
-  <div class="secciones-container">
-    <!-- Inicio -->
-    <section id="inicio" class="seccion activa">
-      <div class="hero">
-        <h2>Bienvenido al Torneo</h2>
-        <p>Vive la pasiÃ³n del fÃºtbol con los mejores equipos locales</p>
-      </div>
-      <div class="imagen-seccion" style="margin-top: 20px; text-align:center;">
-        <label style="display:block; border: 2px dashed #ccc; border-radius:12px; padding:20px; color:#666; cursor:pointer;">
-          Cargar imagen de bienvenida
-          <input type="file" class="input-imagen" accept="image/*" style="display:none;" onchange="handleImageUpload(event, 'imgInicio')">
-        </label>
-        <img id="imgInicio" src="" alt="Imagen de inicio" style="max-width:400px; margin-top:15px; display:none; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,.15);">
-      </div>
-
-      <h2>Resumen General</h2>
-      <div class="estadisticas">
-        <div class="stat-card">
-          <div class="stat-value">14</div>
-          <div class="stat-label">Equipos</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">48</div>
-          <div class="stat-label">Partidos</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">168</div>
-          <div class="stat-label">Goles</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">12</div>
-          <div class="stat-label">Jornadas</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Competencias -->
-    <section id="competencias" class="seccion">
-      <h2>Tabla de Posiciones</h2>
-      <div class="imagen-seccion" style="margin:15px 0; text-align:center;">
-        <label style="display:inline-block; border: 2px dashed #ccc; border-radius:12px; padding:16px; color:#666; cursor:pointer;">
-          Cargar imagen de competencias
-          <input type="file" class="input-imagen" accept="image/*" style="display:none;" onchange="handleImageUpload(event, 'imgCompetencias')">
-        </label>
-        <img id="imgCompetencias" src="" alt="Imagen competencias" style="display:none; max-width:450px; margin-top:15px; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,.15);">
-      </div>
-      <table class="tabla-moderna">
-        <thead>
-          <tr>
-            <th>Pos</th>
-            <th>Equipo</th>
-            <th>PJ</th>
-            <th>G</th>
-            <th>E</th>
-            <th>P</th>
-            <th>GF</th>
-            <th>GC</th>
-            <th>DG</th>
-            <th>Pts</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="posicion">1</td>
-            <td class="equipo-nombre">Construservicios</td>
-            <td>12</td>
-            <td>9</td>
-            <td>3</td>
-            <td>0</td>
-            <td>35</td>
-            <td>8</td>
-            <td>+27</td>
-            <td class="puntos">31</td>
-          </tr>
-          <tr>
-            <td class="posicion">2</td>
-            <td class="equipo-nombre">UPTC - Medic Salud</td>
-            <td>12</td>
-            <td>9</td>
-            <td>2</td>
-            <td>1</td>
-            <td>39</td>
-            <td>13</td>
-            <td>+26</td>
-            <td class="puntos">30</td>
-          </tr>
-          <tr>
-            <td class="posicion">3</td>
-            <td class="equipo-nombre">Club Deportivo San Jose</td>
-            <td>12</td>
-            <td>9</td>
-            <td>1</td>
-            <td>2</td>
-            <td>27</td>
-            <td>9</td>
-            <td>+18</td>
-            <td class="puntos">29</td>
-          </tr>
-          <tr>
-            <td class="posicion">4</td>
-            <td class="equipo-nombre">Reserva Activa</td>
-            <td>12</td>
-            <td>9</td>
-            <td>0</td>
-            <td>3</td>
-            <td>35</td>
-            <td>15</td>
-            <td>+20</td>
-            <td class="puntos">27</td>
-          </tr>
-          <tr>
-            <td class="posicion">5</td>
-            <td class="equipo-nombre">Amigos Edwin Rodriguez</td>
-            <td>12</td>
-            <td>8</td>
-            <td>0</td>
-            <td>4</td>
-            <td>34</td>
-            <td>28</td>
-            <td>+6</td>
-            <td class="puntos">24</td>
-          </tr>
-          <tr>
-            <td class="posicion">6</td>
-            <td class="equipo-nombre">Radiadores la Valle</td>
-            <td>12</td>
-            <td>7</td>
-            <td>2</td>
-            <td>3</td>
-            <td>32</td>
-            <td>20</td>
-            <td>+12</td>
-            <td class="puntos">23</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- Equipos -->
-    <section id="equipos" class="seccion">
-      <h2>Equipos Participantes</h2>
-      <div class="imagen-seccion" style="margin:15px 0; text-align:center;">
-        <label style="display:inline-block; border: 2px dashed #ccc; border-radius:12px; padding:16px; color:#666; cursor:pointer;">
-          Cargar imagen de equipos
-          <input type="file" class="input-imagen" accept="image/*" style="display:none;" onchange="handleImageUpload(event, 'imgEquipos')">
-        </label>
-        <img id="imgEquipos" src="" alt="Imagen equipos" style="display:none; max-width:450px; margin-top:15px; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,.15);">
-      </div>
-      <div class="tarjetas-grid">
-        <div class="tarjeta">
-          <div class="tarjeta-header">ðŸ¥‡ MÃ¡ximo Goleador</div>
-          <div class="tarjeta-content">
-            <div style="text-align: center; padding: 20px 0;">
-              <div style="font-size: 2.5rem; font-weight: 700; color: var(--azul-principal);">12</div>
-              <div style="font-size: 1.1rem; font-weight: 600; margin-top: 10px;">Carlos LÃ³pez</div>
-              <div style="color: var(--gris-claro); margin-top: 5px;">Construservicios</div>
-            </div>
-            <table class="tabla-moderna" style="margin: 0;">
-              <thead>
-                <tr>
-                  <th>Jugador</th>
-                  <th>Goles</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Jorge MartÃ­nez</td>
-                  <td style="text-align: center;">11</td>
-                </tr>
-                <tr>
-                  <td>Diego RodrÃ­guez</td>
-                  <td style="text-align: center;">9</td>
-                </tr>
-                <tr>
-                  <td>Juan GarcÃ­a</td>
-                  <td style="text-align: center;">8</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="tarjeta">
-          <div class="tarjeta-header">ðŸŽ¯ Mayor Asistidor</div>
-          <div class="tarjeta-content">
-            <div style="text-align: center; padding: 20px 0;">
-              <div style="font-size: 2.5rem; font-weight: 700; color: var(--azul-principal);">8</div>
-              <div style="font-size: 1.1rem; font-weight: 600; margin-top: 10px;">Miguel Paredes</div>
-              <div style="color: var(--gris-claro); margin-top: 5px;">UPTC - Medic Salud</div>
-            </div>
-            <table class="tabla-moderna" style="margin: 0;">
-              <thead>
-                <tr>
-                  <th>Jugador</th>
-                  <th>Asist.</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Fernando LÃ³pez</td>
-                  <td style="text-align: center;">7</td>
-                </tr>
-                <tr>
-                  <td>Roberto SÃ¡nchez</td>
-                  <td style="text-align: center;">6</td>
-                </tr>
-                <tr>
-                  <td>Pablo GonzÃ¡lez</td>
-                  <td style="text-align: center;">5</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="tarjeta">
-          <div class="tarjeta-header">ðŸŸ¥ Disciplina</div>
-          <div class="tarjeta-content">
-            <table class="tabla-moderna" style="margin: 0;">
-              <thead>
-                <tr>
-                  <th>Equipo</th>
-                  <th>ðŸŸ¨</th>
-                  <th>ðŸŸ¥</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Radiadores</td>
-                  <td style="text-align: center;">8</td>
-                  <td style="text-align: center;">1</td>
-                </tr>
-                <tr>
-                  <td>Comuneros</td>
-                  <td style="text-align: center;">6</td>
-                  <td style="text-align: center;">0</td>
-                </tr>
-                <tr>
-                  <td>CDA Ecoauto</td>
-                  <td style="text-align: center;">5</td>
-                  <td style="text-align: center;">2</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Eventos -->
-    <section id="eventos" class="seccion">
-      <h2>PrÃ³ximos Partidos</h2>
-      <div class="imagen-seccion" style="margin:15px 0; text-align:center;">
-        <label style="display:inline-block; border: 2px dashed #ccc; border-radius:12px; padding:16px; color:#666; cursor:pointer;">
-          Cargar imagen de eventos
-          <input type="file" class="input-imagen" accept="image/*" style="display:none;" onchange="handleImageUpload(event, 'imgEventos')">
-        </label>
-        <img id="imgEventos" src="" alt="Imagen eventos" style="display:none; max-width:450px; margin-top:15px; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,.15);">
-      </div>
-      <div class="tarjetas-grid">
-        <div class="tarjeta">
-          <div class="tarjeta-header">â° Jornada 12</div>
-          <div class="tarjeta-content">
-            <div class="evento-item">
-              <span class="evento-fecha">20-jul</span>
-              <span class="evento-equipo"><strong>Semillitas</strong> vs VidrierÃ­a</span>
-              <span class="badge badge-ganador">1-0</span>
-            </div>
-            <div class="evento-item">
-              <span class="evento-fecha">20-jul</span>
-              <span class="evento-equipo"><strong>Radiadores</strong> vs Amigos</span>
-              <span class="badge badge-perdedor">1-2</span>
-            </div>
-            <div class="evento-item">
-              <span class="evento-fecha">20-jul</span>
-              <span class="evento-equipo"><strong>Comuneros</strong> vs CDA</span>
-              <span class="badge badge-ganador">2-0</span>
-            </div>
-            <div class="evento-item">
-              <span class="evento-fecha">19-jul</span>
-              <span class="evento-equipo"><strong>Reserva</strong> vs Amigos 2020</span>
-              <span class="badge badge-ganador">1-0</span>
-            </div>
-            <div class="evento-item">
-              <span class="evento-fecha">20-jul</span>
-              <span class="evento-equipo"><strong>Sama</strong> vs San Jose</span>
-              <span class="badge badge-perdedor">0-3</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="tarjeta">
-          <div class="tarjeta-header">ðŸ† Ãšltimos Resultados</div>
-          <div class="tarjeta-content">
-            <div class="evento-item">
-              <span class="evento-fecha">18-jul</span>
-              <span class="evento-equipo"><strong>Construservicios</strong> vs UPTC</span>
-              <span class="badge badge-ganador">2-1</span>
-            </div>
-            <div class="evento-item">
-              <span class="evento-fecha">17-jul</span>
-              <span class="evento-equipo"><strong>San Jose</strong> vs Radiadores</span>
-              <span class="badge badge-ganador">3-2</span>
-            </div>
-            <div class="evento-item">
-              <span class="evento-fecha">16-jul</span>
-              <span class="evento-equipo"><strong>Reserva</strong> vs CDA</span>
-              <span class="badge badge-empate">2-2</span>
-            </div>
-            <div class="evento-item">
-              <span class="evento-fecha">15-jul</span>
-              <span class="evento-equipo"><strong>Construservicios</strong> vs Sama</span>
-              <span class="badge badge-ganador">3-0</span>
-            </div>
-            <div class="evento-item">
-              <span class="evento-fecha">14-jul</span>
-              <span class="evento-equipo"><strong>UPTC</strong> vs Comuneros</span>
-              <span class="badge badge-ganador">4-1</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- GalerÃ­a -->
-    <section id="multimedia" class="seccion">
-      <h2>GalerÃ­a de Fotos</h2>
-      <p style="margin-bottom: 20px; color: var(--gris-claro);">Desliza para ver mÃ¡s imÃ¡genes (pausa al pasar el ratÃ³n)</p>
-      <div class="imagen-seccion" style="margin:15px 0; text-align:center;">
-        <label style="display:inline-block; border: 2px dashed #ccc; border-radius:12px; padding:16px; color:#666; cursor:pointer;">
-          Cargar imagen de galerÃ­a
-          <input type="file" class="input-imagen" accept="image/*" style="display:none;" onchange="handleImageUpload(event, 'imgGaleria')">
-        </label>
-        <img id="imgGaleria" src="" alt="Imagen galerÃ­a" style="display:none; max-width:450px; margin-top:15px; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,.15);">
-      </div>
-      <div class="carrusel">
-        <div class="carrusel-track">
-          <img src="fotos/partido1.jpg" alt="Partido destacado 1">
-          <img src="fotos/partido2.jpg" alt="Partido destacado 2">
-          <img src="fotos/jugador1.jpg" alt="Jugador destacado">
-          <img src="fotos/equipo1.jpg" alt="Equipo ganador">
-          <img src="fotos/celebracion.jpg" alt="CelebraciÃ³n">
-          
-          <img src="fotos/partido1.jpg" alt="Partido destacado 1">
-          <img src="fotos/partido2.jpg" alt="Partido destacado 2">
-          <img src="fotos/jugador1.jpg" alt="Jugador destacado">
-          <img src="fotos/equipo1.jpg" alt="Equipo ganador">
-          <img src="fotos/celebracion.jpg" alt="CelebraciÃ³n">
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <p><strong>Torneo Municipal de FÃºtbol 2026</strong></p>
-    <p>Desarrollado con pasiÃ³n por el fÃºtbol local</p>
-    <p style="margin-top: 15px; font-size: 0.85rem;">Â© 2026 Todos los derechos reservados</p>
-  </footer>
-
-  <script>
-    function mostrarSeccion(id) {
-      // Ocultar todas las secciones
-      const secciones = document.querySelectorAll('.seccion');
-      secciones.forEach(sec => sec.classList.remove('activa'));
-      
-      // Mostrar la secciÃ³n seleccionada
-      document.getElementById(id).classList.add('activa');
-      
-      // Scroll hacia arriba
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function logout() {
-      if(confirm('Â¿Deseas cerrar sesiÃ³n?')) {
-        localStorage.removeItem('role');
-        localStorage.removeItem('userEmail');
-        window.location.href = 'login.html';
-      }
-    }
-
-    function handleImageUpload(event, imageId) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = document.getElementById(imageId);
-        img.src = e.target.result;
-        img.style.display = 'block';
-      };
-      reader.readAsDataURL(file);
-    }
-
-    // Verificar si el usuario es administrador
-    document.addEventListener('DOMContentLoaded', () => {
-      const role = localStorage.getItem('role');
-      if (role !== 'admin') {
-        window.location.href = 'login.html';
-      }
-    });
-  </script>
-</body>
-</html>
-
