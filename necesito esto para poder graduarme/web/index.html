@@ -22,8 +22,9 @@
         <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('competencias', event)"><i class="fas fa-table"></i> Competencias</a></div>
         <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('equipos', event)"><i class="fas fa-users"></i> Equipos</a></div>
         <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('eventos', event)"><i class="fas fa-calendar"></i> Eventos</a></div>
-        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('multimedia', event)"><i class="fas fa-images"></i> Multimedia</a></div>
+        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('plantillas', event)"><i class="fas fa-people-group"></i> Plantillas</a></div>
         <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('datos', event)"><i class="fas fa-database"></i> Datos</a></div>
+        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('configuracion', event)"><i class="fas fa-palette"></i> Configuración</a></div>
       </nav>
 
       <div class="sidebar-footer">
@@ -256,23 +257,40 @@
           </div>
         </section>
 
-        <!-- Multimedia -->
-        <section id="multimedia" class="section">
+        <!-- Plantillas -->
+        <section id="plantillas" class="section">
           <div class="section-card">
-            <div class="card-header"><h2><i class="fas fa-images"></i> Galería del Torneo</h2><p>Imágenes y momentos destacados</p></div>
+            <div class="card-header">
+              <h2><i class="fas fa-people-group"></i> Plantilla del Equipo</h2>
+              <p>Director técnico y jugadores organizados por puesto</p>
+            </div>
             <div class="card-content">
-              <div id="editable-multimedia" class="editable-content" contenteditable="true">
-                Los mejores momentos capturados en cada jornada.
+              <div class="form-inline" style="margin-bottom: 24px;">
+                <select id="squadTeamSelect" style="max-width: 320px;"></select>
               </div>
-              <div style="margin-bottom:16px;">
-                <label class="file-upload">
-                  <span class="file-upload-label"><i class="fas fa-plus"></i> Agregar foto</span>
-                  <input type="file" id="galleryAdd" accept="image/*">
+
+              <div id="squadEmptyState" class="empty-state" style="display:none;">
+                Primero agrega equipos en la pestaña <strong>Competencias</strong> para poder armar sus plantillas.
+              </div>
+
+              <div id="squadEditor" style="display:none;">
+                <label class="field" style="display:block; margin-bottom:22px; max-width:420px;">
+                  <span style="font-size:0.85rem; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:6px;"><i class="fas fa-clipboard-user"></i> Director Técnico</span>
+                  <input type="text" id="squadDtInput" placeholder="Nombre del director técnico" class="form-inline-single">
                 </label>
-              </div>
-              <div id="carousel-controls" style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px;"></div>
-              <div class="carousel">
-                <div class="carousel-track" id="carouselTrack"></div>
+
+                <form id="squadPlayerForm" class="form-inline">
+                  <input type="text" id="squadPlayerName" placeholder="Nombre del jugador" required>
+                  <select id="squadPlayerPosition">
+                    <option value="Portero">Portero</option>
+                    <option value="Defensa">Defensa</option>
+                    <option value="Mediocampista">Mediocampista</option>
+                    <option value="Delantero">Delantero</option>
+                  </select>
+                  <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar jugador</button>
+                </form>
+
+                <div class="squad-positions" id="squadPositions"></div>
               </div>
             </div>
           </div>
@@ -295,6 +313,48 @@
             </div>
           </div>
         </section>
+
+        <!-- Configuración -->
+        <section id="configuracion" class="section">
+          <div class="section-card">
+            <div class="card-header">
+              <h2><i class="fas fa-palette"></i> Apariencia</h2>
+              <p>Personaliza los colores y el modo de visualización del panel y de la vista pública</p>
+            </div>
+            <div class="card-content">
+              <div class="theme-toggle-row">
+                <div>
+                  <div class="theme-toggle-label"><i class="fas fa-moon"></i> Modo oscuro</div>
+                  <div class="theme-toggle-desc">Cambia el fondo y las tarjetas a tonos oscuros. Aplica también a la vista pública.</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="darkModeToggle">
+                  <span class="switch-slider"></span>
+                </label>
+              </div>
+
+              <div class="theme-toggle-row" style="display:block;">
+                <div style="margin-bottom: 4px;">
+                  <div class="theme-toggle-label"><i class="fas fa-fill-drip"></i> Color principal</div>
+                  <div class="theme-toggle-desc">Elige un color predefinido o uno personalizado — reemplaza el azul en botones, íconos y acentos.</div>
+                </div>
+                <div class="color-swatches" id="colorSwatches"></div>
+                <div class="color-custom-row">
+                  <input type="color" id="customColorInput" value="#2563eb">
+                  <span class="theme-toggle-desc">Color personalizado</span>
+                </div>
+              </div>
+
+              <div class="theme-toggle-row">
+                <div>
+                  <div class="theme-toggle-label"><i class="fas fa-rotate-left"></i> Restablecer</div>
+                  <div class="theme-toggle-desc">Vuelve al azul original y al modo claro.</div>
+                </div>
+                <button class="btn btn-outline btn-sm" id="resetThemeBtn"><i class="fas fa-rotate-left"></i> Restablecer</button>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
   </div>
@@ -313,8 +373,9 @@
       initStandings();
       initTeamsExtra();
       initEvents();
-      initGallery();
+      initSquads();
       initExcel();
+      initTheme();
       refreshHomeStats();
     });
 
@@ -337,7 +398,7 @@
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       const el = document.getElementById(sectionId);
       if (el) el.classList.add('active');
-      const titles = { inicio: 'Inicio', competencias: 'Competencias', equipos: 'Equipos', eventos: 'Eventos', multimedia: 'Multimedia', datos: 'Datos' };
+      const titles = { inicio: 'Inicio', competencias: 'Competencias', equipos: 'Equipos', eventos: 'Eventos', plantillas: 'Plantillas', datos: 'Datos', configuracion: 'Configuración' };
       document.getElementById('pageTitle').textContent = titles[sectionId] || 'Panel';
     }
 
@@ -383,7 +444,7 @@
 
     /* ---------- Textos editables ---------- */
     function initEditableTexts() {
-      ['inicio', 'equipos', 'eventos', 'multimedia'].forEach(section => {
+      ['inicio', 'equipos', 'eventos'].forEach(section => {
         const el = document.getElementById(`editable-${section}`);
         if (!el) return;
         const saved = localStorage.getItem(`text-${section}`);
@@ -468,6 +529,7 @@
       populateTeamSelect(document.getElementById('upAway'));
       populateTeamSelect(document.getElementById('resHome'));
       populateTeamSelect(document.getElementById('resAway'));
+      if (typeof refreshSquadTeamSelect === 'function') refreshSquadTeamSelect();
     }
 
     /* ---------- Tabla de posiciones ---------- */
@@ -870,58 +932,114 @@
       renderResultsList();
     }
 
-    /* ---------- Galería ---------- */
-    function initGallery() {
-      renderGallery();
-      document.getElementById('galleryAdd').addEventListener('change', function () {
-        const file = this.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = e => {
-          const imgs = getGallery();
-          imgs.push(e.target.result);
-          saveGallery(imgs);
-          renderGallery();
-        };
-        reader.readAsDataURL(file);
-        this.value = '';
-      });
-    }
-    function getGallery() {
-      return JSON.parse(localStorage.getItem('carouselImgs') || 'null') || [];
-    }
-    function saveGallery(data) { localStorage.setItem('carouselImgs', JSON.stringify(data)); }
+    /* ---------- Plantillas (jugadores por puesto + DT) ---------- */
+    const SQUAD_POSITIONS = ['Portero', 'Defensa', 'Mediocampista', 'Delantero'];
 
-    function renderGallery() {
-      const imgs = getGallery();
-      const track = document.getElementById('carouselTrack');
-      const controls = document.getElementById('carousel-controls');
-      track.innerHTML = '';
-      controls.innerHTML = '';
-      if (!imgs.length) {
-        track.innerHTML = '<p class="empty-state" style="padding:24px;">Aún no has subido fotos. Usa "Agregar foto" arriba.</p>';
+    function getSquads() {
+      return JSON.parse(localStorage.getItem('squads') || 'null') || {};
+    }
+    function saveSquads(data) { localStorage.setItem('squads', JSON.stringify(data)); }
+    function getTeamSquad(team) {
+      const squads = getSquads();
+      return squads[team] || { dt: '', players: [] };
+    }
+
+    let currentSquadTeam = null;
+
+    function initSquads() {
+      const select = document.getElementById('squadTeamSelect');
+      select.addEventListener('change', () => {
+        currentSquadTeam = select.value;
+        renderSquadEditor();
+      });
+
+      document.getElementById('squadDtInput').addEventListener('blur', function () {
+        if (!currentSquadTeam) return;
+        const squads = getSquads();
+        if (!squads[currentSquadTeam]) squads[currentSquadTeam] = { dt: '', players: [] };
+        squads[currentSquadTeam].dt = this.value.trim();
+        saveSquads(squads);
+      });
+
+      document.getElementById('squadPlayerForm').addEventListener('submit', e => {
+        e.preventDefault();
+        if (!currentSquadTeam) return;
+        const nameInput = document.getElementById('squadPlayerName');
+        const posSelect = document.getElementById('squadPlayerPosition');
+        const name = nameInput.value.trim();
+        if (!name) return;
+        const squads = getSquads();
+        if (!squads[currentSquadTeam]) squads[currentSquadTeam] = { dt: '', players: [] };
+        squads[currentSquadTeam].players.push({ name, position: posSelect.value });
+        saveSquads(squads);
+        nameInput.value = '';
+        nameInput.focus();
+        renderSquadPositions();
+      });
+
+      refreshSquadTeamSelect();
+    }
+
+    function refreshSquadTeamSelect() {
+      const select = document.getElementById('squadTeamSelect');
+      const roster = getRoster();
+      const emptyState = document.getElementById('squadEmptyState');
+      const editor = document.getElementById('squadEditor');
+
+      if (!roster.length) {
+        select.innerHTML = '';
+        emptyState.style.display = 'block';
+        editor.style.display = 'none';
+        currentSquadTeam = null;
         return;
       }
-      const doubled = imgs.concat(imgs);
-      doubled.forEach(src => {
-        const img = document.createElement('img');
-        img.src = src;
-        img.alt = 'Imagen del torneo';
-        track.appendChild(img);
-      });
-      imgs.forEach((src, idx) => {
-        const wrap = document.createElement('div');
-        wrap.style.cssText = 'display:flex; align-items:center; gap:6px; border:1px solid var(--border); border-radius:8px; padding:4px 8px;';
-        wrap.innerHTML = `<img src="${src}" style="width:32px;height:32px;object-fit:cover;border-radius:4px;"> <span style="font-size:0.8rem;">#${idx + 1}</span>
-          <button class="btn btn-danger btn-sm" style="padding:4px 8px;" onclick="deleteGalleryImg(${idx})"><i class="fas fa-trash"></i></button>`;
-        controls.appendChild(wrap);
+
+      emptyState.style.display = 'none';
+      editor.style.display = 'block';
+      const previousValue = currentSquadTeam && roster.includes(currentSquadTeam) ? currentSquadTeam : roster[0];
+      select.innerHTML = roster.map(t => `<option value="${t}" ${t === previousValue ? 'selected' : ''}>${t}</option>`).join('');
+      currentSquadTeam = previousValue;
+      renderSquadEditor();
+    }
+
+    function renderSquadEditor() {
+      if (!currentSquadTeam) return;
+      const squad = getTeamSquad(currentSquadTeam);
+      document.getElementById('squadDtInput').value = squad.dt || '';
+      renderSquadPositions();
+    }
+
+    function renderSquadPositions() {
+      const squad = getTeamSquad(currentSquadTeam);
+      const box = document.getElementById('squadPositions');
+      box.innerHTML = '';
+      SQUAD_POSITIONS.forEach(position => {
+        const players = squad.players
+          .map((p, idx) => ({ ...p, idx }))
+          .filter(p => p.position === position);
+
+        const group = document.createElement('div');
+        group.className = 'squad-group';
+        group.innerHTML = `
+          <div class="squad-group-header"><span>${position}</span><span class="squad-count">${players.length}</span></div>
+          ${players.length
+            ? `<ul class="squad-player-list">${players.map(p => `
+                <li><span>${p.name}</span>
+                  <button title="Quitar jugador" onclick="removeSquadPlayer(${p.idx})"><i class="fas fa-xmark"></i></button>
+                </li>`).join('')}</ul>`
+            : `<div class="squad-empty-group">Sin jugadores en este puesto.</div>`}
+        `;
+        box.appendChild(group);
       });
     }
-    function deleteGalleryImg(idx) {
-      const imgs = getGallery();
-      imgs.splice(idx, 1);
-      saveGallery(imgs);
-      renderGallery();
+
+    function removeSquadPlayer(idx) {
+      if (!currentSquadTeam) return;
+      const squads = getSquads();
+      if (!squads[currentSquadTeam]) return;
+      squads[currentSquadTeam].players.splice(idx, 1);
+      saveSquads(squads);
+      renderSquadPositions();
     }
 
     /* ---------- Excel: importación inteligente ---------- */
@@ -1060,6 +1178,99 @@
           distributeData(result);
         };
         reader.readAsArrayBuffer(file);
+      });
+    }
+
+    /* ---------- Configuración de apariencia (tema) ---------- */
+    function hexToRgb(hex) {
+      hex = hex.replace('#', '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const num = parseInt(hex, 16) || 0;
+      return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+    }
+    function rgbToHex(r, g, b) {
+      return '#' + [r, g, b].map(x => Math.max(0, Math.min(255, Math.round(x))).toString(16).padStart(2, '0')).join('');
+    }
+    function mixColor(hex, targetHex, weight) {
+      const c1 = hexToRgb(hex), c2 = hexToRgb(targetHex);
+      return rgbToHex(
+        c1.r * (1 - weight) + c2.r * weight,
+        c1.g * (1 - weight) + c2.g * weight,
+        c1.b * (1 - weight) + c2.b * weight
+      );
+    }
+    function getThemeSettings() {
+      return JSON.parse(localStorage.getItem('themeSettings') || 'null') || { dark: false, primary: '#2563eb' };
+    }
+    function saveThemeSettings(s) { localStorage.setItem('themeSettings', JSON.stringify(s)); }
+
+    function applyTheme(settings) {
+      const root = document.documentElement;
+      const { r, g, b } = hexToRgb(settings.primary);
+      root.style.setProperty('--primary', settings.primary);
+      root.style.setProperty('--primary-dark', mixColor(settings.primary, '#000000', 0.18));
+      root.style.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
+      const lightTint = settings.dark ? `rgba(${r}, ${g}, ${b}, 0.16)` : mixColor(settings.primary, '#ffffff', 0.88);
+      root.style.setProperty('--primary-light', lightTint);
+      if (document.body) document.body.classList.toggle('dark-mode', !!settings.dark);
+    }
+
+    // Aplicar de inmediato para evitar parpadeo al cargar
+    applyTheme(getThemeSettings());
+
+    const THEME_COLORS = ['#2563eb', '#7c3aed', '#059669', '#dc2626', '#ea580c', '#0891b2', '#db2777', '#65a30d'];
+
+    function initTheme() {
+      const settings = getThemeSettings();
+      const darkToggle = document.getElementById('darkModeToggle');
+      const customInput = document.getElementById('customColorInput');
+      const swatchBox = document.getElementById('colorSwatches');
+
+      darkToggle.checked = !!settings.dark;
+      darkToggle.addEventListener('change', () => {
+        const s = getThemeSettings();
+        s.dark = darkToggle.checked;
+        saveThemeSettings(s);
+        applyTheme(s);
+      });
+
+      function renderSwatches() {
+        const current = getThemeSettings().primary.toLowerCase();
+        swatchBox.innerHTML = '';
+        THEME_COLORS.forEach(color => {
+          const el = document.createElement('div');
+          el.className = 'color-swatch' + (color.toLowerCase() === current ? ' active' : '');
+          el.style.background = color;
+          el.title = color;
+          el.addEventListener('click', () => {
+            const s = getThemeSettings();
+            s.primary = color;
+            saveThemeSettings(s);
+            applyTheme(s);
+            customInput.value = color;
+            renderSwatches();
+          });
+          swatchBox.appendChild(el);
+        });
+      }
+      renderSwatches();
+
+      customInput.value = settings.primary;
+      customInput.addEventListener('input', () => {
+        const s = getThemeSettings();
+        s.primary = customInput.value;
+        saveThemeSettings(s);
+        applyTheme(s);
+        renderSwatches();
+      });
+
+      document.getElementById('resetThemeBtn').addEventListener('click', () => {
+        const s = { dark: false, primary: '#2563eb' };
+        saveThemeSettings(s);
+        applyTheme(s);
+        darkToggle.checked = false;
+        customInput.value = '#2563eb';
+        renderSwatches();
       });
     }
   </script>
