@@ -253,10 +253,6 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      if (!localStorage.getItem('role')) {
-        window.location.href = 'login.html';
-        return;
-      }
       loadHero();
       loadStats();
       loadTexts();
