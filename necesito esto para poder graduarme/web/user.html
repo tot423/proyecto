@@ -336,6 +336,32 @@
       return `<span class="team-crest" style="--crest-size:${size}px;--crest-color:${teamColor(name)}">${teamInitials(name)}</span>`;
     }
 
+    /* ---------- Formato de fecha y hora ---------- */
+    const MONTH_NAMES_ES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    const WEEKDAY_NAMES_ES = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+
+    function formatFecha(value, withWeekday) {
+      if (!value) return '';
+      const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+      if (!match) return value;
+      const [, y, m, d] = match;
+      const date = new Date(Number(y), Number(m) - 1, Number(d));
+      const base = `${Number(d)} ${MONTH_NAMES_ES[Number(m) - 1]} ${y}`;
+      return withWeekday ? `${WEEKDAY_NAMES_ES[date.getDay()]} ${base}` : base;
+    }
+
+    function formatHora(value) {
+      if (!value) return '';
+      const match = /^(\d{2}):(\d{2})$/.exec(value);
+      if (!match) return value;
+      let hour = parseInt(match[1], 10);
+      const minutes = match[2];
+      const ampm = hour >= 12 ? 'pm' : 'am';
+      hour = hour % 12;
+      if (hour === 0) hour = 12;
+      return `${hour}:${minutes} ${ampm}`;
+    }
+
     const defaultStandings = [
       { team: 'Construservicios', g: 9, e: 3, p: 0, gf: 35, gc: 8 },
       { team: 'UPTC - Medic Salud', g: 9, e: 2, p: 1, gf: 39, gc: 13 },
@@ -462,8 +488,8 @@
 
     function loadEvents() {
       const upcoming = JSON.parse(localStorage.getItem('upcomingMatches') || 'null') || [
-        { fecha: '20-jul', home: 'Construservicios', away: 'Reserva Activa', hora: '3:00 pm' },
-        { fecha: '20-jul', home: 'Radiadores la Valle', away: 'Amigos Edwin Rodriguez', hora: '4:30 pm' }
+        { fecha: '2026-07-20', home: 'Construservicios', away: 'Reserva Activa', hora: '15:00' },
+        { fecha: '2026-07-20', home: 'Radiadores la Valle', away: 'Amigos Edwin Rodriguez', hora: '16:30' }
       ];
       const upcomingBox = document.getElementById('upcomingList');
       upcomingBox.innerHTML = '';
@@ -471,15 +497,15 @@
       upcoming.forEach(m => {
         const row = document.createElement('div');
         row.style.cssText = 'display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:8px;';
-        row.innerHTML = `<span style="display:flex; align-items:center; flex-wrap:wrap; gap:6px;"><strong>${m.fecha}</strong> ·
+        row.innerHTML = `<span style="display:flex; align-items:center; flex-wrap:wrap; gap:6px;"><strong>${formatFecha(m.fecha)}</strong> ·
           <span class="matchup">${teamCrest(m.home, 22)}${m.home} <span class="vs-sep">vs</span> ${teamCrest(m.away, 22)}${m.away}</span></span>
-          ${m.hora ? '<span style="color:var(--text-secondary);">' + m.hora + '</span>' : ''}`;
+          ${m.hora ? '<span style="color:var(--text-secondary);">' + formatHora(m.hora) + '</span>' : ''}`;
         upcomingBox.appendChild(row);
       });
 
       const results = JSON.parse(localStorage.getItem('recentResults') || 'null') || [
-        { fecha: '18/03', home: 'Construservicios', away: 'UPTC - Medic Salud', marcador: '3 - 1', tipo: 'win' },
-        { fecha: '17/03', home: 'Club Deportivo San Jose', away: 'Reserva Activa', marcador: '2 - 2', tipo: 'draw' }
+        { fecha: '2026-03-18', home: 'Construservicios', away: 'UPTC - Medic Salud', marcador: '3 - 1', tipo: 'win' },
+        { fecha: '2026-03-17', home: 'Club Deportivo San Jose', away: 'Reserva Activa', marcador: '2 - 2', tipo: 'draw' }
       ];
       const labels = { win: 'Victoria local', draw: 'Empate', loss: 'Victoria visitante' };
       const colors = { win: 'var(--success)', draw: 'var(--warning)', loss: 'var(--error)' };
@@ -490,7 +516,7 @@
         const card = document.createElement('div');
         card.className = 'data-card';
         card.innerHTML = `
-          <div class="data-card-header matchup">${r.fecha} · ${teamCrest(r.home, 20)}${r.home} <span class="vs-sep">vs</span> ${teamCrest(r.away, 20)}${r.away}</div>
+          <div class="data-card-header matchup">${formatFecha(r.fecha)} · ${teamCrest(r.home, 20)}${r.home} <span class="vs-sep">vs</span> ${teamCrest(r.away, 20)}${r.away}</div>
           <div class="data-card-content">
             <div style="text-align:center; font-size:2rem; font-weight:700; color:${colors[r.tipo] || 'var(--primary)'}; margin-bottom:8px;">${r.marcador}</div>
             <div style="text-align:center; color:var(--text-secondary);">${labels[r.tipo] || ''}</div>
@@ -510,7 +536,7 @@
       ribbon.innerHTML = `
         <span class="nmr-label"><i class="fas fa-tower-broadcast"></i> Próximo Partido</span>
         <span class="nmr-teams">${teamCrest(m.home, 26)}${m.home} <span class="vs-sep" style="color:rgba(255,255,255,0.7);">vs</span> ${teamCrest(m.away, 26)}${m.away}</span>
-        <span class="nmr-meta">${m.fecha}${m.hora ? ' · ' + m.hora : ''}</span>
+        <span class="nmr-meta">${formatFecha(m.fecha, true)}${m.hora ? ' · ' + formatHora(m.hora) : ''}</span>
       `;
     }
 
