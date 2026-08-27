@@ -1122,3 +1122,229 @@ body.dark-mode ::selection { background: rgba(var(--primary-rgb), 0.4); }
   padding: 2px;
   background: var(--surface);
 }
+
+/* ============ Team crest badges ============ */
+.team-crest {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--crest-size, 30px);
+  height: var(--crest-size, 30px);
+  min-width: var(--crest-size, 30px);
+  border-radius: 50%;
+  background: var(--crest-color, var(--primary));
+  color: white;
+  font-weight: 800;
+  font-size: calc(var(--crest-size, 30px) * 0.36);
+  letter-spacing: 0.02em;
+  margin-right: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  vertical-align: middle;
+  flex: 0 0 auto;
+}
+.team-name-cell {
+  display: inline-flex;
+  align-items: center;
+}
+.matchup {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.matchup .vs-sep {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* ============ Competition-style headers ============ */
+.card-header h2 {
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 5px 12px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+/* ============ Hero: star texture + next match ribbon ============ */
+.hero-section {
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(255,255,255,0.10) 0, transparent 3%),
+    radial-gradient(circle at 32% 68%, rgba(255,255,255,0.08) 0, transparent 2.4%),
+    radial-gradient(circle at 58% 24%, rgba(255,255,255,0.10) 0, transparent 2.6%),
+    radial-gradient(circle at 78% 62%, rgba(255,255,255,0.08) 0, transparent 2.2%),
+    radial-gradient(circle at 90% 20%, rgba(255,255,255,0.09) 0, transparent 2%),
+    radial-gradient(circle at 22% 88%, rgba(255,255,255,0.07) 0, transparent 2%);
+}
+.hero-content { flex-direction: column; align-items: flex-start; justify-content: flex-end; gap: 0; }
+.next-match-ribbon {
+  position: relative;
+  margin-top: 18px;
+  width: 100%;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  backdrop-filter: blur(6px);
+}
+.next-match-ribbon .nmr-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.75);
+  flex: 0 0 100%;
+  margin-bottom: 2px;
+}
+.next-match-ribbon .nmr-teams {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.next-match-ribbon .nmr-meta {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* ============ Sidebar star texture ============ */
+.sidebar-header {
+  background-image:
+    linear-gradient(135deg, var(--primary), var(--primary-dark)),
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.12) 0, transparent 2.5%),
+    radial-gradient(circle at 75% 70%, rgba(255,255,255,0.10) 0, transparent 2%);
+}
+
+/* ============ Eliminatorias (bracket) ============ */
+.bracket {
+  display: flex;
+  gap: 28px;
+  overflow-x: auto;
+  padding: 12px 4px 20px;
+}
+.bracket-round {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 22px;
+  min-width: 240px;
+  flex: 1 0 240px;
+}
+.bracket-round-title {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+.bracket-match {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.bracket-slot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.bracket-slot:last-child { border-bottom: none; }
+.bracket-slot.winner {
+  background: rgba(16, 185, 129, 0.1);
+  color: #065f46;
+}
+body.dark-mode .bracket-slot.winner { color: #6ee7b7; }
+.bracket-slot .slot-team {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 0;
+}
+.bracket-slot .slot-team select {
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-weight: 600;
+  color: inherit;
+  cursor: pointer;
+  max-width: 130px;
+}
+.bracket-slot .slot-score {
+  width: 42px;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 2px;
+  font-weight: 700;
+  font-family: inherit;
+}
+.bracket-slot .slot-score-display {
+  font-weight: 800;
+  min-width: 20px;
+  text-align: center;
+}
+.bracket-final-trophy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 180px;
+  flex: 0 0 auto;
+}
+.bracket-final-trophy .trophy-badge {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fde68a, #f59e0b);
+  color: #78350f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.1rem;
+  box-shadow: 0 10px 24px rgba(245, 158, 11, 0.4);
+}
+.bracket-champion-banner {
+  text-align: center;
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #fde68a, #f59e0b);
+  color: #78350f;
+  font-weight: 800;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 900px) {
+  .bracket-round { min-width: 210px; }
+}
