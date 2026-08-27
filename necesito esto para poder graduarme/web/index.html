@@ -230,10 +230,10 @@
                 Calendario de partidos y resultados más recientes del torneo.
               </div>
               <form class="form-inline" id="upcomingForm">
-                <input type="text" id="upFecha" placeholder="Fecha (ej. 20-jul)" required style="max-width:140px;">
+                <input type="date" id="upFecha" required style="max-width:165px;" title="Fecha del partido">
                 <select id="upHome" required></select>
                 <select id="upAway" required></select>
-                <input type="text" id="upHora" placeholder="Hora (ej. 3:00 pm)" style="max-width:140px;">
+                <input type="time" id="upHora" style="max-width:130px;" title="Hora del partido">
                 <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar</button>
               </form>
               <div id="upcomingList"></div>
@@ -244,7 +244,7 @@
             <div class="card-header"><h2><i class="fas fa-flag-checkered"></i> Resultados Recientes</h2><p>Últimos partidos jugados</p></div>
             <div class="card-content">
               <form class="form-inline" id="resultForm">
-                <input type="text" id="resFecha" placeholder="Fecha (ej. 18/03)" required style="max-width:120px;">
+                <input type="date" id="resFecha" required style="max-width:165px;" title="Fecha del partido">
                 <select id="resHome" required></select>
                 <select id="resAway" required></select>
                 <input type="text" id="resMarcador" placeholder="Marcador (ej. 3 - 1)" required style="max-width:130px;">
@@ -492,6 +492,32 @@
       return `<span class="team-crest" style="--crest-size:${size}px;--crest-color:${teamColor(name)}">${teamInitials(name)}</span>`;
     }
 
+    /* ---------- Formato de fecha y hora ---------- */
+    const MONTH_NAMES_ES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    const WEEKDAY_NAMES_ES = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+
+    function formatFecha(value, withWeekday) {
+      if (!value) return '';
+      const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+      if (!match) return value; // formato antiguo en texto libre, se muestra tal cual
+      const [, y, m, d] = match;
+      const date = new Date(Number(y), Number(m) - 1, Number(d));
+      const base = `${Number(d)} ${MONTH_NAMES_ES[Number(m) - 1]} ${y}`;
+      return withWeekday ? `${WEEKDAY_NAMES_ES[date.getDay()]} ${base}` : base;
+    }
+
+    function formatHora(value) {
+      if (!value) return '';
+      const match = /^(\d{2}):(\d{2})$/.exec(value);
+      if (!match) return value; // formato antiguo en texto libre
+      let hour = parseInt(match[1], 10);
+      const minutes = match[2];
+      const ampm = hour >= 12 ? 'pm' : 'am';
+      hour = hour % 12;
+      if (hour === 0) hour = 12;
+      return `${hour}:${minutes} ${ampm}`;
+    }
+
     /* ---------- Roster de equipos ---------- */
     const defaultRoster = ['Construservicios', 'UPTC - Medic Salud', 'Club Deportivo San Jose', 'Reserva Activa', 'Amigos Edwin Rodriguez', 'Radiadores la Valle'];
 
@@ -728,7 +754,7 @@
       const data = getUpcoming().slice(0, 3);
       box.innerHTML = data.map((m, i) => `
         <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; ${i < data.length - 1 ? 'border-bottom:1px solid var(--border);' : ''}">
-          <span>${m.fecha}</span><span class="matchup">${teamCrest(m.home, 20)}${m.home} <span class="vs-sep">vs</span> ${teamCrest(m.away, 20)}${m.away}</span>
+          <span>${formatFecha(m.fecha)}</span><span class="matchup">${teamCrest(m.home, 20)}${m.home} <span class="vs-sep">vs</span> ${teamCrest(m.away, 20)}${m.away}</span>
         </div>`).join('') || '<p class="empty-state">Sin partidos programados.</p>';
     }
 
@@ -742,7 +768,7 @@
       ribbon.innerHTML = `
         <span class="nmr-label"><i class="fas fa-tower-broadcast"></i> Próximo Partido</span>
         <span class="nmr-teams">${teamCrest(m.home, 26)}${m.home} <span class="vs-sep" style="color:rgba(255,255,255,0.7);">vs</span> ${teamCrest(m.away, 26)}${m.away}</span>
-        <span class="nmr-meta">${m.fecha}${m.hora ? ' · ' + m.hora : ''}</span>
+        <span class="nmr-meta">${formatFecha(m.fecha, true)}${m.hora ? ' · ' + formatHora(m.hora) : ''}</span>
       `;
     }
 
@@ -883,12 +909,12 @@
 
     /* ---------- Eventos ---------- */
     const defaultUpcoming = [
-      { fecha: '20-jul', home: 'Construservicios', away: 'Reserva Activa', hora: '3:00 pm' },
-      { fecha: '20-jul', home: 'Radiadores la Valle', away: 'Amigos Edwin Rodriguez', hora: '4:30 pm' }
+      { fecha: '2026-07-20', home: 'Construservicios', away: 'Reserva Activa', hora: '15:00' },
+      { fecha: '2026-07-20', home: 'Radiadores la Valle', away: 'Amigos Edwin Rodriguez', hora: '16:30' }
     ];
     const defaultResults = [
-      { fecha: '18/03', home: 'Construservicios', away: 'UPTC - Medic Salud', marcador: '3 - 1', tipo: 'win' },
-      { fecha: '17/03', home: 'Club Deportivo San Jose', away: 'Reserva Activa', marcador: '2 - 2', tipo: 'draw' }
+      { fecha: '2026-03-18', home: 'Construservicios', away: 'UPTC - Medic Salud', marcador: '3 - 1', tipo: 'win' },
+      { fecha: '2026-03-17', home: 'Club Deportivo San Jose', away: 'Reserva Activa', marcador: '2 - 2', tipo: 'draw' }
     ];
 
     function getUpcoming() { return JSON.parse(localStorage.getItem('upcomingMatches') || 'null') || defaultUpcoming.slice(); }
@@ -948,7 +974,7 @@
       data.forEach((m, idx) => {
         const row = document.createElement('div');
         row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:8px;';
-        row.innerHTML = `<span style="display:flex; align-items:center; flex-wrap:wrap; gap:6px;"><strong>${m.fecha}</strong> ${m.hora ? '· ' + m.hora + ' ·' : '·'}
+        row.innerHTML = `<span style="display:flex; align-items:center; flex-wrap:wrap; gap:6px;"><strong>${formatFecha(m.fecha)}</strong> ${m.hora ? '· ' + formatHora(m.hora) + ' ·' : '·'}
           <span class="matchup">${teamCrest(m.home, 22)}${m.home} <span class="vs-sep">vs</span> ${teamCrest(m.away, 22)}${m.away}</span></span>
           <button class="btn btn-danger btn-sm" onclick="deleteUpcoming(${idx})"><i class="fas fa-trash"></i></button>`;
         list.appendChild(row);
@@ -973,7 +999,7 @@
         card.className = 'data-card';
         card.innerHTML = `
           <div class="data-card-header" style="display:flex; justify-content:space-between; align-items:center;">
-            <span class="matchup">${r.fecha} · ${teamCrest(r.home, 20)}${r.home} <span class="vs-sep">vs</span> ${teamCrest(r.away, 20)}${r.away}</span>
+            <span class="matchup">${formatFecha(r.fecha)} · ${teamCrest(r.home, 20)}${r.home} <span class="vs-sep">vs</span> ${teamCrest(r.away, 20)}${r.away}</span>
             <button class="btn btn-danger btn-sm" onclick="deleteResult(${idx})"><i class="fas fa-trash"></i></button>
           </div>
           <div class="data-card-content">
