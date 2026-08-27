@@ -22,6 +22,7 @@
         <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('competencias', event)"><i class="fas fa-table"></i> Competencias</a></div>
         <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('equipos', event)"><i class="fas fa-users"></i> Equipos</a></div>
         <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('eventos', event)"><i class="fas fa-calendar"></i> Eventos</a></div>
+        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('eliminatorias', event)"><i class="fas fa-trophy"></i> Eliminatorias</a></div>
         <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('plantillas', event)"><i class="fas fa-people-group"></i> Plantillas</a></div>
         <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('datos', event)"><i class="fas fa-database"></i> Datos</a></div>
         <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('configuracion', event)"><i class="fas fa-palette"></i> Configuración</a></div>
@@ -51,9 +52,11 @@
             <div class="hero-overlay"></div>
             <div class="hero-content">
               <div class="hero-text">
+                <span class="hero-kicker"><i class="fas fa-star"></i> Torneo Fútbol · Temporada 2026</span>
                 <h1 id="heroTitle" contenteditable="true">Bienvenido al Panel</h1>
                 <p id="heroSubtitle" contenteditable="true">Gestiona tu torneo de fútbol profesional</p>
               </div>
+              <div class="next-match-ribbon" id="nextMatchRibbon" style="display:none;"></div>
             </div>
             <div class="hero-controls">
               <label class="file-upload">
@@ -257,6 +260,20 @@
           </div>
         </section>
 
+        <!-- Eliminatorias -->
+        <section id="eliminatorias" class="section">
+          <div class="section-card">
+            <div class="card-header">
+              <h2><i class="fas fa-trophy"></i> Fase de Eliminación Directa</h2>
+              <p>Elige los equipos de cada cruce — el ganador se marca solo según el marcador</p>
+            </div>
+            <div class="card-content">
+              <div class="bracket" id="bracketContainer"></div>
+              <div id="championBanner"></div>
+            </div>
+          </div>
+        </section>
+
         <!-- Plantillas -->
         <section id="plantillas" class="section">
           <div class="section-card">
@@ -373,6 +390,7 @@
       initStandings();
       initTeamsExtra();
       initEvents();
+      initKnockout();
       initSquads();
       initExcel();
       initTheme();
@@ -398,7 +416,7 @@
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       const el = document.getElementById(sectionId);
       if (el) el.classList.add('active');
-      const titles = { inicio: 'Inicio', competencias: 'Competencias', equipos: 'Equipos', eventos: 'Eventos', plantillas: 'Plantillas', datos: 'Datos', configuracion: 'Configuración' };
+      const titles = { inicio: 'Inicio', competencias: 'Competencias', equipos: 'Equipos', eventos: 'Eventos', eliminatorias: 'Eliminatorias', plantillas: 'Plantillas', datos: 'Datos', configuracion: 'Configuración' };
       document.getElementById('pageTitle').textContent = titles[sectionId] || 'Panel';
     }
 
@@ -453,6 +471,27 @@
       });
     }
 
+    /* ---------- Escudos de equipo (auto-generados) ---------- */
+    const CREST_PALETTE = ['#0090d9', '#e63946', '#2a9d8f', '#f4a261', '#8338ec', '#ff006e', '#3a86ff', '#fb5607', '#06d6a0', '#ef476f'];
+    const CREST_STOPWORDS = ['de', 'del', 'la', 'los', 'las', 'el', 'y'];
+
+    function teamInitials(name) {
+      if (!name) return '?';
+      const words = String(name).trim().split(/\s+/).filter(w => w && !CREST_STOPWORDS.includes(w.toLowerCase()));
+      const letters = words.slice(0, 2).map(w => w[0].toUpperCase()).join('');
+      return letters || name.slice(0, 2).toUpperCase();
+    }
+    function teamColor(name) {
+      let hash = 0;
+      for (let i = 0; i < String(name).length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+      return CREST_PALETTE[Math.abs(hash) % CREST_PALETTE.length];
+    }
+    function teamCrest(name, size) {
+      size = size || 28;
+      if (!name) return '';
+      return `<span class="team-crest" style="--crest-size:${size}px;--crest-color:${teamColor(name)}">${teamInitials(name)}</span>`;
+    }
+
     /* ---------- Roster de equipos ---------- */
     const defaultRoster = ['Construservicios', 'UPTC - Medic Salud', 'Club Deportivo San Jose', 'Reserva Activa', 'Amigos Edwin Rodriguez', 'Radiadores la Valle'];
 
@@ -496,7 +535,7 @@
       roster.forEach((team, idx) => {
         const chip = document.createElement('span');
         chip.className = 'roster-chip';
-        chip.innerHTML = `${team} <button title="Quitar de la lista" onclick="removeRosterTeam(${idx})"><i class="fas fa-xmark"></i></button>`;
+        chip.innerHTML = `${teamCrest(team, 22)}${team} <button title="Quitar de la lista" onclick="removeRosterTeam(${idx})"><i class="fas fa-xmark"></i></button>`;
         box.appendChild(chip);
       });
     }
@@ -530,6 +569,7 @@
       populateTeamSelect(document.getElementById('resHome'));
       populateTeamSelect(document.getElementById('resAway'));
       if (typeof refreshSquadTeamSelect === 'function') refreshSquadTeamSelect();
+      if (typeof renderBracket === 'function') renderBracket();
     }
 
     /* ---------- Tabla de posiciones ---------- */
@@ -601,6 +641,8 @@
           <td class="col-actions"><button class="btn btn-danger btn-sm" title="Eliminar" onclick="deleteStandingRow(${idx})"><i class="fas fa-trash"></i></button></td>
         `;
         const teamCell = tr.querySelector('.team-name');
+        teamCell.classList.add('team-name-cell');
+        teamCell.innerHTML = teamCrest(row.team, 26);
         const select = document.createElement('select');
         populateTeamSelect(select, row.team);
         select.addEventListener('change', () => {
@@ -658,7 +700,7 @@
         const badgeColor = efectividad >= 60 ? 'var(--success)' : efectividad >= 40 ? 'var(--warning)' : 'var(--error)';
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td class="team-name">${row.team}</td>
+          <td class="team-name team-name-cell">${teamCrest(row.team, 24)}${row.team}</td>
           <td style="text-align:center;">${pj}</td>
           <td style="text-align:center;">${row.gf}</td>
           <td style="text-align:center;">${row.gc}</td>
@@ -673,10 +715,11 @@
       const teamsBox = document.getElementById('homeTeamsPreview');
       const data = getStandings();
       teamsBox.innerHTML = data.slice(0, 4).map((row, i) => `
-        <div style="display:flex; justify-content:space-between; padding:8px 0; ${i < 3 ? 'border-bottom:1px solid var(--border);' : ''}">
-          <span class="position">${i + 1}</span><span>${row.team}</span>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; ${i < 3 ? 'border-bottom:1px solid var(--border);' : ''}">
+          <span class="position">${i + 1}</span><span class="team-name-cell">${teamCrest(row.team, 22)}${row.team}</span>
         </div>`).join('') || '<p class="empty-state">Sin equipos aún.</p>';
       renderUpcomingPreview();
+      renderNextMatchRibbon();
     }
 
     function renderUpcomingPreview() {
@@ -684,9 +727,23 @@
       if (!box) return;
       const data = getUpcoming().slice(0, 3);
       box.innerHTML = data.map((m, i) => `
-        <div style="display:flex; justify-content:space-between; padding:8px 0; ${i < data.length - 1 ? 'border-bottom:1px solid var(--border);' : ''}">
-          <span>${m.fecha}</span><span>${m.home} vs ${m.away}</span>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; ${i < data.length - 1 ? 'border-bottom:1px solid var(--border);' : ''}">
+          <span>${m.fecha}</span><span class="matchup">${teamCrest(m.home, 20)}${m.home} <span class="vs-sep">vs</span> ${teamCrest(m.away, 20)}${m.away}</span>
         </div>`).join('') || '<p class="empty-state">Sin partidos programados.</p>';
+    }
+
+    function renderNextMatchRibbon() {
+      const ribbon = document.getElementById('nextMatchRibbon');
+      if (!ribbon) return;
+      const data = getUpcoming();
+      if (!data.length) { ribbon.style.display = 'none'; return; }
+      const m = data[0];
+      ribbon.style.display = 'flex';
+      ribbon.innerHTML = `
+        <span class="nmr-label"><i class="fas fa-tower-broadcast"></i> Próximo Partido</span>
+        <span class="nmr-teams">${teamCrest(m.home, 26)}${m.home} <span class="vs-sep" style="color:rgba(255,255,255,0.7);">vs</span> ${teamCrest(m.away, 26)}${m.away}</span>
+        <span class="nmr-meta">${m.fecha}${m.hora ? ' · ' + m.hora : ''}</span>
+      `;
     }
 
     /* ---------- Goleadores / asistidores / disciplina ---------- */
@@ -835,7 +892,7 @@
     ];
 
     function getUpcoming() { return JSON.parse(localStorage.getItem('upcomingMatches') || 'null') || defaultUpcoming.slice(); }
-    function saveUpcoming(data) { localStorage.setItem('upcomingMatches', JSON.stringify(data)); renderUpcomingPreview(); }
+    function saveUpcoming(data) { localStorage.setItem('upcomingMatches', JSON.stringify(data)); renderUpcomingPreview(); renderNextMatchRibbon(); }
     function getResults() { return JSON.parse(localStorage.getItem('recentResults') || 'null') || defaultResults.slice(); }
     function saveResults(data) { localStorage.setItem('recentResults', JSON.stringify(data)); }
 
@@ -890,8 +947,9 @@
       if (!data.length) { list.innerHTML = '<p class="empty-state">No hay partidos programados.</p>'; return; }
       data.forEach((m, idx) => {
         const row = document.createElement('div');
-        row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);';
-        row.innerHTML = `<span><strong>${m.fecha}</strong> — ${m.home} vs ${m.away} ${m.hora ? '· ' + m.hora : ''}</span>
+        row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:8px;';
+        row.innerHTML = `<span style="display:flex; align-items:center; flex-wrap:wrap; gap:6px;"><strong>${m.fecha}</strong> ${m.hora ? '· ' + m.hora + ' ·' : '·'}
+          <span class="matchup">${teamCrest(m.home, 22)}${m.home} <span class="vs-sep">vs</span> ${teamCrest(m.away, 22)}${m.away}</span></span>
           <button class="btn btn-danger btn-sm" onclick="deleteUpcoming(${idx})"><i class="fas fa-trash"></i></button>`;
         list.appendChild(row);
       });
@@ -915,7 +973,7 @@
         card.className = 'data-card';
         card.innerHTML = `
           <div class="data-card-header" style="display:flex; justify-content:space-between; align-items:center;">
-            <span>${r.fecha} · ${r.home} vs ${r.away}</span>
+            <span class="matchup">${r.fecha} · ${teamCrest(r.home, 20)}${r.home} <span class="vs-sep">vs</span> ${teamCrest(r.away, 20)}${r.away}</span>
             <button class="btn btn-danger btn-sm" onclick="deleteResult(${idx})"><i class="fas fa-trash"></i></button>
           </div>
           <div class="data-card-content">
@@ -930,6 +988,106 @@
       data.splice(idx, 1);
       saveResults(data);
       renderResultsList();
+    }
+
+    /* ---------- Eliminatorias (bracket) ---------- */
+    function getKnockout() {
+      const saved = JSON.parse(localStorage.getItem('knockout') || 'null');
+      if (saved) return saved;
+      return {
+        cuartos: Array.from({ length: 4 }, () => ({ a: '', b: '', sa: null, sb: null })),
+        semis: Array.from({ length: 2 }, () => ({ a: '', b: '', sa: null, sb: null })),
+        final: [{ a: '', b: '', sa: null, sb: null }]
+      };
+    }
+    function saveKnockout(data) { localStorage.setItem('knockout', JSON.stringify(data)); }
+
+    function initKnockout() {
+      renderBracket();
+    }
+
+    function bracketTeamOptions(selected) {
+      const roster = getRoster();
+      const opts = ['<option value="">Por definir</option>'];
+      roster.forEach(t => opts.push(`<option value="${t}" ${t === selected ? 'selected' : ''}>${t}</option>`));
+      return opts.join('');
+    }
+
+    function renderBracket() {
+      const data = getKnockout();
+      const container = document.getElementById('bracketContainer');
+      container.innerHTML = '';
+
+      const roundDefs = [
+        { key: 'cuartos', label: 'Cuartos de Final' },
+        { key: 'semis', label: 'Semifinal' },
+        { key: 'final', label: 'Final' }
+      ];
+
+      roundDefs.forEach(({ key, label }) => {
+        const col = document.createElement('div');
+        col.className = 'bracket-round';
+        col.innerHTML = `<div class="bracket-round-title">${label}</div>`;
+
+        data[key].forEach((match, idx) => {
+          const winnerA = match.sa !== null && match.sb !== null && match.sa > match.sb;
+          const winnerB = match.sa !== null && match.sb !== null && match.sb > match.sa;
+
+          const card = document.createElement('div');
+          card.className = 'bracket-match';
+          card.innerHTML = `
+            <div class="bracket-slot${winnerA ? ' winner' : ''}">
+              <span class="slot-team"><select data-round="${key}" data-idx="${idx}" data-side="a">${bracketTeamOptions(match.a)}</select></span>
+              <input type="number" min="0" class="slot-score" data-round="${key}" data-idx="${idx}" data-side="sa" value="${match.sa ?? ''}" placeholder="-">
+            </div>
+            <div class="bracket-slot${winnerB ? ' winner' : ''}">
+              <span class="slot-team"><select data-round="${key}" data-idx="${idx}" data-side="b">${bracketTeamOptions(match.b)}</select></span>
+              <input type="number" min="0" class="slot-score" data-round="${key}" data-idx="${idx}" data-side="sb" value="${match.sb ?? ''}" placeholder="-">
+            </div>
+          `;
+          col.appendChild(card);
+        });
+
+        container.appendChild(col);
+
+        if (key === 'final') {
+          const trophyCol = document.createElement('div');
+          trophyCol.className = 'bracket-final-trophy';
+          trophyCol.innerHTML = `<div class="trophy-badge"><i class="fas fa-trophy"></i></div>`;
+          container.appendChild(trophyCol);
+        }
+      });
+
+      container.querySelectorAll('select, input').forEach(el => {
+        const evt = el.tagName === 'SELECT' ? 'change' : 'input';
+        el.addEventListener(evt, () => {
+          const round = el.dataset.round, idx = parseInt(el.dataset.idx), side = el.dataset.side;
+          const current = getKnockout();
+          if (side === 'sa' || side === 'sb') {
+            const val = el.value === '' ? null : parseInt(el.value) || 0;
+            current[round][idx][side] = val;
+          } else {
+            current[round][idx][side] = el.value;
+          }
+          saveKnockout(current);
+          renderBracket();
+        });
+      });
+
+      renderChampionBanner(data);
+    }
+
+    function renderChampionBanner(data) {
+      const banner = document.getElementById('championBanner');
+      const f = data.final[0];
+      if (f.sa !== null && f.sb !== null && f.sa !== f.sb) {
+        const champion = f.sa > f.sb ? f.a : f.b;
+        if (champion) {
+          banner.innerHTML = `<div class="bracket-champion-banner"><i class="fas fa-trophy"></i> Campeón: ${champion}</div>`;
+          return;
+        }
+      }
+      banner.innerHTML = '';
     }
 
     /* ---------- Plantillas (jugadores por puesto + DT) ---------- */
