@@ -378,12 +378,68 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script>
+    const SUPABASE_URL = 'https://naxujfmgdoezzhyyfmhf.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_-7X2KTKass1QILgLM10luA_XbXOLY8j';
+    const SYNCED_KEYS = new Set([
+      'heroBg', 'heroTitle', 'heroSubtitle', 'statJornadas', 'text-inicio', 'text-equipos',
+      'text-eventos', 'teamsRoster', 'standings', 'topScorers', 'topAssists', 'discipline',
+      'upcomingMatches', 'recentResults', 'knockout', 'squads', 'excelData', 'themeSettings'
+    ]);
+    let syncTimer;
+
+    function getSyncedState() {
+      return Object.fromEntries([...SYNCED_KEYS]
+        .filter(key => localStorage.getItem(key) !== null)
+        .map(key => [key, localStorage.getItem(key)]));
+    }
+
+    async function downloadSyncedState() {
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/app_state?id=eq.futivo&select=data`, {
+          headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+        });
+        if (!response.ok) return;
+        const rows = await response.json();
+        Object.entries(rows[0]?.data || {}).forEach(([key, value]) => localStorage.setItem(key, value));
+      } catch (error) {
+        console.warn('No se pudo cargar la información compartida.', error);
+      }
+    }
+
+    async function uploadSyncedState() {
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/app_state`, {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+            Prefer: 'resolution=merge-duplicates'
+          },
+          body: JSON.stringify({ id: 'futivo', data: getSyncedState(), updated_at: new Date().toISOString() })
+        });
+      } catch (error) {
+        console.warn('No se pudo sincronizar con Supabase.', error);
+      }
+    }
+
+    const originalSetItem = localStorage.setItem.bind(localStorage);
+    localStorage.setItem = (key, value) => {
+      originalSetItem(key, value);
+      if (SYNCED_KEYS.has(key)) {
+        clearTimeout(syncTimer);
+        syncTimer = setTimeout(uploadSyncedState, 300);
+      }
+    };
+
     /* ---------- Acceso ---------- */
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       if (localStorage.getItem('role') !== 'admin') {
         window.location.href = 'login.html';
         return;
       }
+      await downloadSyncedState();
+      await uploadSyncedState();
       initHero();
       initEditableTexts();
       initRoster();
