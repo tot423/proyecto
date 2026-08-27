@@ -51,7 +51,7 @@
           </div>
         </label>
 
-        <input type="hidden" name="role" id="roleInput" value="user">
+        <input type="hidden" name="role" value="admin">
 
         <div class="options-row">
           <label class="remember-me">
@@ -66,10 +66,6 @@
           Entrar
         </button>
 
-        <button type="button" class="admin-toggle" id="adminToggle">
-          <i class="fas fa-user-shield"></i>
-          <span id="adminToggleText">¿Eres administrador? Ingresa aquí</span>
-        </button>
       </form>
 
       <p id="loginError" class="login-error"></p>
@@ -81,21 +77,6 @@
   </div>
 
   <script>
-    const roleInput = document.getElementById('roleInput');
-    const adminToggle = document.getElementById('adminToggle');
-    const adminToggleText = document.getElementById('adminToggleText');
-    const loginCard = document.querySelector('.login-card');
-
-    adminToggle.addEventListener('click', () => {
-      const isAdmin = roleInput.value === 'admin';
-      roleInput.value = isAdmin ? 'user' : 'admin';
-      adminToggleText.textContent = isAdmin
-        ? '¿Eres administrador? Ingresa aquí'
-        : 'Ingresando como administrador · cambiar a usuario';
-      adminToggle.classList.toggle('is-admin', !isAdmin);
-      loginCard.classList.toggle('admin-mode', !isAdmin);
-    });
-
     const togglePass = document.getElementById('togglePass');
     const passInput = document.querySelector('input[name="password"]');
     togglePass.addEventListener('click', () => {
@@ -109,7 +90,6 @@
       const data = new FormData(this);
       const email = data.get('email').trim();
       const password = data.get('password');
-      const role = data.get('role');
       const errorEl = document.getElementById('loginError');
 
       if (!email || !password) {
@@ -118,9 +98,9 @@
         return;
       }
 
-      localStorage.setItem('role', role);
+      localStorage.setItem('role', 'admin');
       localStorage.setItem('userEmail', email);
-      window.location.href = role === 'admin' ? 'index.html' : 'user.html';
+      window.location.href = 'index.html';
     });
   </script>
 </body>
