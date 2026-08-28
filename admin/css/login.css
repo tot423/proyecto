@@ -92,6 +92,22 @@ body {
   box-shadow: var(--shadow), 0 0 0 1px rgba(245, 158, 11, 0.25);
 }
 
+.back-to-site {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(226, 232, 240, 0.6);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 22px;
+  transition: color 0.2s ease;
+}
+
+.back-to-site:hover {
+  color: rgba(226, 232, 240, 0.95);
+}
+
 .brand {
   display: flex;
   align-items: center;

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Torneo Fútbol</title>
+  <title>Panel Administrador - Torneo Fútbol</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
@@ -14,7 +14,7 @@
     <aside class="sidebar">
       <div class="sidebar-header">
         <h1><i class="fas fa-trophy"></i> Torneo Fútbol</h1>
-        <p>Sitio del Torneo</p>
+        <p>Panel Administrativo</p>
       </div>
 
       <nav class="sidebar-nav">
@@ -24,10 +24,16 @@
         <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('eventos', event)"><i class="fas fa-calendar"></i> Eventos</a></div>
         <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('eliminatorias', event)"><i class="fas fa-trophy"></i> Eliminatorias</a></div>
         <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('plantillas', event)"><i class="fas fa-people-group"></i> Plantillas</a></div>
-        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('configuracion', event)"><i class="fas fa-palette"></i> Apariencia</a></div>
+        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('datos', event)"><i class="fas fa-database"></i> Datos</a></div>
+        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('configuracion', event)"><i class="fas fa-palette"></i> Configuración</a></div>
       </nav>
 
-      <div class="sidebar-footer" id="sidebarFooter"></div>
+      <div class="sidebar-footer">
+        <a href="index.html" class="btn btn-outline btn-sm" style="width:100%; justify-content:center; margin-bottom:10px; text-decoration:none;">
+          <i class="fas fa-eye"></i> Ver vista pública
+        </a>
+        <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+      </div>
     </aside>
 
     <!-- Main Content -->
@@ -35,7 +41,7 @@
       <header class="topbar">
         <h1 class="topbar-title" id="pageTitle">Inicio</h1>
         <div class="topbar-actions">
-          <span class="user-info" id="userInfoBadge"><i class="fas fa-user-circle"></i> Visitante</span>
+          <span class="user-info"><i class="fas fa-user-circle"></i> Administrador</span>
         </div>
       </header>
 
@@ -47,45 +53,76 @@
             <div class="hero-content">
               <div class="hero-text">
                 <span class="hero-kicker"><i class="fas fa-star"></i> Torneo Fútbol · Temporada 2026</span>
-                <h1 id="heroTitle">Bienvenido al Panel</h1>
-                <p id="heroSubtitle">Gestiona tu torneo de fútbol profesional</p>
+                <h1 id="heroTitle" contenteditable="true">Bienvenido al Panel</h1>
+                <p id="heroSubtitle" contenteditable="true">Gestiona tu torneo de fútbol profesional</p>
               </div>
               <div class="next-match-ribbon" id="nextMatchRibbon" style="display:none;"></div>
+            </div>
+            <div class="hero-controls">
+              <label class="file-upload">
+                <span class="file-upload-label"><i class="fas fa-camera"></i> Cambiar imagen</span>
+                <input type="file" id="heroImage" accept="image/*">
+              </label>
             </div>
           </div>
 
           <div class="stats-grid">
-            <div class="stat-card">
+            <div class="stat-card stat-auto">
               <div class="stat-icon"><i class="fas fa-shield-halved"></i></div>
-              <div class="stat-body"><div class="stat-value" id="statEquipos">14</div><div class="stat-label">Equipos</div></div>
+              <div class="stat-body"><div class="stat-value" id="statEquipos">0</div><div class="stat-label">Equipos</div><span class="auto-tag"><i class="fas fa-bolt"></i> Automático</span></div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card stat-auto">
               <div class="stat-icon"><i class="fas fa-calendar-days"></i></div>
-              <div class="stat-body"><div class="stat-value" id="statPartidos">48</div><div class="stat-label">Partidos</div></div>
+              <div class="stat-body"><div class="stat-value" id="statPartidos">0</div><div class="stat-label">Partidos</div><span class="auto-tag"><i class="fas fa-bolt"></i> Automático</span></div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card stat-auto">
               <div class="stat-icon"><i class="fas fa-futbol"></i></div>
-              <div class="stat-body"><div class="stat-value" id="statGoles">168</div><div class="stat-label">Goles</div></div>
+              <div class="stat-body"><div class="stat-value" id="statGoles">0</div><div class="stat-label">Goles</div><span class="auto-tag"><i class="fas fa-bolt"></i> Automático</span></div>
             </div>
             <div class="stat-card">
               <div class="stat-icon"><i class="fas fa-flag-checkered"></i></div>
-              <div class="stat-body"><div class="stat-value" id="statJornadas">12</div><div class="stat-label">Jornadas</div></div>
+              <div class="stat-body"><div class="stat-value" contenteditable="true" id="statJornadas">1</div><div class="stat-label">Jornadas</div></div>
             </div>
           </div>
 
           <div class="section-card">
-            <div class="card-header"><h2><i class="fas fa-info-circle"></i> Sobre el torneo</h2></div>
-            <div class="card-content"><div id="text-inicio"></div></div>
+            <div class="card-header">
+              <h2><i class="fas fa-edit"></i> Contenido de Inicio</h2>
+              <p>Edita el texto que aparecerá en la página principal</p>
+            </div>
+            <div class="card-content">
+              <div id="editable-inicio" class="editable-content" contenteditable="true">
+                Sigue de cerca cada jornada del torneo: resultados, tabla de posiciones y lo mejor de nuestros equipos.
+              </div>
+            </div>
           </div>
         </section>
 
         <!-- Competencias -->
         <section id="competencias" class="section">
+          <div class="roster-panel">
+            <h3><i class="fas fa-shield-halved"></i> Equipos del torneo</h3>
+            <p>Regístralos aquí una sola vez. Luego aparecerán como opción en la tabla de posiciones, goleadores, disciplina y partidos — así no hay que volver a escribir el nombre y nunca queda mal digitado.</p>
+            <form id="rosterForm" class="form-inline" style="margin:0;">
+              <input type="text" id="rosterInput" placeholder="Nombre del equipo" required>
+              <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar equipo</button>
+            </form>
+            <div class="roster-chips" id="rosterChips"></div>
+          </div>
+
           <div class="section-card">
-            <div class="card-header"><h2><i class="fas fa-trophy"></i> Tabla de Posiciones</h2><p>Clasificación actual del torneo</p></div>
+            <div class="card-header">
+              <h2><i class="fas fa-trophy"></i> Tabla de Posiciones</h2>
+              <p>Se ordena sola por puntos — solo registra partidos ganados, empatados, perdidos y goles</p>
+            </div>
             <div class="card-content">
+              <div class="table-toolbar">
+                <span style="color: var(--text-secondary); font-size: 0.85rem;"><i class="fas fa-bolt" style="color:var(--success);"></i> PJ, Pts y DG se calculan solos. Ordenado automáticamente de mayor a menor puntaje.</span>
+                <button class="btn btn-primary btn-sm" onclick="addStandingRow()"><i class="fas fa-plus"></i> Agregar equipo a la tabla</button>
+              </div>
+
               <div class="table-container">
-                <table class="modern-table">
+                <table class="modern-table" id="standingsTable">
                   <thead>
                     <tr>
                       <th style="text-align:center;">Pos</th><th>Equipo</th>
@@ -93,6 +130,7 @@
                       <th style="text-align:center;">E</th><th style="text-align:center;">P</th>
                       <th style="text-align:center;">GF</th><th style="text-align:center;">GC</th>
                       <th style="text-align:center;">DG</th><th style="text-align:center;">Pts</th>
+                      <th class="col-actions"></th>
                     </tr>
                   </thead>
                   <tbody id="standingsBody"></tbody>
@@ -100,14 +138,30 @@
               </div>
             </div>
           </div>
+
+          <div class="cards-grid">
+            <div class="data-card">
+              <div class="data-card-header"><i class="fas fa-calendar"></i> Próximos Partidos</div>
+              <div class="data-card-content" id="homeUpcomingPreview"></div>
+            </div>
+            <div class="data-card">
+              <div class="data-card-header"><i class="fas fa-users"></i> Equipos Participantes</div>
+              <div class="data-card-content" id="homeTeamsPreview"></div>
+            </div>
+          </div>
         </section>
 
         <!-- Equipos -->
         <section id="equipos" class="section">
           <div class="section-card">
-            <div class="card-header"><h2><i class="fas fa-users"></i> Información de Equipos</h2></div>
+            <div class="card-header">
+              <h2><i class="fas fa-users"></i> Información de Equipos</h2>
+              <p>Estadísticas calculadas automáticamente a partir de la tabla de posiciones</p>
+            </div>
             <div class="card-content">
-              <div id="text-equipos" style="margin-bottom: 16px;"></div>
+              <div id="editable-equipos" class="editable-content" contenteditable="true">
+                Los equipos compiten a lo largo de la temporada por el título del torneo.
+              </div>
               <div class="table-container">
                 <table class="modern-table">
                   <thead>
@@ -126,20 +180,40 @@
           <div class="cards-grid">
             <div class="data-card">
               <div class="data-card-header"><i class="fas fa-futbol"></i> Máximo Goleador</div>
-              <div class="data-card-content" id="topScorerFeatured"></div>
+              <div class="data-card-content">
+                <div class="table-toolbar"><span style="color:var(--text-secondary); font-size:0.82rem;">El primero de la lista aparece destacado</span>
+                  <button class="btn btn-primary btn-sm" onclick="addPersonRow('topScorers')"><i class="fas fa-plus"></i> Agregar</button>
+                </div>
+                <table class="modern-table" style="margin:0;">
+                  <thead><tr><th>Jugador</th><th>Equipo</th><th style="text-align:center;">Goles</th><th class="col-actions"></th></tr></thead>
+                  <tbody id="topScorersBody"></tbody>
+                </table>
+              </div>
             </div>
+
             <div class="data-card">
               <div class="data-card-header"><i class="fas fa-shoe-prints"></i> Mayor Asistidor</div>
-              <div class="data-card-content" id="topAssistFeatured"></div>
+              <div class="data-card-content">
+                <div class="table-toolbar"><span style="color:var(--text-secondary); font-size:0.82rem;">El primero de la lista aparece destacado</span>
+                  <button class="btn btn-primary btn-sm" onclick="addPersonRow('topAssists')"><i class="fas fa-plus"></i> Agregar</button>
+                </div>
+                <table class="modern-table" style="margin:0;">
+                  <thead><tr><th>Jugador</th><th>Equipo</th><th style="text-align:center;">Asist.</th><th class="col-actions"></th></tr></thead>
+                  <tbody id="topAssistsBody"></tbody>
+                </table>
+              </div>
             </div>
           </div>
 
           <div class="section-card">
             <div class="card-header"><h2><i class="fas fa-flag"></i> Disciplina</h2><p>Tarjetas amarillas y rojas por equipo</p></div>
             <div class="card-content">
+              <div class="table-toolbar"><span></span>
+                <button class="btn btn-primary btn-sm" onclick="addDisciplineRow()"><i class="fas fa-plus"></i> Agregar equipo</button>
+              </div>
               <div class="table-container">
                 <table class="modern-table">
-                  <thead><tr><th>Equipo</th><th style="text-align:center;">🟨</th><th style="text-align:center;">🟥</th></tr></thead>
+                  <thead><tr><th>Equipo</th><th style="text-align:center;">🟨</th><th style="text-align:center;">🟥</th><th class="col-actions"></th></tr></thead>
                   <tbody id="disciplineBody"></tbody>
                 </table>
               </div>
@@ -150,15 +224,37 @@
         <!-- Eventos -->
         <section id="eventos" class="section">
           <div class="section-card">
-            <div class="card-header"><h2><i class="fas fa-calendar"></i> Próximos Partidos</h2></div>
+            <div class="card-header"><h2><i class="fas fa-calendar"></i> Próximos Partidos</h2><p>Elige los equipos de la lista — el enfrentamiento se arma solo</p></div>
             <div class="card-content">
-              <div id="text-eventos" style="margin-bottom: 16px;"></div>
+              <div id="editable-eventos" class="editable-content" contenteditable="true">
+                Calendario de partidos y resultados más recientes del torneo.
+              </div>
+              <form class="form-inline" id="upcomingForm">
+                <input type="date" id="upFecha" required style="max-width:165px;" title="Fecha del partido">
+                <select id="upHome" required></select>
+                <select id="upAway" required></select>
+                <input type="time" id="upHora" style="max-width:130px;" title="Hora del partido">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar</button>
+              </form>
               <div id="upcomingList"></div>
             </div>
           </div>
+
           <div class="section-card">
-            <div class="card-header"><h2><i class="fas fa-flag-checkered"></i> Resultados Recientes</h2></div>
+            <div class="card-header"><h2><i class="fas fa-flag-checkered"></i> Resultados Recientes</h2><p>Últimos partidos jugados</p></div>
             <div class="card-content">
+              <form class="form-inline" id="resultForm">
+                <input type="date" id="resFecha" required style="max-width:165px;" title="Fecha del partido">
+                <select id="resHome" required></select>
+                <select id="resAway" required></select>
+                <input type="text" id="resMarcador" placeholder="Marcador (ej. 3 - 1)" required style="max-width:130px;">
+                <select id="resTipo">
+                  <option value="win">Victoria local</option>
+                  <option value="draw">Empate</option>
+                  <option value="loss">Victoria visitante</option>
+                </select>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar</button>
+              </form>
               <div class="cards-grid" id="resultsList"></div>
             </div>
           </div>
@@ -169,7 +265,7 @@
           <div class="section-card">
             <div class="card-header">
               <h2><i class="fas fa-trophy"></i> Fase de Eliminación Directa</h2>
-              <p>Cuartos de Final, Semifinal y Final</p>
+              <p>Elige los equipos de cada cruce — el ganador se marca solo según el marcador</p>
             </div>
             <div class="card-content">
               <div class="bracket" id="bracketContainer"></div>
@@ -183,46 +279,81 @@
           <div class="section-card">
             <div class="card-header">
               <h2><i class="fas fa-people-group"></i> Plantilla del Equipo</h2>
-              <p>Director técnico y jugadores por puesto</p>
+              <p>Director técnico y jugadores organizados por puesto</p>
             </div>
             <div class="card-content">
               <div class="form-inline" style="margin-bottom: 24px;">
                 <select id="squadTeamSelect" style="max-width: 320px;"></select>
               </div>
-              <div id="squadEmptyState" class="empty-state" style="display:none;">Aún no hay equipos ni jugadores registrados.</div>
+
+              <div id="squadEmptyState" class="empty-state" style="display:none;">
+                Primero agrega equipos en la pestaña <strong>Competencias</strong> para poder armar sus plantillas.
+              </div>
+
               <div id="squadEditor" style="display:none;">
-                <div style="margin-bottom:22px; display:flex; align-items:center; gap:10px; color:var(--text-secondary); font-size:0.9rem;">
-                  <i class="fas fa-clipboard-user" style="color:var(--primary);"></i>
-                  <span>Director Técnico: <strong id="squadDtDisplay" style="color:var(--text-primary);">—</strong></span>
-                </div>
+                <label class="field" style="display:block; margin-bottom:22px; max-width:420px;">
+                  <span style="font-size:0.85rem; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:6px;"><i class="fas fa-clipboard-user"></i> Director Técnico</span>
+                  <input type="text" id="squadDtInput" placeholder="Nombre del director técnico" class="form-inline-single">
+                </label>
+
+                <form id="squadPlayerForm" class="form-inline">
+                  <input type="text" id="squadPlayerName" placeholder="Nombre del jugador" required>
+                  <select id="squadPlayerPosition">
+                    <option value="Portero">Portero</option>
+                    <option value="Defensa">Defensa</option>
+                    <option value="Mediocampista">Mediocampista</option>
+                    <option value="Delantero">Delantero</option>
+                  </select>
+                  <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar jugador</button>
+                </form>
+
                 <div class="squad-positions" id="squadPositions"></div>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- Configuración / Apariencia -->
+        <!-- Datos -->
+        <section id="datos" class="section">
+          <div class="section-card">
+            <div class="card-header"><h2><i class="fas fa-database"></i> Importar desde Excel</h2><p>Sube tu archivo y, si trae la tabla de posiciones, se aplica con un clic</p></div>
+            <div class="card-content">
+              <div class="import-hint">
+                <i class="fas fa-circle-info"></i>
+                <span>Si tu hoja tiene columnas <strong>Equipo, G, E, P, GF, GC</strong> (en cualquier orden), el sistema la reconoce sola y te deja aplicarla directo a la tabla de posiciones — sin retipear nada. Cualquier otra hoja se muestra abajo para editarla libremente.</span>
+              </div>
+              <label class="file-upload">
+                <span class="file-upload-label"><i class="fas fa-file-excel"></i> Seleccionar archivo Excel</span>
+                <input type="file" id="excelInput" accept=".xlsx,.xls">
+              </label>
+              <div id="tablesContainer" style="overflow: auto; margin-top: 20px;"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Configuración -->
         <section id="configuracion" class="section">
           <div class="section-card">
             <div class="card-header">
               <h2><i class="fas fa-palette"></i> Apariencia</h2>
-              <p>Personaliza cómo se ve esta página en tu dispositivo</p>
+              <p>Personaliza los colores y el modo de visualización del panel y de la vista pública</p>
             </div>
             <div class="card-content">
               <div class="theme-toggle-row">
                 <div>
                   <div class="theme-toggle-label"><i class="fas fa-moon"></i> Modo oscuro</div>
-                  <div class="theme-toggle-desc">Cambia el fondo y las tarjetas a tonos oscuros.</div>
+                  <div class="theme-toggle-desc">Cambia el fondo y las tarjetas a tonos oscuros. Aplica también a la vista pública.</div>
                 </div>
                 <label class="switch">
                   <input type="checkbox" id="darkModeToggle">
                   <span class="switch-slider"></span>
                 </label>
               </div>
+
               <div class="theme-toggle-row" style="display:block;">
                 <div style="margin-bottom: 4px;">
                   <div class="theme-toggle-label"><i class="fas fa-fill-drip"></i> Color principal</div>
-                  <div class="theme-toggle-desc">Elige el color de acentos y botones de esta vista.</div>
+                  <div class="theme-toggle-desc">Elige un color predefinido o uno personalizado — reemplaza el azul en botones, íconos y acentos.</div>
                 </div>
                 <div class="color-swatches" id="colorSwatches"></div>
                 <div class="color-custom-row">
@@ -230,6 +361,7 @@
                   <span class="theme-toggle-desc">Color personalizado</span>
                 </div>
               </div>
+
               <div class="theme-toggle-row">
                 <div>
                   <div class="theme-toggle-label"><i class="fas fa-rotate-left"></i> Restablecer</div>
@@ -241,58 +373,39 @@
           </div>
         </section>
       </div>
-
-      <footer class="footer" style="text-align:center; padding:24px; color:var(--text-secondary); font-size:0.85rem;">
-        <p><strong>Torneo Municipal de Fútbol 2026</strong></p>
-        <p>© 2026 Todos los derechos reservados</p>
-      </footer>
     </main>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script>
+    /* ---------- Acceso ---------- */
     document.addEventListener('DOMContentLoaded', () => {
-      initAccessUI();
-      loadHero();
-      loadStats();
-      loadTexts();
-      loadStandings();
-      loadTeamExtras();
-      loadEvents();
-      loadBracket();
-      loadSquads();
+      if (localStorage.getItem('role') !== 'admin') {
+        window.location.href = 'login.html';
+        return;
+      }
+      initHero();
+      initEditableTexts();
+      initRoster();
+      initStandings();
+      initTeamsExtra();
+      initEvents();
+      initKnockout();
+      initSquads();
+      initExcel();
       initTheme();
+      refreshHomeStats();
     });
 
-    /* ---------- Acceso: navegar aquí no requiere iniciar sesión ---------- */
-    function initAccessUI() {
-      const isAdmin = localStorage.getItem('role') === 'admin';
-      const footer = document.getElementById('sidebarFooter');
-      const badge = document.getElementById('userInfoBadge');
-
-      if (isAdmin) {
-        badge.innerHTML = '<i class="fas fa-user-shield"></i> Administrador';
-        footer.innerHTML = `
-          <a href="admin.html" class="btn btn-primary btn-sm" style="width:100%; justify-content:center; margin-bottom:10px; text-decoration:none;">
-            <i class="fas fa-toolbox"></i> Panel Admin
-          </a>
-          <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
-        `;
-      } else {
-        badge.innerHTML = '<i class="fas fa-user-circle"></i> Visitante';
-        footer.innerHTML = `
-          <a href="login.html" class="btn btn-outline btn-sm" style="width:100%; justify-content:center; text-decoration:none;">
-            <i class="fas fa-user-shield"></i> Iniciar sesión
-          </a>
-        `;
+    function logout() {
+      if (confirm('¿Deseas cerrar sesión?')) {
+        localStorage.removeItem('role');
+        localStorage.removeItem('userEmail');
+        window.location.href = 'index.html';
       }
     }
 
-    function logout() {
-      localStorage.removeItem('role');
-      localStorage.removeItem('userEmail');
-      window.location.reload();
-    }
-
+    /* ---------- Navegación ---------- */
     function showSection(sectionId, event) {
       if (event) event.preventDefault();
       document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
@@ -303,34 +416,58 @@
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       const el = document.getElementById(sectionId);
       if (el) el.classList.add('active');
-      const titles = { inicio: 'Inicio', competencias: 'Competencias', equipos: 'Equipos', eventos: 'Eventos', eliminatorias: 'Eliminatorias', plantillas: 'Plantillas', configuracion: 'Apariencia' };
+      const titles = { inicio: 'Inicio', competencias: 'Competencias', equipos: 'Equipos', eventos: 'Eventos', eliminatorias: 'Eliminatorias', plantillas: 'Plantillas', datos: 'Datos', configuracion: 'Configuración' };
       document.getElementById('pageTitle').textContent = titles[sectionId] || 'Panel';
     }
 
-    function loadHero() {
-      const bg = localStorage.getItem('heroBg');
-      if (bg) document.querySelector('.hero-section').style.backgroundImage = `linear-gradient(135deg, var(--primary), var(--primary-dark)), url(${bg})`;
-      document.getElementById('heroTitle').textContent = localStorage.getItem('heroTitle') || 'Bienvenido al Torneo';
-      document.getElementById('heroSubtitle').textContent = localStorage.getItem('heroSubtitle') || 'Vive la pasión del fútbol local';
+    /* ---------- Hero ---------- */
+    function initHero() {
+      const savedHero = localStorage.getItem('heroBg');
+      if (savedHero) {
+        document.querySelector('.hero-section').style.backgroundImage = `linear-gradient(135deg, var(--primary), var(--primary-dark)), url(${savedHero})`;
+      }
+      const title = document.getElementById('heroTitle');
+      const subtitle = document.getElementById('heroSubtitle');
+      title.textContent = localStorage.getItem('heroTitle') || title.textContent;
+      subtitle.textContent = localStorage.getItem('heroSubtitle') || subtitle.textContent;
+      title.addEventListener('input', () => localStorage.setItem('heroTitle', title.textContent));
+      subtitle.addEventListener('input', () => localStorage.setItem('heroSubtitle', subtitle.textContent));
+
+      document.getElementById('heroImage').addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = evt => {
+          document.querySelector('.hero-section').style.backgroundImage = `linear-gradient(135deg, var(--primary), var(--primary-dark)), url(${evt.target.result})`;
+          localStorage.setItem('heroBg', evt.target.result);
+        };
+        reader.readAsDataURL(file);
+      });
+
+      const jornadas = document.getElementById('statJornadas');
+      jornadas.textContent = localStorage.getItem('statJornadas') || jornadas.textContent;
+      jornadas.addEventListener('input', () => localStorage.setItem('statJornadas', jornadas.textContent));
     }
 
-    function loadStats() {
-      const roster = JSON.parse(localStorage.getItem('teamsRoster') || 'null') || [];
+    /* ---------- Stats automáticas de Inicio ---------- */
+    function refreshHomeStats() {
+      const roster = getRoster();
       const standings = getStandings();
       const totalGoles = standings.reduce((sum, r) => sum + (r.gf || 0), 0);
       const totalPj = standings.reduce((sum, r) => sum + computeRow(r).pj, 0);
-      document.getElementById('statEquipos').textContent = roster.length || standings.length;
-      document.getElementById('statPartidos').textContent = Math.round(totalPj / 2);
+      document.getElementById('statEquipos').textContent = roster.length;
       document.getElementById('statGoles').textContent = totalGoles;
-      document.getElementById('statJornadas').textContent = localStorage.getItem('statJornadas') || '1';
+      document.getElementById('statPartidos').textContent = Math.round(totalPj / 2);
     }
 
-    function loadTexts() {
+    /* ---------- Textos editables ---------- */
+    function initEditableTexts() {
       ['inicio', 'equipos', 'eventos'].forEach(section => {
-        const el = document.getElementById(`text-${section}`);
+        const el = document.getElementById(`editable-${section}`);
         if (!el) return;
         const saved = localStorage.getItem(`text-${section}`);
-        el.innerHTML = saved || '';
+        if (saved) el.innerHTML = saved;
+        el.addEventListener('input', () => localStorage.setItem(`text-${section}`, el.innerHTML));
       });
     }
 
@@ -362,7 +499,7 @@
     function formatFecha(value, withWeekday) {
       if (!value) return '';
       const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
-      if (!match) return value;
+      if (!match) return value; // formato antiguo en texto libre, se muestra tal cual
       const [, y, m, d] = match;
       const date = new Date(Number(y), Number(m) - 1, Number(d));
       const base = `${Number(d)} ${MONTH_NAMES_ES[Number(m) - 1]} ${y}`;
@@ -372,7 +509,7 @@
     function formatHora(value) {
       if (!value) return '';
       const match = /^(\d{2}):(\d{2})$/.exec(value);
-      if (!match) return value;
+      if (!match) return value; // formato antiguo en texto libre
       let hour = parseInt(match[1], 10);
       const minutes = match[2];
       const ampm = hour >= 12 ? 'pm' : 'am';
@@ -381,6 +518,87 @@
       return `${hour}:${minutes} ${ampm}`;
     }
 
+    /* ---------- Roster de equipos ---------- */
+    const defaultRoster = ['Construservicios', 'UPTC - Medic Salud', 'Club Deportivo San Jose', 'Reserva Activa', 'Amigos Edwin Rodriguez Concejal', 'CDA Ecoauto - Dylan Sport', 'Sama - Autos', 'Avengers F.C', 'Amigos 2020 - Chavito', 'Comuneros - Blinda Tec', 'Radiadores la Valle - Amigos Mario Suarez', 'Vidrieria Tellez - Constructora Oicata', 'C.D Semillitas', 'Sallet Seguros - Papeleria los Angeles'];
+
+    function getRoster() {
+      return JSON.parse(localStorage.getItem('teamsRoster') || 'null') || defaultRoster.slice();
+    }
+    function saveRoster(list) {
+      localStorage.setItem('teamsRoster', JSON.stringify(list));
+    }
+
+    function initRoster() {
+      renderRoster();
+      document.getElementById('rosterForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const input = document.getElementById('rosterInput');
+        const name = input.value.trim();
+        if (!name) return;
+        const roster = getRoster();
+        if (roster.some(t => t.toLowerCase() === name.toLowerCase())) {
+          input.value = '';
+          return;
+        }
+        roster.push(name);
+        saveRoster(roster);
+        renderRoster();
+        refreshAllTeamSelects();
+        refreshHomeStats();
+        input.value = '';
+        input.focus();
+      });
+    }
+
+    function renderRoster() {
+      const roster = getRoster();
+      const box = document.getElementById('rosterChips');
+      box.innerHTML = '';
+      if (!roster.length) {
+        box.innerHTML = '<span class="empty-state">Aún no hay equipos registrados.</span>';
+        return;
+      }
+      roster.forEach((team, idx) => {
+        const chip = document.createElement('span');
+        chip.className = 'roster-chip';
+        chip.innerHTML = `${teamCrest(team, 22)}${team} <button title="Quitar de la lista" onclick="removeRosterTeam(${idx})"><i class="fas fa-xmark"></i></button>`;
+        box.appendChild(chip);
+      });
+    }
+
+    function removeRosterTeam(idx) {
+      const roster = getRoster();
+      const name = roster[idx];
+      if (!confirm(`Quitar "${name}" de la lista de equipos? (No borra sus datos ya guardados en otras tablas)`)) return;
+      roster.splice(idx, 1);
+      saveRoster(roster);
+      renderRoster();
+      refreshAllTeamSelects();
+      refreshHomeStats();
+    }
+
+    function populateTeamSelect(select, selectedValue) {
+      const roster = getRoster();
+      const options = roster.slice();
+      if (selectedValue && !options.includes(selectedValue)) options.push(selectedValue);
+      select.innerHTML = options.map(t => `<option value="${t}" ${t === selectedValue ? 'selected' : ''}>${t}</option>`).join('')
+        || '<option value="">Agrega equipos primero</option>';
+    }
+
+    function refreshAllTeamSelects() {
+      renderStandings();
+      renderPeopleTable('topScorers', 'topScorersBody');
+      renderPeopleTable('topAssists', 'topAssistsBody');
+      renderDiscipline();
+      populateTeamSelect(document.getElementById('upHome'));
+      populateTeamSelect(document.getElementById('upAway'));
+      populateTeamSelect(document.getElementById('resHome'));
+      populateTeamSelect(document.getElementById('resAway'));
+      if (typeof refreshSquadTeamSelect === 'function') refreshSquadTeamSelect();
+      if (typeof renderBracket === 'function') renderBracket();
+    }
+
+    /* ---------- Tabla de posiciones ---------- */
     const defaultStandings = [
       { team: 'Construservicios', g: 9, e: 3, p: 0, gf: 35, gc: 8 },
       { team: 'UPTC - Medic Salud', g: 9, e: 2, p: 1, gf: 39, gc: 13 },
@@ -405,8 +623,7 @@
       return { pj, pts, dg };
     }
 
-    function getStandings() {
-      const data = JSON.parse(localStorage.getItem('standings') || 'null') || defaultStandings.slice();
+    function sortStandings(data) {
       return data.slice().sort((a, b) => {
         const ca = computeRow(a), cb = computeRow(b);
         if (cb.pts !== ca.pts) return cb.pts - ca.pts;
@@ -415,35 +632,101 @@
       });
     }
 
-    function loadStandings() {
+    function getStandings() {
+      const data = JSON.parse(localStorage.getItem('standings') || 'null') || defaultStandings.slice();
+      return sortStandings(data);
+    }
+    function saveStandings(data) {
+      localStorage.setItem('standings', JSON.stringify(sortStandings(data)));
+      renderTeamStats();
+      renderHomePreviews();
+      refreshHomeStats();
+    }
+
+    function initStandings() {
+      renderStandings();
+      renderTeamStats();
+      renderHomePreviews();
+    }
+
+    function renderStandings() {
       const data = getStandings();
       const body = document.getElementById('standingsBody');
       body.innerHTML = '';
-      if (!data.length) { body.innerHTML = '<tr><td colspan="10" class="empty-state">Aún no hay equipos registrados.</td></tr>'; return; }
+      if (!data.length) {
+        body.innerHTML = '<tr><td colspan="11" class="empty-state">Agrega equipos con el botón de arriba.</td></tr>';
+        return;
+      }
       data.forEach((row, idx) => {
         const { pj, pts, dg } = computeRow(row);
         const rankClass = idx < 3 ? ` rank-${idx + 1}` : '';
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td class="position"><span class="rank-badge${rankClass}">${idx + 1}</span></td>
-          <td class="team-name team-name-cell">${teamCrest(row.team, 26)}${row.team}</td>
-          <td style="text-align:center;">${pj}</td>
-          <td style="text-align:center;">${row.g}</td>
-          <td style="text-align:center;">${row.e}</td>
-          <td style="text-align:center;">${row.p}</td>
-          <td style="text-align:center;">${row.gf}</td>
-          <td style="text-align:center;">${row.gc}</td>
-          <td style="text-align:center;">${dg >= 0 ? '+' + dg : dg}</td>
-          <td class="points" style="text-align:center;">${pts}</td>`;
+          <td class="team-name"></td>
+          <td class="cell-computed">${pj}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="g">${row.g}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="e">${row.e}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="p">${row.p}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="gf">${row.gf}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="gc">${row.gc}</td>
+          <td class="cell-computed">${dg >= 0 ? '+' + dg : dg}</td>
+          <td class="points cell-computed">${pts}</td>
+          <td class="col-actions"><button class="btn btn-danger btn-sm" title="Eliminar" onclick="deleteStandingRow(${idx})"><i class="fas fa-trash"></i></button></td>
+        `;
+        const teamCell = tr.querySelector('.team-name');
+        teamCell.classList.add('team-name-cell');
+        teamCell.innerHTML = teamCrest(row.team, 26);
+        const select = document.createElement('select');
+        populateTeamSelect(select, row.team);
+        select.addEventListener('change', () => {
+          const current = getStandings();
+          current[idx].team = select.value;
+          saveStandings(current);
+          renderStandings();
+        });
+        teamCell.appendChild(select);
+
+        tr.querySelectorAll('[contenteditable]').forEach(cell => {
+          cell.addEventListener('blur', () => {
+            const field = cell.dataset.field;
+            const value = parseInt(cell.textContent) || 0;
+            const current = getStandings();
+            current[idx][field] = value;
+            saveStandings(current);
+            renderStandings();
+          });
+        });
         body.appendChild(tr);
       });
-      loadTeamStats(data);
     }
 
-    function loadTeamStats(data) {
+    function addStandingRow() {
+      const roster = getRoster();
+      if (!roster.length) {
+        alert('Primero agrega al menos un equipo en el panel "Equipos del torneo".');
+        return;
+      }
+      const current = getStandings();
+      const usedTeams = current.map(r => r.team);
+      const freeTeam = roster.find(t => !usedTeams.includes(t)) || roster[0];
+      current.push({ team: freeTeam, g: 0, e: 0, p: 0, gf: 0, gc: 0 });
+      saveStandings(current);
+      renderStandings();
+    }
+    function deleteStandingRow(idx) {
+      const current = getStandings();
+      current.splice(idx, 1);
+      saveStandings(current);
+      renderStandings();
+    }
+
+    /* ---------- Estadísticas de equipo (derivadas) ---------- */
+    function renderTeamStats() {
+      const data = getStandings();
       const body = document.getElementById('teamStatsBody');
       body.innerHTML = '';
-      if (!data.length) { body.innerHTML = '<tr><td colspan="6" class="empty-state">Aún no hay equipos registrados.</td></tr>'; return; }
+      if (!data.length) { body.innerHTML = '<tr><td colspan="6" class="empty-state">Agrega equipos en la tabla de posiciones.</td></tr>'; return; }
       data.forEach(row => {
         const { pj, pts } = computeRow(row);
         const promedio = pj ? (row.gf / pj).toFixed(2) : '0.00';
@@ -456,11 +739,48 @@
           <td style="text-align:center;">${row.gf}</td>
           <td style="text-align:center;">${row.gc}</td>
           <td style="text-align:center;">${promedio}</td>
-          <td style="text-align:center;"><span class="badge" style="background:${badgeColor}; color:white;">${efectividad}%</span></td>`;
+          <td style="text-align:center;"><span class="badge" style="background:${badgeColor}; color:white;">${efectividad}%</span></td>
+        `;
         body.appendChild(tr);
       });
     }
 
+    function renderHomePreviews() {
+      const teamsBox = document.getElementById('homeTeamsPreview');
+      const data = getStandings();
+      teamsBox.innerHTML = data.slice(0, 4).map((row, i) => `
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; ${i < 3 ? 'border-bottom:1px solid var(--border);' : ''}">
+          <span class="position">${i + 1}</span><span class="team-name-cell">${teamCrest(row.team, 22)}${row.team}</span>
+        </div>`).join('') || '<p class="empty-state">Sin equipos aún.</p>';
+      renderUpcomingPreview();
+      renderNextMatchRibbon();
+    }
+
+    function renderUpcomingPreview() {
+      const box = document.getElementById('homeUpcomingPreview');
+      if (!box) return;
+      const data = getUpcoming().slice(0, 3);
+      box.innerHTML = data.map((m, i) => `
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; ${i < data.length - 1 ? 'border-bottom:1px solid var(--border);' : ''}">
+          <span>${formatFecha(m.fecha)}</span><span class="matchup">${teamCrest(m.home, 20)}${m.home} <span class="vs-sep">vs</span> ${teamCrest(m.away, 20)}${m.away}</span>
+        </div>`).join('') || '<p class="empty-state">Sin partidos programados.</p>';
+    }
+
+    function renderNextMatchRibbon() {
+      const ribbon = document.getElementById('nextMatchRibbon');
+      if (!ribbon) return;
+      const data = getUpcoming();
+      if (!data.length) { ribbon.style.display = 'none'; return; }
+      const m = data[0];
+      ribbon.style.display = 'flex';
+      ribbon.innerHTML = `
+        <span class="nmr-label"><i class="fas fa-tower-broadcast"></i> Próximo Partido</span>
+        <span class="nmr-teams">${teamCrest(m.home, 26)}${m.home} <span class="vs-sep" style="color:rgba(255,255,255,0.7);">vs</span> ${teamCrest(m.away, 26)}${m.away}</span>
+        <span class="nmr-meta">${formatFecha(m.fecha, true)}${m.hora ? ' · ' + formatHora(m.hora) : ''}</span>
+      `;
+    }
+
+    /* ---------- Goleadores / asistidores / disciplina ---------- */
     const defaultScorers = [
       { player: 'Luis Baron', team: 'Construservicios', value: 17 },
       { player: 'Pedro Martinez', team: 'Amigos Edwin Rodriguez Concejal', value: 12 },
@@ -491,103 +811,240 @@
       { team: 'CDA Ecoauto - Dylan Sport', yellow: 5, red: 2 }
     ];
 
-    function loadTeamExtras() {
-      const scorers = JSON.parse(localStorage.getItem('topScorers') || 'null') || defaultScorers.slice();
-      const assists = JSON.parse(localStorage.getItem('topAssists') || 'null') || defaultAssists.slice();
-      const discipline = JSON.parse(localStorage.getItem('discipline') || 'null') || defaultDiscipline.slice();
+    function getPeople(key) {
+      const defaults = key === 'topScorers' ? defaultScorers : defaultAssists;
+      return JSON.parse(localStorage.getItem(key) || 'null') || defaults.slice();
+    }
+    function savePeople(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
 
-      renderFeatured('topScorerFeatured', scorers, 'goles');
-      renderFeatured('topAssistFeatured', assists, 'asist.');
+    function getDiscipline() {
+      return JSON.parse(localStorage.getItem('discipline') || 'null') || defaultDiscipline.slice();
+    }
+    function saveDiscipline(data) { localStorage.setItem('discipline', JSON.stringify(data)); }
 
-      const body = document.getElementById('disciplineBody');
+    function initTeamsExtra() {
+      renderPeopleTable('topScorers', 'topScorersBody');
+      renderPeopleTable('topAssists', 'topAssistsBody');
+      renderDiscipline();
+    }
+
+    function renderPeopleTable(key, bodyId) {
+      const data = getPeople(key);
+      const body = document.getElementById(bodyId);
       body.innerHTML = '';
-      if (!discipline.length) { body.innerHTML = '<tr><td colspan="3" class="empty-state">Sin registros.</td></tr>'; return; }
-      discipline.forEach(row => {
+      if (!data.length) { body.innerHTML = `<tr><td colspan="4" class="empty-state">Sin registros.</td></tr>`; return; }
+      data.forEach((row, idx) => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${row.team}</td><td style="text-align:center;">${row.yellow}</td><td style="text-align:center;">${row.red}</td>`;
+        tr.innerHTML = `
+          <td contenteditable="true" data-field="player">${row.player}</td>
+          <td class="team-cell"></td>
+          <td style="text-align:center;" contenteditable="true" data-field="value">${row.value}</td>
+          <td class="col-actions"><button class="btn btn-danger btn-sm" onclick="deletePersonRow('${key}', ${idx})"><i class="fas fa-trash"></i></button></td>
+        `;
+        const teamCell = tr.querySelector('.team-cell');
+        const select = document.createElement('select');
+        populateTeamSelect(select, row.team);
+        select.addEventListener('change', () => {
+          const current = getPeople(key);
+          current[idx].team = select.value;
+          savePeople(key, current);
+        });
+        teamCell.appendChild(select);
+
+        tr.querySelectorAll('[contenteditable]').forEach(cell => {
+          cell.addEventListener('blur', () => {
+            const field = cell.dataset.field;
+            const current = getPeople(key);
+            current[idx][field] = field === 'value' ? (parseInt(cell.textContent) || 0) : cell.textContent.trim();
+            savePeople(key, current);
+            renderPeopleTable(key, bodyId);
+          });
+        });
         body.appendChild(tr);
       });
     }
 
-    function renderFeatured(containerId, list, unit) {
-      const box = document.getElementById(containerId);
-      if (!list.length) { box.innerHTML = '<p class="empty-state">Sin datos aún.</p>'; return; }
-      const [first, ...rest] = list;
-      let html = `
-        <div style="text-align:center; padding:16px 0;">
-          <div style="font-size:2.5rem; font-weight:700; color:var(--primary);">${first.value}</div>
-          <div style="font-size:1.1rem; font-weight:600; margin-top:8px;">${first.player}</div>
-          <div style="color:var(--text-secondary); margin-top:4px;">${first.team}</div>
-        </div>`;
-      if (rest.length) {
-        html += `<table class="modern-table" style="margin:0;"><tbody>`;
-        rest.forEach(p => { html += `<tr><td>${p.player}</td><td style="text-align:center;">${p.value}</td></tr>`; });
-        html += `</tbody></table>`;
-      }
-      box.innerHTML = html;
+    function addPersonRow(key) {
+      const roster = getRoster();
+      if (!roster.length) { alert('Primero agrega equipos en Competencias.'); return; }
+      const data = getPeople(key);
+      data.push({ player: 'Nuevo Jugador', team: roster[0], value: 0 });
+      savePeople(key, data);
+      renderPeopleTable(key, key === 'topScorers' ? 'topScorersBody' : 'topAssistsBody');
+    }
+    function deletePersonRow(key, idx) {
+      const data = getPeople(key);
+      data.splice(idx, 1);
+      savePeople(key, data);
+      renderPeopleTable(key, key === 'topScorers' ? 'topScorersBody' : 'topAssistsBody');
     }
 
-    function loadEvents() {
-      const upcoming = JSON.parse(localStorage.getItem('upcomingMatches') || 'null') || [
-        { fecha: '2025-11-16', home: 'Construservicios', away: 'CDA Ecoauto - Dylan Sport', hora: '08:00' },
-        { fecha: '2025-11-16', home: 'UPTC - Medic Salud', away: 'Avengers F.C', hora: '10:00' },
-        { fecha: '2025-11-16', home: 'Club Deportivo San Jose', away: 'Sama - Autos', hora: '12:00' },
-        { fecha: '2025-11-16', home: 'Reserva Activa', away: 'Amigos Edwin Rodriguez Concejal', hora: '14:00' }
-      ];
-      const upcomingBox = document.getElementById('upcomingList');
-      upcomingBox.innerHTML = '';
-      if (!upcoming.length) { upcomingBox.innerHTML = '<p class="empty-state">No hay partidos programados por ahora.</p>'; }
-      upcoming.forEach(m => {
-        const row = document.createElement('div');
-        row.style.cssText = 'display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:8px;';
-        row.innerHTML = `<span style="display:flex; align-items:center; flex-wrap:wrap; gap:6px;"><strong>${formatFecha(m.fecha)}</strong> ·
-          <span class="matchup">${teamCrest(m.home, 22)}${m.home} <span class="vs-sep">vs</span> ${teamCrest(m.away, 22)}${m.away}</span></span>
-          ${m.hora ? '<span style="color:var(--text-secondary);">' + formatHora(m.hora) + '</span>' : ''}`;
-        upcomingBox.appendChild(row);
+    function renderDiscipline() {
+      const data = getDiscipline();
+      const body = document.getElementById('disciplineBody');
+      body.innerHTML = '';
+      if (!data.length) { body.innerHTML = '<tr><td colspan="4" class="empty-state">Sin registros.</td></tr>'; return; }
+      data.forEach((row, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="team-cell"></td>
+          <td style="text-align:center;" contenteditable="true" data-field="yellow">${row.yellow}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="red">${row.red}</td>
+          <td class="col-actions"><button class="btn btn-danger btn-sm" onclick="deleteDisciplineRow(${idx})"><i class="fas fa-trash"></i></button></td>
+        `;
+        const teamCell = tr.querySelector('.team-cell');
+        const select = document.createElement('select');
+        populateTeamSelect(select, row.team);
+        select.addEventListener('change', () => {
+          const current = getDiscipline();
+          current[idx].team = select.value;
+          saveDiscipline(current);
+        });
+        teamCell.appendChild(select);
+
+        tr.querySelectorAll('[contenteditable]').forEach(cell => {
+          cell.addEventListener('blur', () => {
+            const field = cell.dataset.field;
+            const current = getDiscipline();
+            current[idx][field] = parseInt(cell.textContent) || 0;
+            saveDiscipline(current);
+            renderDiscipline();
+          });
+        });
+        body.appendChild(tr);
+      });
+    }
+    function addDisciplineRow() {
+      const roster = getRoster();
+      if (!roster.length) { alert('Primero agrega equipos en Competencias.'); return; }
+      const data = getDiscipline();
+      data.push({ team: roster[0], yellow: 0, red: 0 });
+      saveDiscipline(data);
+      renderDiscipline();
+    }
+    function deleteDisciplineRow(idx) {
+      const data = getDiscipline();
+      data.splice(idx, 1);
+      saveDiscipline(data);
+      renderDiscipline();
+    }
+
+    /* ---------- Eventos ---------- */
+    const defaultUpcoming = [
+      { fecha: '2025-11-16', home: 'Construservicios', away: 'CDA Ecoauto - Dylan Sport', hora: '08:00' },
+      { fecha: '2025-11-16', home: 'UPTC - Medic Salud', away: 'Avengers F.C', hora: '10:00' },
+      { fecha: '2025-11-16', home: 'Club Deportivo San Jose', away: 'Sama - Autos', hora: '12:00' },
+      { fecha: '2025-11-16', home: 'Reserva Activa', away: 'Amigos Edwin Rodriguez Concejal', hora: '14:00' }
+    ];
+    const defaultResults = [
+      { fecha: '2025-10-26', home: 'Construservicios', away: 'Club Deportivo San Jose', marcador: '1 - 0', tipo: 'win' },
+      { fecha: '2025-10-26', home: 'Sallet Seguros - Papeleria los Angeles', away: 'Amigos 2020 - Chavito', marcador: '0 - 7', tipo: 'loss' },
+      { fecha: '2025-10-26', home: 'Sama - Autos', away: 'CDA Ecoauto - Dylan Sport', marcador: '0 - 0', tipo: 'draw' },
+      { fecha: '2025-10-26', home: 'Comuneros - Blinda Tec', away: 'Vidrieria Tellez - Constructora Oicata', marcador: '0 - 2', tipo: 'loss' },
+      { fecha: '2025-10-26', home: 'C.D Semillitas', away: 'Radiadores la Valle - Amigos Mario Suarez', marcador: '1 - 4', tipo: 'loss' },
+      { fecha: '2025-10-25', home: 'UPTC - Medic Salud', away: 'Avengers F.C', marcador: '2 - 0', tipo: 'win' }
+    ];
+
+    function getUpcoming() { return JSON.parse(localStorage.getItem('upcomingMatches') || 'null') || defaultUpcoming.slice(); }
+    function saveUpcoming(data) { localStorage.setItem('upcomingMatches', JSON.stringify(data)); renderUpcomingPreview(); renderNextMatchRibbon(); }
+    function getResults() { return JSON.parse(localStorage.getItem('recentResults') || 'null') || defaultResults.slice(); }
+    function saveResults(data) { localStorage.setItem('recentResults', JSON.stringify(data)); }
+
+    function initEvents() {
+      populateTeamSelect(document.getElementById('upHome'));
+      populateTeamSelect(document.getElementById('upAway'));
+      populateTeamSelect(document.getElementById('resHome'));
+      populateTeamSelect(document.getElementById('resAway'));
+      renderUpcomingList();
+      renderResultsList();
+
+      document.getElementById('upcomingForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const fecha = document.getElementById('upFecha').value.trim();
+        const home = document.getElementById('upHome').value;
+        const away = document.getElementById('upAway').value;
+        const hora = document.getElementById('upHora').value.trim();
+        if (!fecha || !home || !away) return;
+        if (home === away) { alert('Elige dos equipos distintos.'); return; }
+        const data = getUpcoming();
+        data.unshift({ fecha, home, away, hora });
+        saveUpcoming(data);
+        renderUpcomingList();
+        e.target.reset();
+        populateTeamSelect(document.getElementById('upHome'));
+        populateTeamSelect(document.getElementById('upAway'));
       });
 
-      const results = JSON.parse(localStorage.getItem('recentResults') || 'null') || [
-        { fecha: '2025-10-26', home: 'Construservicios', away: 'Club Deportivo San Jose', marcador: '1 - 0', tipo: 'win' },
-        { fecha: '2025-10-26', home: 'Sallet Seguros - Papeleria los Angeles', away: 'Amigos 2020 - Chavito', marcador: '0 - 7', tipo: 'loss' },
-        { fecha: '2025-10-26', home: 'Sama - Autos', away: 'CDA Ecoauto - Dylan Sport', marcador: '0 - 0', tipo: 'draw' },
-        { fecha: '2025-10-26', home: 'Comuneros - Blinda Tec', away: 'Vidrieria Tellez - Constructora Oicata', marcador: '0 - 2', tipo: 'loss' },
-        { fecha: '2025-10-26', home: 'C.D Semillitas', away: 'Radiadores la Valle - Amigos Mario Suarez', marcador: '1 - 4', tipo: 'loss' },
-        { fecha: '2025-10-25', home: 'UPTC - Medic Salud', away: 'Avengers F.C', marcador: '2 - 0', tipo: 'win' }
-      ];
+      document.getElementById('resultForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const fecha = document.getElementById('resFecha').value.trim();
+        const home = document.getElementById('resHome').value;
+        const away = document.getElementById('resAway').value;
+        const marcador = document.getElementById('resMarcador').value.trim();
+        const tipo = document.getElementById('resTipo').value;
+        if (!fecha || !home || !away || !marcador) return;
+        if (home === away) { alert('Elige dos equipos distintos.'); return; }
+        const data = getResults();
+        data.unshift({ fecha, home, away, marcador, tipo });
+        saveResults(data);
+        renderResultsList();
+        e.target.reset();
+        populateTeamSelect(document.getElementById('resHome'));
+        populateTeamSelect(document.getElementById('resAway'));
+      });
+    }
+
+    function renderUpcomingList() {
+      const list = document.getElementById('upcomingList');
+      const data = getUpcoming();
+      list.innerHTML = '';
+      if (!data.length) { list.innerHTML = '<p class="empty-state">No hay partidos programados.</p>'; return; }
+      data.forEach((m, idx) => {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:8px;';
+        row.innerHTML = `<span style="display:flex; align-items:center; flex-wrap:wrap; gap:6px;"><strong>${formatFecha(m.fecha)}</strong> ${m.hora ? '· ' + formatHora(m.hora) + ' ·' : '·'}
+          <span class="matchup">${teamCrest(m.home, 22)}${m.home} <span class="vs-sep">vs</span> ${teamCrest(m.away, 22)}${m.away}</span></span>
+          <button class="btn btn-danger btn-sm" onclick="deleteUpcoming(${idx})"><i class="fas fa-trash"></i></button>`;
+        list.appendChild(row);
+      });
+    }
+    function deleteUpcoming(idx) {
+      const data = getUpcoming();
+      data.splice(idx, 1);
+      saveUpcoming(data);
+      renderUpcomingList();
+    }
+
+    function renderResultsList() {
+      const list = document.getElementById('resultsList');
+      const data = getResults();
+      list.innerHTML = '';
+      if (!data.length) { list.innerHTML = '<p class="empty-state">No hay resultados registrados.</p>'; return; }
       const labels = { win: 'Victoria local', draw: 'Empate', loss: 'Victoria visitante' };
       const colors = { win: 'var(--success)', draw: 'var(--warning)', loss: 'var(--error)' };
-      const resultsBox = document.getElementById('resultsList');
-      resultsBox.innerHTML = '';
-      if (!results.length) { resultsBox.innerHTML = '<p class="empty-state">Aún no hay resultados.</p>'; }
-      results.forEach(r => {
+      data.forEach((r, idx) => {
         const card = document.createElement('div');
         card.className = 'data-card';
         card.innerHTML = `
-          <div class="data-card-header matchup">${formatFecha(r.fecha)} · ${teamCrest(r.home, 20)}${r.home} <span class="vs-sep">vs</span> ${teamCrest(r.away, 20)}${r.away}</div>
+          <div class="data-card-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <span class="matchup">${formatFecha(r.fecha)} · ${teamCrest(r.home, 20)}${r.home} <span class="vs-sep">vs</span> ${teamCrest(r.away, 20)}${r.away}</span>
+            <button class="btn btn-danger btn-sm" onclick="deleteResult(${idx})"><i class="fas fa-trash"></i></button>
+          </div>
           <div class="data-card-content">
             <div style="text-align:center; font-size:2rem; font-weight:700; color:${colors[r.tipo] || 'var(--primary)'}; margin-bottom:8px;">${r.marcador}</div>
             <div style="text-align:center; color:var(--text-secondary);">${labels[r.tipo] || ''}</div>
           </div>`;
-        resultsBox.appendChild(card);
+        list.appendChild(card);
       });
-
-      renderNextMatchRibbon(upcoming);
+    }
+    function deleteResult(idx) {
+      const data = getResults();
+      data.splice(idx, 1);
+      saveResults(data);
+      renderResultsList();
     }
 
-    function renderNextMatchRibbon(upcoming) {
-      const ribbon = document.getElementById('nextMatchRibbon');
-      if (!ribbon) return;
-      if (!upcoming || !upcoming.length) { ribbon.style.display = 'none'; return; }
-      const m = upcoming[0];
-      ribbon.style.display = 'flex';
-      ribbon.innerHTML = `
-        <span class="nmr-label"><i class="fas fa-tower-broadcast"></i> Próximo Partido</span>
-        <span class="nmr-teams">${teamCrest(m.home, 26)}${m.home} <span class="vs-sep" style="color:rgba(255,255,255,0.7);">vs</span> ${teamCrest(m.away, 26)}${m.away}</span>
-        <span class="nmr-meta">${formatFecha(m.fecha, true)}${m.hora ? ' · ' + formatHora(m.hora) : ''}</span>
-      `;
-    }
-
-    /* ---------- Eliminatorias (solo lectura) ---------- */
+    /* ---------- Eliminatorias (bracket) ---------- */
     function getKnockout() {
       const saved = JSON.parse(localStorage.getItem('knockout') || 'null');
       if (saved) return saved;
@@ -602,8 +1059,20 @@
         final: [{ a: '', b: '', sa: null, sb: null }]
       };
     }
+    function saveKnockout(data) { localStorage.setItem('knockout', JSON.stringify(data)); }
 
-    function loadBracket() {
+    function initKnockout() {
+      renderBracket();
+    }
+
+    function bracketTeamOptions(selected) {
+      const roster = getRoster();
+      const opts = ['<option value="">Por definir</option>'];
+      roster.forEach(t => opts.push(`<option value="${t}" ${t === selected ? 'selected' : ''}>${t}</option>`));
+      return opts.join('');
+    }
+
+    function renderBracket() {
       const data = getKnockout();
       const container = document.getElementById('bracketContainer');
       container.innerHTML = '';
@@ -619,22 +1088,20 @@
         col.className = 'bracket-round';
         col.innerHTML = `<div class="bracket-round-title">${label}</div>`;
 
-        data[key].forEach(match => {
+        data[key].forEach((match, idx) => {
           const winnerA = match.sa !== null && match.sb !== null && match.sa > match.sb;
           const winnerB = match.sa !== null && match.sb !== null && match.sb > match.sa;
-          const nameA = match.a || 'Por definir';
-          const nameB = match.b || 'Por definir';
 
           const card = document.createElement('div');
           card.className = 'bracket-match';
           card.innerHTML = `
             <div class="bracket-slot${winnerA ? ' winner' : ''}">
-              <span class="slot-team">${match.a ? teamCrest(match.a, 22) : ''}${nameA}</span>
-              <span class="slot-score-display">${match.sa ?? '-'}</span>
+              <span class="slot-team"><select data-round="${key}" data-idx="${idx}" data-side="a">${bracketTeamOptions(match.a)}</select></span>
+              <input type="number" min="0" class="slot-score" data-round="${key}" data-idx="${idx}" data-side="sa" value="${match.sa ?? ''}" placeholder="-">
             </div>
             <div class="bracket-slot${winnerB ? ' winner' : ''}">
-              <span class="slot-team">${match.b ? teamCrest(match.b, 22) : ''}${nameB}</span>
-              <span class="slot-score-display">${match.sb ?? '-'}</span>
+              <span class="slot-team"><select data-round="${key}" data-idx="${idx}" data-side="b">${bracketTeamOptions(match.b)}</select></span>
+              <input type="number" min="0" class="slot-score" data-round="${key}" data-idx="${idx}" data-side="sb" value="${match.sb ?? ''}" placeholder="-">
             </div>
           `;
           col.appendChild(card);
@@ -650,58 +1117,288 @@
         }
       });
 
+      container.querySelectorAll('select, input').forEach(el => {
+        const evt = el.tagName === 'SELECT' ? 'change' : 'input';
+        el.addEventListener(evt, () => {
+          const round = el.dataset.round, idx = parseInt(el.dataset.idx), side = el.dataset.side;
+          const current = getKnockout();
+          if (side === 'sa' || side === 'sb') {
+            const val = el.value === '' ? null : parseInt(el.value) || 0;
+            current[round][idx][side] = val;
+          } else {
+            current[round][idx][side] = el.value;
+          }
+          saveKnockout(current);
+          renderBracket();
+        });
+      });
+
+      renderChampionBanner(data);
+    }
+
+    function renderChampionBanner(data) {
       const banner = document.getElementById('championBanner');
       const f = data.final[0];
       if (f.sa !== null && f.sb !== null && f.sa !== f.sb) {
         const champion = f.sa > f.sb ? f.a : f.b;
-        banner.innerHTML = champion ? `<div class="bracket-champion-banner"><i class="fas fa-trophy"></i> Campeón: ${champion}</div>` : '';
-      } else {
-        banner.innerHTML = '';
+        if (champion) {
+          banner.innerHTML = `<div class="bracket-champion-banner"><i class="fas fa-trophy"></i> Campeón: ${champion}</div>`;
+          return;
+        }
       }
+      banner.innerHTML = '';
     }
 
-    /* ---------- Plantillas (solo lectura) ---------- */
+    /* ---------- Plantillas (jugadores por puesto + DT) ---------- */
     const SQUAD_POSITIONS = ['Portero', 'Defensa', 'Mediocampista', 'Delantero'];
 
-    function loadSquads() {
-      const roster = JSON.parse(localStorage.getItem('teamsRoster') || 'null') || [];
-      const squads = JSON.parse(localStorage.getItem('squads') || 'null') || {};
+    function getSquads() {
+      return JSON.parse(localStorage.getItem('squads') || 'null') || {};
+    }
+    function saveSquads(data) { localStorage.setItem('squads', JSON.stringify(data)); }
+    function getTeamSquad(team) {
+      const squads = getSquads();
+      return squads[team] || { dt: '', players: [] };
+    }
+
+    let currentSquadTeam = null;
+
+    function initSquads() {
       const select = document.getElementById('squadTeamSelect');
+      select.addEventListener('change', () => {
+        currentSquadTeam = select.value;
+        renderSquadEditor();
+      });
+
+      document.getElementById('squadDtInput').addEventListener('blur', function () {
+        if (!currentSquadTeam) return;
+        const squads = getSquads();
+        if (!squads[currentSquadTeam]) squads[currentSquadTeam] = { dt: '', players: [] };
+        squads[currentSquadTeam].dt = this.value.trim();
+        saveSquads(squads);
+      });
+
+      document.getElementById('squadPlayerForm').addEventListener('submit', e => {
+        e.preventDefault();
+        if (!currentSquadTeam) return;
+        const nameInput = document.getElementById('squadPlayerName');
+        const posSelect = document.getElementById('squadPlayerPosition');
+        const name = nameInput.value.trim();
+        if (!name) return;
+        const squads = getSquads();
+        if (!squads[currentSquadTeam]) squads[currentSquadTeam] = { dt: '', players: [] };
+        squads[currentSquadTeam].players.push({ name, position: posSelect.value });
+        saveSquads(squads);
+        nameInput.value = '';
+        nameInput.focus();
+        renderSquadPositions();
+      });
+
+      refreshSquadTeamSelect();
+    }
+
+    function refreshSquadTeamSelect() {
+      const select = document.getElementById('squadTeamSelect');
+      const roster = getRoster();
       const emptyState = document.getElementById('squadEmptyState');
       const editor = document.getElementById('squadEditor');
 
       if (!roster.length) {
+        select.innerHTML = '';
         emptyState.style.display = 'block';
         editor.style.display = 'none';
+        currentSquadTeam = null;
         return;
       }
+
       emptyState.style.display = 'none';
       editor.style.display = 'block';
-      select.innerHTML = roster.map(t => `<option value="${t}">${t}</option>`).join('');
-      select.addEventListener('change', () => renderSquadView(squads, select.value));
-      renderSquadView(squads, roster[0]);
+      const previousValue = currentSquadTeam && roster.includes(currentSquadTeam) ? currentSquadTeam : roster[0];
+      select.innerHTML = roster.map(t => `<option value="${t}" ${t === previousValue ? 'selected' : ''}>${t}</option>`).join('');
+      currentSquadTeam = previousValue;
+      renderSquadEditor();
     }
 
-    function renderSquadView(squads, team) {
-      const squad = squads[team] || { dt: '', players: [] };
-      document.getElementById('squadDtDisplay').textContent = squad.dt || 'Sin asignar';
+    function renderSquadEditor() {
+      if (!currentSquadTeam) return;
+      const squad = getTeamSquad(currentSquadTeam);
+      document.getElementById('squadDtInput').value = squad.dt || '';
+      renderSquadPositions();
+    }
+
+    function renderSquadPositions() {
+      const squad = getTeamSquad(currentSquadTeam);
       const box = document.getElementById('squadPositions');
       box.innerHTML = '';
       SQUAD_POSITIONS.forEach(position => {
-        const players = squad.players.filter(p => p.position === position);
+        const players = squad.players
+          .map((p, idx) => ({ ...p, idx }))
+          .filter(p => p.position === position);
+
         const group = document.createElement('div');
         group.className = 'squad-group';
         group.innerHTML = `
           <div class="squad-group-header"><span>${position}</span><span class="squad-count">${players.length}</span></div>
           ${players.length
-            ? `<ul class="squad-player-list">${players.map(p => `<li><span>${p.name}</span></li>`).join('')}</ul>`
+            ? `<ul class="squad-player-list">${players.map(p => `
+                <li><span>${p.name}</span>
+                  <button title="Quitar jugador" onclick="removeSquadPlayer(${p.idx})"><i class="fas fa-xmark"></i></button>
+                </li>`).join('')}</ul>`
             : `<div class="squad-empty-group">Sin jugadores en este puesto.</div>`}
         `;
         box.appendChild(group);
       });
     }
 
-    /* ---------- Apariencia (tema) ---------- */
+    function removeSquadPlayer(idx) {
+      if (!currentSquadTeam) return;
+      const squads = getSquads();
+      if (!squads[currentSquadTeam]) return;
+      squads[currentSquadTeam].players.splice(idx, 1);
+      saveSquads(squads);
+      renderSquadPositions();
+    }
+
+    /* ---------- Excel: importación inteligente ---------- */
+    const STANDINGS_COLUMN_ALIASES = {
+      team: ['equipo', 'team', 'club'],
+      g: ['g', 'ganados', 'victorias', 'pg'],
+      e: ['e', 'empates', 'pe'],
+      p: ['p', 'perdidos', 'derrotas', 'pp'],
+      gf: ['gf', 'goles a favor', 'golesafavor', 'gol favor'],
+      gc: ['gc', 'goles en contra', 'golesencontra', 'gol contra']
+    };
+
+    function normalizeHeader(text) {
+      return String(text || '').toLowerCase().trim()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function detectStandingsColumns(headerRow) {
+      const map = {};
+      headerRow.forEach((cell, idx) => {
+        const norm = normalizeHeader(cell);
+        for (const field in STANDINGS_COLUMN_ALIASES) {
+          if (STANDINGS_COLUMN_ALIASES[field].includes(norm) && map[field] === undefined) {
+            map[field] = idx;
+          }
+        }
+      });
+      const requiredFields = ['team', 'g', 'e', 'p', 'gf', 'gc'];
+      const complete = requiredFields.every(f => map[f] !== undefined);
+      return complete ? map : null;
+    }
+
+    function initExcel() {
+      let currentExcelData = {};
+
+      function createTable(sheet, sheetName) {
+        const table = document.createElement('table');
+        table.className = 'modern-table';
+        const header = table.insertRow();
+        if (sheet.length) {
+          sheet[0].forEach(cell => {
+            const th = document.createElement('th');
+            th.textContent = cell;
+            header.appendChild(th);
+          });
+        }
+        for (let r = 1; r < sheet.length; r++) {
+          const row = table.insertRow();
+          sheet[r].forEach(cell => {
+            const td = row.insertCell();
+            td.textContent = cell;
+            td.contentEditable = true;
+            td.addEventListener('input', () => {
+              currentExcelData[sheetName][r][td.cellIndex] = td.textContent;
+              localStorage.setItem('excelData', JSON.stringify(currentExcelData));
+            });
+          });
+        }
+        return table;
+      }
+
+      function applySheetToStandings(sheet, colMap) {
+        const rows = [];
+        for (let r = 1; r < sheet.length; r++) {
+          const raw = sheet[r];
+          if (!raw || !raw[colMap.team]) continue;
+          rows.push({
+            team: String(raw[colMap.team]).trim(),
+            g: parseInt(raw[colMap.g]) || 0,
+            e: parseInt(raw[colMap.e]) || 0,
+            p: parseInt(raw[colMap.p]) || 0,
+            gf: parseInt(raw[colMap.gf]) || 0,
+            gc: parseInt(raw[colMap.gc]) || 0
+          });
+        }
+        if (!rows.length) { alert('No se encontraron filas de datos en esta hoja.'); return; }
+
+        const roster = getRoster();
+        rows.forEach(r => {
+          if (!roster.some(t => t.toLowerCase() === r.team.toLowerCase())) roster.push(r.team);
+        });
+        saveRoster(roster);
+        saveStandings(rows);
+        renderRoster();
+        refreshAllTeamSelects();
+        renderStandings();
+        alert(`Se aplicaron ${rows.length} equipos a la tabla de posiciones. Ya puedes verla en Competencias.`);
+      }
+
+      function distributeData(data) {
+        const container = document.getElementById('tablesContainer');
+        container.innerHTML = '';
+        for (const sheetName in data) {
+          const sheet = data[sheetName];
+          const title = document.createElement('h3');
+          title.textContent = sheetName;
+          title.style.cssText = 'color: var(--primary); margin: 24px 0 12px 0;';
+          container.appendChild(title);
+
+          const colMap = sheet.length ? detectStandingsColumns(sheet[0]) : null;
+          if (colMap) {
+            const banner = document.createElement('div');
+            banner.className = 'import-match-banner';
+            banner.innerHTML = `<span><i class="fas fa-circle-check" style="color:#059669;"></i> <strong>Esta hoja coincide</strong> con el formato de tabla de posiciones.</span>`;
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-primary btn-sm';
+            btn.innerHTML = '<i class="fas fa-bolt"></i> Aplicar a la tabla de posiciones';
+            btn.addEventListener('click', () => applySheetToStandings(sheet, colMap));
+            banner.appendChild(btn);
+            container.appendChild(banner);
+          }
+
+          container.appendChild(createTable(sheet, sheetName));
+        }
+      }
+
+      const saved = localStorage.getItem('excelData');
+      if (saved) {
+        try { currentExcelData = JSON.parse(saved); distributeData(currentExcelData); }
+        catch (e) { console.error('Error al leer datos de Excel guardados', e); }
+      }
+
+      document.getElementById('excelInput').addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = evt => {
+          const data = new Uint8Array(evt.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const result = {};
+          workbook.SheetNames.forEach(name => {
+            result[name] = XLSX.utils.sheet_to_json(workbook.Sheets[name], { header: 1 });
+          });
+          currentExcelData = result;
+          localStorage.setItem('excelData', JSON.stringify(result));
+          distributeData(result);
+        };
+        reader.readAsArrayBuffer(file);
+      });
+    }
+
+    /* ---------- Configuración de apariencia (tema) ---------- */
     function hexToRgb(hex) {
       hex = hex.replace('#', '');
       if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');

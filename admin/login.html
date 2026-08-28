@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Iniciar sesión | Torneo Fútbol</title>
+  <title>Acceso administrador | Torneo Fútbol</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,19 +16,21 @@
     <div class="bg-orb bg-orb-2"></div>
 
     <div class="login-card">
+      <a href="index.html" class="back-to-site"><i class="fas fa-arrow-left"></i> Volver al sitio del torneo</a>
+
       <div class="brand">
         <div class="brand-icon">
-          <i class="fas fa-trophy"></i>
+          <i class="fas fa-user-shield"></i>
         </div>
         <div>
           <h2>Torneo Fútbol</h2>
-          <p>Panel de gestión</p>
+          <p>Acceso administrador</p>
         </div>
       </div>
 
       <div class="login-header">
         <h1>Iniciar sesión</h1>
-        <p>Consulta la tabla de posiciones, resultados y toda la información del torneo.</p>
+        <p>Este acceso es solo para quienes gestionan el torneo. Si solo quieres ver la tabla de posiciones, resultados o equipos, no necesitas iniciar sesión.</p>
       </div>
 
       <form id="loginForm" class="login-form">
@@ -51,8 +53,6 @@
           </div>
         </label>
 
-        <input type="hidden" name="role" value="admin">
-
         <div class="options-row">
           <label class="remember-me">
             <input type="checkbox" name="remember">
@@ -63,16 +63,11 @@
 
         <button type="submit" class="login-btn">
           <i class="fas fa-sign-in-alt"></i>
-          Entrar
+          Entrar al panel
         </button>
-
       </form>
 
       <p id="loginError" class="login-error"></p>
-
-      <div class="login-footer">
-        <p>¿No tienes cuenta? <a href="#">Contacta al administrador</a></p>
-      </div>
     </div>
   </div>
 
@@ -100,7 +95,7 @@
 
       localStorage.setItem('role', 'admin');
       localStorage.setItem('userEmail', email);
-      window.location.href = 'index.html';
+      window.location.href = 'admin.html';
     });
   </script>
 </body>

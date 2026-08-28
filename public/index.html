@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Torneo Fútbol - Vista de Usuario</title>
+  <title>Torneo Fútbol</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
@@ -14,7 +14,7 @@
     <aside class="sidebar">
       <div class="sidebar-header">
         <h1><i class="fas fa-trophy"></i> Torneo Fútbol</h1>
-        <p>Vista de Usuario</p>
+        <p>Sitio del Torneo</p>
       </div>
 
       <nav class="sidebar-nav">
@@ -27,7 +27,7 @@
         <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('configuracion', event)"><i class="fas fa-palette"></i> Apariencia</a></div>
       </nav>
 
-      <div class="sidebar-footer"></div>
+      <div class="sidebar-footer" id="sidebarFooter"></div>
     </aside>
 
     <!-- Main Content -->
@@ -35,7 +35,7 @@
       <header class="topbar">
         <h1 class="topbar-title" id="pageTitle">Inicio</h1>
         <div class="topbar-actions">
-          <span class="user-info"><i class="fas fa-user-circle"></i> Usuario</span>
+          <span class="user-info" id="userInfoBadge"><i class="fas fa-user-circle"></i> Visitante</span>
         </div>
       </header>
 
@@ -250,30 +250,8 @@
   </div>
 
   <script>
-    const SUPABASE_URL = 'https://naxujfmgdoezzhyyfmhf.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_-7X2KTKass1QILgLM10luA_XbXOLY8j';
-    const SYNCED_KEYS = new Set([
-      'heroBg', 'heroTitle', 'heroSubtitle', 'statJornadas', 'text-inicio', 'text-equipos',
-      'text-eventos', 'teamsRoster', 'standings', 'topScorers', 'topAssists', 'discipline',
-      'upcomingMatches', 'recentResults', 'knockout', 'squads', 'excelData', 'themeSettings'
-    ]);
-
-    async function downloadSyncedState() {
-      try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/app_state?id=eq.futivo&select=data`, {
-          headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
-        });
-        if (!response.ok) return;
-        const rows = await response.json();
-        const state = rows[0]?.data || {};
-        Object.entries(state).forEach(([key, value]) => localStorage.setItem(key, value));
-      } catch (error) {
-        console.warn('No se pudo cargar la información compartida.', error);
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', async () => {
-      await downloadSyncedState();
+    document.addEventListener('DOMContentLoaded', () => {
+      initAccessUI();
       loadHero();
       loadStats();
       loadTexts();
@@ -284,6 +262,36 @@
       loadSquads();
       initTheme();
     });
+
+    /* ---------- Acceso: navegar aquí no requiere iniciar sesión ---------- */
+    function initAccessUI() {
+      const isAdmin = localStorage.getItem('role') === 'admin';
+      const footer = document.getElementById('sidebarFooter');
+      const badge = document.getElementById('userInfoBadge');
+
+      if (isAdmin) {
+        badge.innerHTML = '<i class="fas fa-user-shield"></i> Administrador';
+        footer.innerHTML = `
+          <a href="admin.html" class="btn btn-primary btn-sm" style="width:100%; justify-content:center; margin-bottom:10px; text-decoration:none;">
+            <i class="fas fa-toolbox"></i> Panel Admin
+          </a>
+          <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+        `;
+      } else {
+        badge.innerHTML = '<i class="fas fa-user-circle"></i> Visitante';
+        footer.innerHTML = `
+          <a href="login.html" class="btn btn-outline btn-sm" style="width:100%; justify-content:center; text-decoration:none;">
+            <i class="fas fa-user-shield"></i> Iniciar sesión
+          </a>
+        `;
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('role');
+      localStorage.removeItem('userEmail');
+      window.location.reload();
+    }
 
     function showSection(sectionId, event) {
       if (event) event.preventDefault();
@@ -378,8 +386,16 @@
       { team: 'UPTC - Medic Salud', g: 9, e: 2, p: 1, gf: 39, gc: 13 },
       { team: 'Club Deportivo San Jose', g: 9, e: 1, p: 2, gf: 27, gc: 9 },
       { team: 'Reserva Activa', g: 9, e: 0, p: 3, gf: 35, gc: 15 },
-      { team: 'Amigos Edwin Rodriguez', g: 8, e: 0, p: 4, gf: 34, gc: 28 },
-      { team: 'Radiadores la Valle', g: 7, e: 2, p: 3, gf: 32, gc: 20 }
+      { team: 'Amigos Edwin Rodriguez Concejal', g: 8, e: 0, p: 4, gf: 34, gc: 28 },
+      { team: 'CDA Ecoauto - Dylan Sport', g: 6, e: 3, p: 3, gf: 23, gc: 13 },
+      { team: 'Sama - Autos', g: 4, e: 4, p: 4, gf: 14, gc: 19 },
+      { team: 'Avengers F.C', g: 5, e: 1, p: 7, gf: 22, gc: 28 },
+      { team: 'Amigos 2020 - Chavito', g: 3, e: 2, p: 7, gf: 22, gc: 23 },
+      { team: 'Comuneros - Blinda Tec', g: 3, e: 2, p: 7, gf: 14, gc: 26 },
+      { team: 'Radiadores la Valle - Amigos Mario Suarez', g: 2, e: 2, p: 8, gf: 15, gc: 27 },
+      { team: 'Vidrieria Tellez - Constructora Oicata', g: 1, e: 4, p: 7, gf: 11, gc: 23 },
+      { team: 'C.D Semillitas', g: 2, e: 1, p: 9, gf: 6, gc: 28 },
+      { team: 'Sallet Seguros - Papeleria los Angeles', g: 0, e: 3, p: 9, gf: 1, gc: 38 }
     ];
 
     function computeRow(row) {
@@ -446,19 +462,33 @@
     }
 
     const defaultScorers = [
-      { player: 'Carlos López', team: 'Construservicios', value: 12 },
-      { player: 'Jorge Martínez', team: 'UPTC - Medic Salud', value: 11 },
-      { player: 'Diego Rodríguez', team: 'Club Deportivo San Jose', value: 9 }
+      { player: 'Luis Baron', team: 'Construservicios', value: 17 },
+      { player: 'Pedro Martinez', team: 'Amigos Edwin Rodriguez Concejal', value: 12 },
+      { player: 'Pedro Alvarez', team: 'UPTC - Medic Salud', value: 12 },
+      { player: 'Miguel Cruz', team: 'UPTC - Medic Salud', value: 10 },
+      { player: 'Fredy Solano', team: 'Reserva Activa', value: 9 },
+      { player: 'Fabian Tabares', team: 'Reserva Activa', value: 8 },
+      { player: 'Edison Munevar', team: 'Club Deportivo San Jose', value: 7 },
+      { player: 'Jose Maldonado', team: 'Comuneros - Blinda Tec', value: 7 },
+      { player: 'Richard Salas', team: 'Amigos 2020 - Chavito', value: 7 },
+      { player: 'Otoniel Cruz', team: 'Amigos 2020 - Chavito', value: 7 }
     ];
-    const defaultAssists = [
-      { player: 'Miguel Paredes', team: 'UPTC - Medic Salud', value: 8 },
-      { player: 'Fernando López', team: 'Construservicios', value: 7 },
-      { player: 'Roberto Sánchez', team: 'Reserva Activa', value: 6 }
-    ];
+    const defaultAssists = [];
     const defaultDiscipline = [
-      { team: 'Radiadores la Valle', yellow: 8, red: 1 },
-      { team: 'Comuneros', yellow: 6, red: 0 },
-      { team: 'CDA Ecoauto', yellow: 5, red: 2 }
+      { team: 'Club Deportivo San Jose', yellow: 19, red: 2 },
+      { team: 'Reserva Activa', yellow: 17, red: 2 },
+      { team: 'Comuneros - Blinda Tec', yellow: 13, red: 1 },
+      { team: 'Sama - Autos', yellow: 12, red: 1 },
+      { team: 'Vidrieria Tellez - Constructora Oicata', yellow: 11, red: 2 },
+      { team: 'UPTC - Medic Salud', yellow: 11, red: 2 },
+      { team: 'Avengers F.C', yellow: 11, red: 1 },
+      { team: 'Amigos 2020 - Chavito', yellow: 11, red: 2 },
+      { team: 'Amigos Edwin Rodriguez Concejal', yellow: 11, red: 2 },
+      { team: 'Radiadores la Valle - Amigos Mario Suarez', yellow: 10, red: 2 },
+      { team: 'Sallet Seguros - Papeleria los Angeles', yellow: 8, red: 2 },
+      { team: 'C.D Semillitas', yellow: 8, red: 3 },
+      { team: 'Construservicios', yellow: 7, red: 2 },
+      { team: 'CDA Ecoauto - Dylan Sport', yellow: 5, red: 2 }
     ];
 
     function loadTeamExtras() {
@@ -499,8 +529,10 @@
 
     function loadEvents() {
       const upcoming = JSON.parse(localStorage.getItem('upcomingMatches') || 'null') || [
-        { fecha: '2026-07-20', home: 'Construservicios', away: 'Reserva Activa', hora: '15:00' },
-        { fecha: '2026-07-20', home: 'Radiadores la Valle', away: 'Amigos Edwin Rodriguez', hora: '16:30' }
+        { fecha: '2025-11-16', home: 'Construservicios', away: 'CDA Ecoauto - Dylan Sport', hora: '08:00' },
+        { fecha: '2025-11-16', home: 'UPTC - Medic Salud', away: 'Avengers F.C', hora: '10:00' },
+        { fecha: '2025-11-16', home: 'Club Deportivo San Jose', away: 'Sama - Autos', hora: '12:00' },
+        { fecha: '2025-11-16', home: 'Reserva Activa', away: 'Amigos Edwin Rodriguez Concejal', hora: '14:00' }
       ];
       const upcomingBox = document.getElementById('upcomingList');
       upcomingBox.innerHTML = '';
@@ -515,8 +547,12 @@
       });
 
       const results = JSON.parse(localStorage.getItem('recentResults') || 'null') || [
-        { fecha: '2026-03-18', home: 'Construservicios', away: 'UPTC - Medic Salud', marcador: '3 - 1', tipo: 'win' },
-        { fecha: '2026-03-17', home: 'Club Deportivo San Jose', away: 'Reserva Activa', marcador: '2 - 2', tipo: 'draw' }
+        { fecha: '2025-10-26', home: 'Construservicios', away: 'Club Deportivo San Jose', marcador: '1 - 0', tipo: 'win' },
+        { fecha: '2025-10-26', home: 'Sallet Seguros - Papeleria los Angeles', away: 'Amigos 2020 - Chavito', marcador: '0 - 7', tipo: 'loss' },
+        { fecha: '2025-10-26', home: 'Sama - Autos', away: 'CDA Ecoauto - Dylan Sport', marcador: '0 - 0', tipo: 'draw' },
+        { fecha: '2025-10-26', home: 'Comuneros - Blinda Tec', away: 'Vidrieria Tellez - Constructora Oicata', marcador: '0 - 2', tipo: 'loss' },
+        { fecha: '2025-10-26', home: 'C.D Semillitas', away: 'Radiadores la Valle - Amigos Mario Suarez', marcador: '1 - 4', tipo: 'loss' },
+        { fecha: '2025-10-25', home: 'UPTC - Medic Salud', away: 'Avengers F.C', marcador: '2 - 0', tipo: 'win' }
       ];
       const labels = { win: 'Victoria local', draw: 'Empate', loss: 'Victoria visitante' };
       const colors = { win: 'var(--success)', draw: 'var(--warning)', loss: 'var(--error)' };
@@ -556,7 +592,12 @@
       const saved = JSON.parse(localStorage.getItem('knockout') || 'null');
       if (saved) return saved;
       return {
-        cuartos: Array.from({ length: 4 }, () => ({ a: '', b: '', sa: null, sb: null })),
+        cuartos: [
+          { a: 'Construservicios', b: 'CDA Ecoauto - Dylan Sport', sa: null, sb: null },
+          { a: 'UPTC - Medic Salud', b: 'Avengers F.C', sa: null, sb: null },
+          { a: 'Club Deportivo San Jose', b: 'Sama - Autos', sa: null, sb: null },
+          { a: 'Reserva Activa', b: 'Amigos Edwin Rodriguez Concejal', sa: null, sb: null }
+        ],
         semis: Array.from({ length: 2 }, () => ({ a: '', b: '', sa: null, sb: null })),
         final: [{ a: '', b: '', sa: null, sb: null }]
       };
