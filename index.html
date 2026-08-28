@@ -1,0 +1,1518 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Administrador - Torneo Fútbol</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1><i class="fas fa-trophy"></i> Torneo Fútbol</h1>
+        <p>Panel Administrativo</p>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-item"><a href="#" class="nav-link active" onclick="showSection('inicio', event)"><i class="fas fa-home"></i> Inicio</a></div>
+        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('competencias', event)"><i class="fas fa-table"></i> Competencias</a></div>
+        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('equipos', event)"><i class="fas fa-users"></i> Equipos</a></div>
+        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('eventos', event)"><i class="fas fa-calendar"></i> Eventos</a></div>
+        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('eliminatorias', event)"><i class="fas fa-trophy"></i> Eliminatorias</a></div>
+        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('plantillas', event)"><i class="fas fa-people-group"></i> Plantillas</a></div>
+        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('datos', event)"><i class="fas fa-database"></i> Datos</a></div>
+        <div class="nav-item"><a href="#" class="nav-link" onclick="showSection('configuracion', event)"><i class="fas fa-palette"></i> Configuración</a></div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="../public/index.html" class="btn btn-outline btn-sm" style="width:100%; justify-content:center; margin-bottom:10px; text-decoration:none;">
+          <i class="fas fa-eye"></i> Ver vista pública
+        </a>
+        <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="topbar">
+        <h1 class="topbar-title" id="pageTitle">Inicio</h1>
+        <div class="topbar-actions">
+          <span class="user-info"><i class="fas fa-user-circle"></i> Administrador</span>
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- Inicio -->
+        <section id="inicio" class="section active">
+          <div class="hero-section">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+              <div class="hero-text">
+                <span class="hero-kicker"><i class="fas fa-star"></i> Torneo Fútbol · Temporada 2026</span>
+                <h1 id="heroTitle" contenteditable="true">Bienvenido al Panel</h1>
+                <p id="heroSubtitle" contenteditable="true">Gestiona tu torneo de fútbol profesional</p>
+              </div>
+              <div class="next-match-ribbon" id="nextMatchRibbon" style="display:none;"></div>
+            </div>
+            <div class="hero-controls">
+              <label class="file-upload">
+                <span class="file-upload-label"><i class="fas fa-camera"></i> Cambiar imagen</span>
+                <input type="file" id="heroImage" accept="image/*">
+              </label>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card stat-auto">
+              <div class="stat-icon"><i class="fas fa-shield-halved"></i></div>
+              <div class="stat-body"><div class="stat-value" id="statEquipos">0</div><div class="stat-label">Equipos</div><span class="auto-tag"><i class="fas fa-bolt"></i> Automático</span></div>
+            </div>
+            <div class="stat-card stat-auto">
+              <div class="stat-icon"><i class="fas fa-calendar-days"></i></div>
+              <div class="stat-body"><div class="stat-value" id="statPartidos">0</div><div class="stat-label">Partidos</div><span class="auto-tag"><i class="fas fa-bolt"></i> Automático</span></div>
+            </div>
+            <div class="stat-card stat-auto">
+              <div class="stat-icon"><i class="fas fa-futbol"></i></div>
+              <div class="stat-body"><div class="stat-value" id="statGoles">0</div><div class="stat-label">Goles</div><span class="auto-tag"><i class="fas fa-bolt"></i> Automático</span></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-flag-checkered"></i></div>
+              <div class="stat-body"><div class="stat-value" contenteditable="true" id="statJornadas">1</div><div class="stat-label">Jornadas</div></div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="card-header">
+              <h2><i class="fas fa-edit"></i> Contenido de Inicio</h2>
+              <p>Edita el texto que aparecerá en la página principal</p>
+            </div>
+            <div class="card-content">
+              <div id="editable-inicio" class="editable-content" contenteditable="true">
+                Sigue de cerca cada jornada del torneo: resultados, tabla de posiciones y lo mejor de nuestros equipos.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Competencias -->
+        <section id="competencias" class="section">
+          <div class="roster-panel">
+            <h3><i class="fas fa-shield-halved"></i> Equipos del torneo</h3>
+            <p>Regístralos aquí una sola vez. Luego aparecerán como opción en la tabla de posiciones, goleadores, disciplina y partidos — así no hay que volver a escribir el nombre y nunca queda mal digitado.</p>
+            <form id="rosterForm" class="form-inline" style="margin:0;">
+              <input type="text" id="rosterInput" placeholder="Nombre del equipo" required>
+              <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar equipo</button>
+            </form>
+            <div class="roster-chips" id="rosterChips"></div>
+          </div>
+
+          <div class="section-card">
+            <div class="card-header">
+              <h2><i class="fas fa-trophy"></i> Tabla de Posiciones</h2>
+              <p>Se ordena sola por puntos — solo registra partidos ganados, empatados, perdidos y goles</p>
+            </div>
+            <div class="card-content">
+              <div class="table-toolbar">
+                <span style="color: var(--text-secondary); font-size: 0.85rem;"><i class="fas fa-bolt" style="color:var(--success);"></i> PJ, Pts y DG se calculan solos. Ordenado automáticamente de mayor a menor puntaje.</span>
+                <button class="btn btn-primary btn-sm" onclick="addStandingRow()"><i class="fas fa-plus"></i> Agregar equipo a la tabla</button>
+              </div>
+
+              <div class="table-container">
+                <table class="modern-table" id="standingsTable">
+                  <thead>
+                    <tr>
+                      <th style="text-align:center;">Pos</th><th>Equipo</th>
+                      <th style="text-align:center;">PJ</th><th style="text-align:center;">G</th>
+                      <th style="text-align:center;">E</th><th style="text-align:center;">P</th>
+                      <th style="text-align:center;">GF</th><th style="text-align:center;">GC</th>
+                      <th style="text-align:center;">DG</th><th style="text-align:center;">Pts</th>
+                      <th class="col-actions"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="standingsBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="cards-grid">
+            <div class="data-card">
+              <div class="data-card-header"><i class="fas fa-calendar"></i> Próximos Partidos</div>
+              <div class="data-card-content" id="homeUpcomingPreview"></div>
+            </div>
+            <div class="data-card">
+              <div class="data-card-header"><i class="fas fa-users"></i> Equipos Participantes</div>
+              <div class="data-card-content" id="homeTeamsPreview"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Equipos -->
+        <section id="equipos" class="section">
+          <div class="section-card">
+            <div class="card-header">
+              <h2><i class="fas fa-users"></i> Información de Equipos</h2>
+              <p>Estadísticas calculadas automáticamente a partir de la tabla de posiciones</p>
+            </div>
+            <div class="card-content">
+              <div id="editable-equipos" class="editable-content" contenteditable="true">
+                Los equipos compiten a lo largo de la temporada por el título del torneo.
+              </div>
+              <div class="table-container">
+                <table class="modern-table">
+                  <thead>
+                    <tr>
+                      <th>Equipo</th><th style="text-align:center;">Partidos</th>
+                      <th style="text-align:center;">Goles a Favor</th><th style="text-align:center;">Goles en Contra</th>
+                      <th style="text-align:center;">Promedio</th><th style="text-align:center;">Efectividad</th>
+                    </tr>
+                  </thead>
+                  <tbody id="teamStatsBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="cards-grid">
+            <div class="data-card">
+              <div class="data-card-header"><i class="fas fa-futbol"></i> Máximo Goleador</div>
+              <div class="data-card-content">
+                <div class="table-toolbar"><span style="color:var(--text-secondary); font-size:0.82rem;">El primero de la lista aparece destacado</span>
+                  <button class="btn btn-primary btn-sm" onclick="addPersonRow('topScorers')"><i class="fas fa-plus"></i> Agregar</button>
+                </div>
+                <table class="modern-table" style="margin:0;">
+                  <thead><tr><th>Jugador</th><th>Equipo</th><th style="text-align:center;">Goles</th><th class="col-actions"></th></tr></thead>
+                  <tbody id="topScorersBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="data-card">
+              <div class="data-card-header"><i class="fas fa-shoe-prints"></i> Mayor Asistidor</div>
+              <div class="data-card-content">
+                <div class="table-toolbar"><span style="color:var(--text-secondary); font-size:0.82rem;">El primero de la lista aparece destacado</span>
+                  <button class="btn btn-primary btn-sm" onclick="addPersonRow('topAssists')"><i class="fas fa-plus"></i> Agregar</button>
+                </div>
+                <table class="modern-table" style="margin:0;">
+                  <thead><tr><th>Jugador</th><th>Equipo</th><th style="text-align:center;">Asist.</th><th class="col-actions"></th></tr></thead>
+                  <tbody id="topAssistsBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="card-header"><h2><i class="fas fa-flag"></i> Disciplina</h2><p>Tarjetas amarillas y rojas por equipo</p></div>
+            <div class="card-content">
+              <div class="table-toolbar"><span></span>
+                <button class="btn btn-primary btn-sm" onclick="addDisciplineRow()"><i class="fas fa-plus"></i> Agregar equipo</button>
+              </div>
+              <div class="table-container">
+                <table class="modern-table">
+                  <thead><tr><th>Equipo</th><th style="text-align:center;">🟨</th><th style="text-align:center;">🟥</th><th class="col-actions"></th></tr></thead>
+                  <tbody id="disciplineBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Eventos -->
+        <section id="eventos" class="section">
+          <div class="section-card">
+            <div class="card-header"><h2><i class="fas fa-calendar"></i> Próximos Partidos</h2><p>Elige los equipos de la lista — el enfrentamiento se arma solo</p></div>
+            <div class="card-content">
+              <div id="editable-eventos" class="editable-content" contenteditable="true">
+                Calendario de partidos y resultados más recientes del torneo.
+              </div>
+              <form class="form-inline" id="upcomingForm">
+                <input type="date" id="upFecha" required style="max-width:165px;" title="Fecha del partido">
+                <select id="upHome" required></select>
+                <select id="upAway" required></select>
+                <input type="time" id="upHora" style="max-width:130px;" title="Hora del partido">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar</button>
+              </form>
+              <div id="upcomingList"></div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="card-header"><h2><i class="fas fa-flag-checkered"></i> Resultados Recientes</h2><p>Últimos partidos jugados</p></div>
+            <div class="card-content">
+              <form class="form-inline" id="resultForm">
+                <input type="date" id="resFecha" required style="max-width:165px;" title="Fecha del partido">
+                <select id="resHome" required></select>
+                <select id="resAway" required></select>
+                <input type="text" id="resMarcador" placeholder="Marcador (ej. 3 - 1)" required style="max-width:130px;">
+                <select id="resTipo">
+                  <option value="win">Victoria local</option>
+                  <option value="draw">Empate</option>
+                  <option value="loss">Victoria visitante</option>
+                </select>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar</button>
+              </form>
+              <div class="cards-grid" id="resultsList"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Eliminatorias -->
+        <section id="eliminatorias" class="section">
+          <div class="section-card">
+            <div class="card-header">
+              <h2><i class="fas fa-trophy"></i> Fase de Eliminación Directa</h2>
+              <p>Elige los equipos de cada cruce — el ganador se marca solo según el marcador</p>
+            </div>
+            <div class="card-content">
+              <div class="bracket" id="bracketContainer"></div>
+              <div id="championBanner"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Plantillas -->
+        <section id="plantillas" class="section">
+          <div class="section-card">
+            <div class="card-header">
+              <h2><i class="fas fa-people-group"></i> Plantilla del Equipo</h2>
+              <p>Director técnico y jugadores organizados por puesto</p>
+            </div>
+            <div class="card-content">
+              <div class="form-inline" style="margin-bottom: 24px;">
+                <select id="squadTeamSelect" style="max-width: 320px;"></select>
+              </div>
+
+              <div id="squadEmptyState" class="empty-state" style="display:none;">
+                Primero agrega equipos en la pestaña <strong>Competencias</strong> para poder armar sus plantillas.
+              </div>
+
+              <div id="squadEditor" style="display:none;">
+                <label class="field" style="display:block; margin-bottom:22px; max-width:420px;">
+                  <span style="font-size:0.85rem; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:6px;"><i class="fas fa-clipboard-user"></i> Director Técnico</span>
+                  <input type="text" id="squadDtInput" placeholder="Nombre del director técnico" class="form-inline-single">
+                </label>
+
+                <form id="squadPlayerForm" class="form-inline">
+                  <input type="text" id="squadPlayerName" placeholder="Nombre del jugador" required>
+                  <select id="squadPlayerPosition">
+                    <option value="Portero">Portero</option>
+                    <option value="Defensa">Defensa</option>
+                    <option value="Mediocampista">Mediocampista</option>
+                    <option value="Delantero">Delantero</option>
+                  </select>
+                  <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar jugador</button>
+                </form>
+
+                <div class="squad-positions" id="squadPositions"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Datos -->
+        <section id="datos" class="section">
+          <div class="section-card">
+            <div class="card-header"><h2><i class="fas fa-database"></i> Importar desde Excel</h2><p>Sube tu archivo y, si trae la tabla de posiciones, se aplica con un clic</p></div>
+            <div class="card-content">
+              <div class="import-hint">
+                <i class="fas fa-circle-info"></i>
+                <span>Si tu hoja tiene columnas <strong>Equipo, G, E, P, GF, GC</strong> (en cualquier orden), el sistema la reconoce sola y te deja aplicarla directo a la tabla de posiciones — sin retipear nada. Cualquier otra hoja se muestra abajo para editarla libremente.</span>
+              </div>
+              <label class="file-upload">
+                <span class="file-upload-label"><i class="fas fa-file-excel"></i> Seleccionar archivo Excel</span>
+                <input type="file" id="excelInput" accept=".xlsx,.xls">
+              </label>
+              <div id="tablesContainer" style="overflow: auto; margin-top: 20px;"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Configuración -->
+        <section id="configuracion" class="section">
+          <div class="section-card">
+            <div class="card-header">
+              <h2><i class="fas fa-palette"></i> Apariencia</h2>
+              <p>Personaliza los colores y el modo de visualización del panel y de la vista pública</p>
+            </div>
+            <div class="card-content">
+              <div class="theme-toggle-row">
+                <div>
+                  <div class="theme-toggle-label"><i class="fas fa-moon"></i> Modo oscuro</div>
+                  <div class="theme-toggle-desc">Cambia el fondo y las tarjetas a tonos oscuros. Aplica también a la vista pública.</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="darkModeToggle">
+                  <span class="switch-slider"></span>
+                </label>
+              </div>
+
+              <div class="theme-toggle-row" style="display:block;">
+                <div style="margin-bottom: 4px;">
+                  <div class="theme-toggle-label"><i class="fas fa-fill-drip"></i> Color principal</div>
+                  <div class="theme-toggle-desc">Elige un color predefinido o uno personalizado — reemplaza el azul en botones, íconos y acentos.</div>
+                </div>
+                <div class="color-swatches" id="colorSwatches"></div>
+                <div class="color-custom-row">
+                  <input type="color" id="customColorInput" value="#2563eb">
+                  <span class="theme-toggle-desc">Color personalizado</span>
+                </div>
+              </div>
+
+              <div class="theme-toggle-row">
+                <div>
+                  <div class="theme-toggle-label"><i class="fas fa-rotate-left"></i> Restablecer</div>
+                  <div class="theme-toggle-desc">Vuelve al azul original y al modo claro.</div>
+                </div>
+                <button class="btn btn-outline btn-sm" id="resetThemeBtn"><i class="fas fa-rotate-left"></i> Restablecer</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    const SUPABASE_URL = 'https://naxujfmgdoezzhyyfmhf.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_-7X2KTKass1QILgLM10luA_XbXOLY8j';
+    const SYNCED_KEYS = new Set([
+      'heroBg', 'heroTitle', 'heroSubtitle', 'statJornadas', 'text-inicio', 'text-equipos',
+      'text-eventos', 'teamsRoster', 'standings', 'topScorers', 'topAssists', 'discipline',
+      'upcomingMatches', 'recentResults', 'knockout', 'squads', 'excelData', 'themeSettings'
+    ]);
+    let syncTimer;
+
+    function getSyncedState() {
+      return Object.fromEntries([...SYNCED_KEYS]
+        .filter(key => localStorage.getItem(key) !== null)
+        .map(key => [key, localStorage.getItem(key)]));
+    }
+
+    async function downloadSyncedState() {
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/app_state?id=eq.futivo&select=data`, {
+          headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+        });
+        if (!response.ok) return;
+        const rows = await response.json();
+        Object.entries(rows[0]?.data || {}).forEach(([key, value]) => localStorage.setItem(key, value));
+      } catch (error) {
+        console.warn('No se pudo cargar la información compartida.', error);
+      }
+    }
+
+    async function uploadSyncedState() {
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/app_state`, {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+            Prefer: 'resolution=merge-duplicates'
+          },
+          body: JSON.stringify({ id: 'futivo', data: getSyncedState(), updated_at: new Date().toISOString() })
+        });
+      } catch (error) {
+        console.warn('No se pudo sincronizar con Supabase.', error);
+      }
+    }
+
+    const originalSetItem = localStorage.setItem.bind(localStorage);
+    localStorage.setItem = (key, value) => {
+      originalSetItem(key, value);
+      if (SYNCED_KEYS.has(key)) {
+        clearTimeout(syncTimer);
+        syncTimer = setTimeout(uploadSyncedState, 300);
+      }
+    };
+
+    /* ---------- Acceso ---------- */
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (localStorage.getItem('role') !== 'admin') {
+        window.location.href = 'login.html';
+        return;
+      }
+      await downloadSyncedState();
+      await uploadSyncedState();
+      initHero();
+      initEditableTexts();
+      initRoster();
+      initStandings();
+      initTeamsExtra();
+      initEvents();
+      initKnockout();
+      initSquads();
+      initExcel();
+      initTheme();
+      refreshHomeStats();
+    });
+
+    function logout() {
+      if (confirm('¿Deseas cerrar sesión?')) {
+        localStorage.removeItem('role');
+        localStorage.removeItem('userEmail');
+        window.location.href = 'login.html';
+      }
+    }
+
+    /* ---------- Navegación ---------- */
+    function showSection(sectionId, event) {
+      if (event) event.preventDefault();
+      document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+      if (event && event.target) {
+        const link = event.target.closest('.nav-link');
+        if (link) link.classList.add('active');
+      }
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      const el = document.getElementById(sectionId);
+      if (el) el.classList.add('active');
+      const titles = { inicio: 'Inicio', competencias: 'Competencias', equipos: 'Equipos', eventos: 'Eventos', eliminatorias: 'Eliminatorias', plantillas: 'Plantillas', datos: 'Datos', configuracion: 'Configuración' };
+      document.getElementById('pageTitle').textContent = titles[sectionId] || 'Panel';
+    }
+
+    /* ---------- Hero ---------- */
+    function initHero() {
+      const savedHero = localStorage.getItem('heroBg');
+      if (savedHero) {
+        document.querySelector('.hero-section').style.backgroundImage = `linear-gradient(135deg, var(--primary), var(--primary-dark)), url(${savedHero})`;
+      }
+      const title = document.getElementById('heroTitle');
+      const subtitle = document.getElementById('heroSubtitle');
+      title.textContent = localStorage.getItem('heroTitle') || title.textContent;
+      subtitle.textContent = localStorage.getItem('heroSubtitle') || subtitle.textContent;
+      title.addEventListener('input', () => localStorage.setItem('heroTitle', title.textContent));
+      subtitle.addEventListener('input', () => localStorage.setItem('heroSubtitle', subtitle.textContent));
+
+      document.getElementById('heroImage').addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = evt => {
+          document.querySelector('.hero-section').style.backgroundImage = `linear-gradient(135deg, var(--primary), var(--primary-dark)), url(${evt.target.result})`;
+          localStorage.setItem('heroBg', evt.target.result);
+        };
+        reader.readAsDataURL(file);
+      });
+
+      const jornadas = document.getElementById('statJornadas');
+      jornadas.textContent = localStorage.getItem('statJornadas') || jornadas.textContent;
+      jornadas.addEventListener('input', () => localStorage.setItem('statJornadas', jornadas.textContent));
+    }
+
+    /* ---------- Stats automáticas de Inicio ---------- */
+    function refreshHomeStats() {
+      const roster = getRoster();
+      const standings = getStandings();
+      const totalGoles = standings.reduce((sum, r) => sum + (r.gf || 0), 0);
+      const totalPj = standings.reduce((sum, r) => sum + computeRow(r).pj, 0);
+      document.getElementById('statEquipos').textContent = roster.length;
+      document.getElementById('statGoles').textContent = totalGoles;
+      document.getElementById('statPartidos').textContent = Math.round(totalPj / 2);
+    }
+
+    /* ---------- Textos editables ---------- */
+    function initEditableTexts() {
+      ['inicio', 'equipos', 'eventos'].forEach(section => {
+        const el = document.getElementById(`editable-${section}`);
+        if (!el) return;
+        const saved = localStorage.getItem(`text-${section}`);
+        if (saved) el.innerHTML = saved;
+        el.addEventListener('input', () => localStorage.setItem(`text-${section}`, el.innerHTML));
+      });
+    }
+
+    /* ---------- Escudos de equipo (auto-generados) ---------- */
+    const CREST_PALETTE = ['#0090d9', '#e63946', '#2a9d8f', '#f4a261', '#8338ec', '#ff006e', '#3a86ff', '#fb5607', '#06d6a0', '#ef476f'];
+    const CREST_STOPWORDS = ['de', 'del', 'la', 'los', 'las', 'el', 'y'];
+
+    function teamInitials(name) {
+      if (!name) return '?';
+      const words = String(name).trim().split(/\s+/).filter(w => w && !CREST_STOPWORDS.includes(w.toLowerCase()));
+      const letters = words.slice(0, 2).map(w => w[0].toUpperCase()).join('');
+      return letters || name.slice(0, 2).toUpperCase();
+    }
+    function teamColor(name) {
+      let hash = 0;
+      for (let i = 0; i < String(name).length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+      return CREST_PALETTE[Math.abs(hash) % CREST_PALETTE.length];
+    }
+    function teamCrest(name, size) {
+      size = size || 28;
+      if (!name) return '';
+      return `<span class="team-crest" style="--crest-size:${size}px;--crest-color:${teamColor(name)}">${teamInitials(name)}</span>`;
+    }
+
+    /* ---------- Formato de fecha y hora ---------- */
+    const MONTH_NAMES_ES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    const WEEKDAY_NAMES_ES = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+
+    function formatFecha(value, withWeekday) {
+      if (!value) return '';
+      const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+      if (!match) return value; // formato antiguo en texto libre, se muestra tal cual
+      const [, y, m, d] = match;
+      const date = new Date(Number(y), Number(m) - 1, Number(d));
+      const base = `${Number(d)} ${MONTH_NAMES_ES[Number(m) - 1]} ${y}`;
+      return withWeekday ? `${WEEKDAY_NAMES_ES[date.getDay()]} ${base}` : base;
+    }
+
+    function formatHora(value) {
+      if (!value) return '';
+      const match = /^(\d{2}):(\d{2})$/.exec(value);
+      if (!match) return value; // formato antiguo en texto libre
+      let hour = parseInt(match[1], 10);
+      const minutes = match[2];
+      const ampm = hour >= 12 ? 'pm' : 'am';
+      hour = hour % 12;
+      if (hour === 0) hour = 12;
+      return `${hour}:${minutes} ${ampm}`;
+    }
+
+    /* ---------- Roster de equipos ---------- */
+    const defaultRoster = ['Construservicios', 'UPTC - Medic Salud', 'Club Deportivo San Jose', 'Reserva Activa', 'Amigos Edwin Rodriguez', 'Radiadores la Valle'];
+
+    function getRoster() {
+      return JSON.parse(localStorage.getItem('teamsRoster') || 'null') || defaultRoster.slice();
+    }
+    function saveRoster(list) {
+      localStorage.setItem('teamsRoster', JSON.stringify(list));
+    }
+
+    function initRoster() {
+      renderRoster();
+      document.getElementById('rosterForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const input = document.getElementById('rosterInput');
+        const name = input.value.trim();
+        if (!name) return;
+        const roster = getRoster();
+        if (roster.some(t => t.toLowerCase() === name.toLowerCase())) {
+          input.value = '';
+          return;
+        }
+        roster.push(name);
+        saveRoster(roster);
+        renderRoster();
+        refreshAllTeamSelects();
+        refreshHomeStats();
+        input.value = '';
+        input.focus();
+      });
+    }
+
+    function renderRoster() {
+      const roster = getRoster();
+      const box = document.getElementById('rosterChips');
+      box.innerHTML = '';
+      if (!roster.length) {
+        box.innerHTML = '<span class="empty-state">Aún no hay equipos registrados.</span>';
+        return;
+      }
+      roster.forEach((team, idx) => {
+        const chip = document.createElement('span');
+        chip.className = 'roster-chip';
+        chip.innerHTML = `${teamCrest(team, 22)}${team} <button title="Quitar de la lista" onclick="removeRosterTeam(${idx})"><i class="fas fa-xmark"></i></button>`;
+        box.appendChild(chip);
+      });
+    }
+
+    function removeRosterTeam(idx) {
+      const roster = getRoster();
+      const name = roster[idx];
+      if (!confirm(`Quitar "${name}" de la lista de equipos? (No borra sus datos ya guardados en otras tablas)`)) return;
+      roster.splice(idx, 1);
+      saveRoster(roster);
+      renderRoster();
+      refreshAllTeamSelects();
+      refreshHomeStats();
+    }
+
+    function populateTeamSelect(select, selectedValue) {
+      const roster = getRoster();
+      const options = roster.slice();
+      if (selectedValue && !options.includes(selectedValue)) options.push(selectedValue);
+      select.innerHTML = options.map(t => `<option value="${t}" ${t === selectedValue ? 'selected' : ''}>${t}</option>`).join('')
+        || '<option value="">Agrega equipos primero</option>';
+    }
+
+    function refreshAllTeamSelects() {
+      renderStandings();
+      renderPeopleTable('topScorers', 'topScorersBody');
+      renderPeopleTable('topAssists', 'topAssistsBody');
+      renderDiscipline();
+      populateTeamSelect(document.getElementById('upHome'));
+      populateTeamSelect(document.getElementById('upAway'));
+      populateTeamSelect(document.getElementById('resHome'));
+      populateTeamSelect(document.getElementById('resAway'));
+      if (typeof refreshSquadTeamSelect === 'function') refreshSquadTeamSelect();
+      if (typeof renderBracket === 'function') renderBracket();
+    }
+
+    /* ---------- Tabla de posiciones ---------- */
+    const defaultStandings = [
+      { team: 'Construservicios', g: 9, e: 3, p: 0, gf: 35, gc: 8 },
+      { team: 'UPTC - Medic Salud', g: 9, e: 2, p: 1, gf: 39, gc: 13 },
+      { team: 'Club Deportivo San Jose', g: 9, e: 1, p: 2, gf: 27, gc: 9 },
+      { team: 'Reserva Activa', g: 9, e: 0, p: 3, gf: 35, gc: 15 },
+      { team: 'Amigos Edwin Rodriguez', g: 8, e: 0, p: 4, gf: 34, gc: 28 },
+      { team: 'Radiadores la Valle', g: 7, e: 2, p: 3, gf: 32, gc: 20 }
+    ];
+
+    function computeRow(row) {
+      const pj = (row.g || 0) + (row.e || 0) + (row.p || 0);
+      const pts = (row.g || 0) * 3 + (row.e || 0);
+      const dg = (row.gf || 0) - (row.gc || 0);
+      return { pj, pts, dg };
+    }
+
+    function sortStandings(data) {
+      return data.slice().sort((a, b) => {
+        const ca = computeRow(a), cb = computeRow(b);
+        if (cb.pts !== ca.pts) return cb.pts - ca.pts;
+        if (cb.dg !== ca.dg) return cb.dg - ca.dg;
+        return (b.gf || 0) - (a.gf || 0);
+      });
+    }
+
+    function getStandings() {
+      const data = JSON.parse(localStorage.getItem('standings') || 'null') || defaultStandings.slice();
+      return sortStandings(data);
+    }
+    function saveStandings(data) {
+      localStorage.setItem('standings', JSON.stringify(sortStandings(data)));
+      renderTeamStats();
+      renderHomePreviews();
+      refreshHomeStats();
+    }
+
+    function initStandings() {
+      renderStandings();
+      renderTeamStats();
+      renderHomePreviews();
+    }
+
+    function renderStandings() {
+      const data = getStandings();
+      const body = document.getElementById('standingsBody');
+      body.innerHTML = '';
+      if (!data.length) {
+        body.innerHTML = '<tr><td colspan="11" class="empty-state">Agrega equipos con el botón de arriba.</td></tr>';
+        return;
+      }
+      data.forEach((row, idx) => {
+        const { pj, pts, dg } = computeRow(row);
+        const rankClass = idx < 3 ? ` rank-${idx + 1}` : '';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="position"><span class="rank-badge${rankClass}">${idx + 1}</span></td>
+          <td class="team-name"></td>
+          <td class="cell-computed">${pj}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="g">${row.g}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="e">${row.e}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="p">${row.p}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="gf">${row.gf}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="gc">${row.gc}</td>
+          <td class="cell-computed">${dg >= 0 ? '+' + dg : dg}</td>
+          <td class="points cell-computed">${pts}</td>
+          <td class="col-actions"><button class="btn btn-danger btn-sm" title="Eliminar" onclick="deleteStandingRow(${idx})"><i class="fas fa-trash"></i></button></td>
+        `;
+        const teamCell = tr.querySelector('.team-name');
+        teamCell.classList.add('team-name-cell');
+        teamCell.innerHTML = teamCrest(row.team, 26);
+        const select = document.createElement('select');
+        populateTeamSelect(select, row.team);
+        select.addEventListener('change', () => {
+          const current = getStandings();
+          current[idx].team = select.value;
+          saveStandings(current);
+          renderStandings();
+        });
+        teamCell.appendChild(select);
+
+        tr.querySelectorAll('[contenteditable]').forEach(cell => {
+          cell.addEventListener('blur', () => {
+            const field = cell.dataset.field;
+            const value = parseInt(cell.textContent) || 0;
+            const current = getStandings();
+            current[idx][field] = value;
+            saveStandings(current);
+            renderStandings();
+          });
+        });
+        body.appendChild(tr);
+      });
+    }
+
+    function addStandingRow() {
+      const roster = getRoster();
+      if (!roster.length) {
+        alert('Primero agrega al menos un equipo en el panel "Equipos del torneo".');
+        return;
+      }
+      const current = getStandings();
+      const usedTeams = current.map(r => r.team);
+      const freeTeam = roster.find(t => !usedTeams.includes(t)) || roster[0];
+      current.push({ team: freeTeam, g: 0, e: 0, p: 0, gf: 0, gc: 0 });
+      saveStandings(current);
+      renderStandings();
+    }
+    function deleteStandingRow(idx) {
+      const current = getStandings();
+      current.splice(idx, 1);
+      saveStandings(current);
+      renderStandings();
+    }
+
+    /* ---------- Estadísticas de equipo (derivadas) ---------- */
+    function renderTeamStats() {
+      const data = getStandings();
+      const body = document.getElementById('teamStatsBody');
+      body.innerHTML = '';
+      if (!data.length) { body.innerHTML = '<tr><td colspan="6" class="empty-state">Agrega equipos en la tabla de posiciones.</td></tr>'; return; }
+      data.forEach(row => {
+        const { pj, pts } = computeRow(row);
+        const promedio = pj ? (row.gf / pj).toFixed(2) : '0.00';
+        const efectividad = pj ? Math.round((pts / (pj * 3)) * 100) : 0;
+        const badgeColor = efectividad >= 60 ? 'var(--success)' : efectividad >= 40 ? 'var(--warning)' : 'var(--error)';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="team-name team-name-cell">${teamCrest(row.team, 24)}${row.team}</td>
+          <td style="text-align:center;">${pj}</td>
+          <td style="text-align:center;">${row.gf}</td>
+          <td style="text-align:center;">${row.gc}</td>
+          <td style="text-align:center;">${promedio}</td>
+          <td style="text-align:center;"><span class="badge" style="background:${badgeColor}; color:white;">${efectividad}%</span></td>
+        `;
+        body.appendChild(tr);
+      });
+    }
+
+    function renderHomePreviews() {
+      const teamsBox = document.getElementById('homeTeamsPreview');
+      const data = getStandings();
+      teamsBox.innerHTML = data.slice(0, 4).map((row, i) => `
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; ${i < 3 ? 'border-bottom:1px solid var(--border);' : ''}">
+          <span class="position">${i + 1}</span><span class="team-name-cell">${teamCrest(row.team, 22)}${row.team}</span>
+        </div>`).join('') || '<p class="empty-state">Sin equipos aún.</p>';
+      renderUpcomingPreview();
+      renderNextMatchRibbon();
+    }
+
+    function renderUpcomingPreview() {
+      const box = document.getElementById('homeUpcomingPreview');
+      if (!box) return;
+      const data = getUpcoming().slice(0, 3);
+      box.innerHTML = data.map((m, i) => `
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; ${i < data.length - 1 ? 'border-bottom:1px solid var(--border);' : ''}">
+          <span>${formatFecha(m.fecha)}</span><span class="matchup">${teamCrest(m.home, 20)}${m.home} <span class="vs-sep">vs</span> ${teamCrest(m.away, 20)}${m.away}</span>
+        </div>`).join('') || '<p class="empty-state">Sin partidos programados.</p>';
+    }
+
+    function renderNextMatchRibbon() {
+      const ribbon = document.getElementById('nextMatchRibbon');
+      if (!ribbon) return;
+      const data = getUpcoming();
+      if (!data.length) { ribbon.style.display = 'none'; return; }
+      const m = data[0];
+      ribbon.style.display = 'flex';
+      ribbon.innerHTML = `
+        <span class="nmr-label"><i class="fas fa-tower-broadcast"></i> Próximo Partido</span>
+        <span class="nmr-teams">${teamCrest(m.home, 26)}${m.home} <span class="vs-sep" style="color:rgba(255,255,255,0.7);">vs</span> ${teamCrest(m.away, 26)}${m.away}</span>
+        <span class="nmr-meta">${formatFecha(m.fecha, true)}${m.hora ? ' · ' + formatHora(m.hora) : ''}</span>
+      `;
+    }
+
+    /* ---------- Goleadores / asistidores / disciplina ---------- */
+    const defaultScorers = [
+      { player: 'Carlos López', team: 'Construservicios', value: 12 },
+      { player: 'Jorge Martínez', team: 'UPTC - Medic Salud', value: 11 },
+      { player: 'Diego Rodríguez', team: 'Club Deportivo San Jose', value: 9 }
+    ];
+    const defaultAssists = [
+      { player: 'Miguel Paredes', team: 'UPTC - Medic Salud', value: 8 },
+      { player: 'Fernando López', team: 'Construservicios', value: 7 },
+      { player: 'Roberto Sánchez', team: 'Reserva Activa', value: 6 }
+    ];
+    const defaultDiscipline = [
+      { team: 'Radiadores la Valle', yellow: 8, red: 1 },
+      { team: 'Comuneros', yellow: 6, red: 0 },
+      { team: 'CDA Ecoauto', yellow: 5, red: 2 }
+    ];
+
+    function getPeople(key) {
+      const defaults = key === 'topScorers' ? defaultScorers : defaultAssists;
+      return JSON.parse(localStorage.getItem(key) || 'null') || defaults.slice();
+    }
+    function savePeople(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+
+    function getDiscipline() {
+      return JSON.parse(localStorage.getItem('discipline') || 'null') || defaultDiscipline.slice();
+    }
+    function saveDiscipline(data) { localStorage.setItem('discipline', JSON.stringify(data)); }
+
+    function initTeamsExtra() {
+      renderPeopleTable('topScorers', 'topScorersBody');
+      renderPeopleTable('topAssists', 'topAssistsBody');
+      renderDiscipline();
+    }
+
+    function renderPeopleTable(key, bodyId) {
+      const data = getPeople(key);
+      const body = document.getElementById(bodyId);
+      body.innerHTML = '';
+      if (!data.length) { body.innerHTML = `<tr><td colspan="4" class="empty-state">Sin registros.</td></tr>`; return; }
+      data.forEach((row, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td contenteditable="true" data-field="player">${row.player}</td>
+          <td class="team-cell"></td>
+          <td style="text-align:center;" contenteditable="true" data-field="value">${row.value}</td>
+          <td class="col-actions"><button class="btn btn-danger btn-sm" onclick="deletePersonRow('${key}', ${idx})"><i class="fas fa-trash"></i></button></td>
+        `;
+        const teamCell = tr.querySelector('.team-cell');
+        const select = document.createElement('select');
+        populateTeamSelect(select, row.team);
+        select.addEventListener('change', () => {
+          const current = getPeople(key);
+          current[idx].team = select.value;
+          savePeople(key, current);
+        });
+        teamCell.appendChild(select);
+
+        tr.querySelectorAll('[contenteditable]').forEach(cell => {
+          cell.addEventListener('blur', () => {
+            const field = cell.dataset.field;
+            const current = getPeople(key);
+            current[idx][field] = field === 'value' ? (parseInt(cell.textContent) || 0) : cell.textContent.trim();
+            savePeople(key, current);
+            renderPeopleTable(key, bodyId);
+          });
+        });
+        body.appendChild(tr);
+      });
+    }
+
+    function addPersonRow(key) {
+      const roster = getRoster();
+      if (!roster.length) { alert('Primero agrega equipos en Competencias.'); return; }
+      const data = getPeople(key);
+      data.push({ player: 'Nuevo Jugador', team: roster[0], value: 0 });
+      savePeople(key, data);
+      renderPeopleTable(key, key === 'topScorers' ? 'topScorersBody' : 'topAssistsBody');
+    }
+    function deletePersonRow(key, idx) {
+      const data = getPeople(key);
+      data.splice(idx, 1);
+      savePeople(key, data);
+      renderPeopleTable(key, key === 'topScorers' ? 'topScorersBody' : 'topAssistsBody');
+    }
+
+    function renderDiscipline() {
+      const data = getDiscipline();
+      const body = document.getElementById('disciplineBody');
+      body.innerHTML = '';
+      if (!data.length) { body.innerHTML = '<tr><td colspan="4" class="empty-state">Sin registros.</td></tr>'; return; }
+      data.forEach((row, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="team-cell"></td>
+          <td style="text-align:center;" contenteditable="true" data-field="yellow">${row.yellow}</td>
+          <td style="text-align:center;" contenteditable="true" data-field="red">${row.red}</td>
+          <td class="col-actions"><button class="btn btn-danger btn-sm" onclick="deleteDisciplineRow(${idx})"><i class="fas fa-trash"></i></button></td>
+        `;
+        const teamCell = tr.querySelector('.team-cell');
+        const select = document.createElement('select');
+        populateTeamSelect(select, row.team);
+        select.addEventListener('change', () => {
+          const current = getDiscipline();
+          current[idx].team = select.value;
+          saveDiscipline(current);
+        });
+        teamCell.appendChild(select);
+
+        tr.querySelectorAll('[contenteditable]').forEach(cell => {
+          cell.addEventListener('blur', () => {
+            const field = cell.dataset.field;
+            const current = getDiscipline();
+            current[idx][field] = parseInt(cell.textContent) || 0;
+            saveDiscipline(current);
+            renderDiscipline();
+          });
+        });
+        body.appendChild(tr);
+      });
+    }
+    function addDisciplineRow() {
+      const roster = getRoster();
+      if (!roster.length) { alert('Primero agrega equipos en Competencias.'); return; }
+      const data = getDiscipline();
+      data.push({ team: roster[0], yellow: 0, red: 0 });
+      saveDiscipline(data);
+      renderDiscipline();
+    }
+    function deleteDisciplineRow(idx) {
+      const data = getDiscipline();
+      data.splice(idx, 1);
+      saveDiscipline(data);
+      renderDiscipline();
+    }
+
+    /* ---------- Eventos ---------- */
+    const defaultUpcoming = [
+      { fecha: '2026-07-20', home: 'Construservicios', away: 'Reserva Activa', hora: '15:00' },
+      { fecha: '2026-07-20', home: 'Radiadores la Valle', away: 'Amigos Edwin Rodriguez', hora: '16:30' }
+    ];
+    const defaultResults = [
+      { fecha: '2026-03-18', home: 'Construservicios', away: 'UPTC - Medic Salud', marcador: '3 - 1', tipo: 'win' },
+      { fecha: '2026-03-17', home: 'Club Deportivo San Jose', away: 'Reserva Activa', marcador: '2 - 2', tipo: 'draw' }
+    ];
+
+    function getUpcoming() { return JSON.parse(localStorage.getItem('upcomingMatches') || 'null') || defaultUpcoming.slice(); }
+    function saveUpcoming(data) { localStorage.setItem('upcomingMatches', JSON.stringify(data)); renderUpcomingPreview(); renderNextMatchRibbon(); }
+    function getResults() { return JSON.parse(localStorage.getItem('recentResults') || 'null') || defaultResults.slice(); }
+    function saveResults(data) { localStorage.setItem('recentResults', JSON.stringify(data)); }
+
+    function initEvents() {
+      populateTeamSelect(document.getElementById('upHome'));
+      populateTeamSelect(document.getElementById('upAway'));
+      populateTeamSelect(document.getElementById('resHome'));
+      populateTeamSelect(document.getElementById('resAway'));
+      renderUpcomingList();
+      renderResultsList();
+
+      document.getElementById('upcomingForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const fecha = document.getElementById('upFecha').value.trim();
+        const home = document.getElementById('upHome').value;
+        const away = document.getElementById('upAway').value;
+        const hora = document.getElementById('upHora').value.trim();
+        if (!fecha || !home || !away) return;
+        if (home === away) { alert('Elige dos equipos distintos.'); return; }
+        const data = getUpcoming();
+        data.unshift({ fecha, home, away, hora });
+        saveUpcoming(data);
+        renderUpcomingList();
+        e.target.reset();
+        populateTeamSelect(document.getElementById('upHome'));
+        populateTeamSelect(document.getElementById('upAway'));
+      });
+
+      document.getElementById('resultForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const fecha = document.getElementById('resFecha').value.trim();
+        const home = document.getElementById('resHome').value;
+        const away = document.getElementById('resAway').value;
+        const marcador = document.getElementById('resMarcador').value.trim();
+        const tipo = document.getElementById('resTipo').value;
+        if (!fecha || !home || !away || !marcador) return;
+        if (home === away) { alert('Elige dos equipos distintos.'); return; }
+        const data = getResults();
+        data.unshift({ fecha, home, away, marcador, tipo });
+        saveResults(data);
+        renderResultsList();
+        e.target.reset();
+        populateTeamSelect(document.getElementById('resHome'));
+        populateTeamSelect(document.getElementById('resAway'));
+      });
+    }
+
+    function renderUpcomingList() {
+      const list = document.getElementById('upcomingList');
+      const data = getUpcoming();
+      list.innerHTML = '';
+      if (!data.length) { list.innerHTML = '<p class="empty-state">No hay partidos programados.</p>'; return; }
+      data.forEach((m, idx) => {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:8px;';
+        row.innerHTML = `<span style="display:flex; align-items:center; flex-wrap:wrap; gap:6px;"><strong>${formatFecha(m.fecha)}</strong> ${m.hora ? '· ' + formatHora(m.hora) + ' ·' : '·'}
+          <span class="matchup">${teamCrest(m.home, 22)}${m.home} <span class="vs-sep">vs</span> ${teamCrest(m.away, 22)}${m.away}</span></span>
+          <button class="btn btn-danger btn-sm" onclick="deleteUpcoming(${idx})"><i class="fas fa-trash"></i></button>`;
+        list.appendChild(row);
+      });
+    }
+    function deleteUpcoming(idx) {
+      const data = getUpcoming();
+      data.splice(idx, 1);
+      saveUpcoming(data);
+      renderUpcomingList();
+    }
+
+    function renderResultsList() {
+      const list = document.getElementById('resultsList');
+      const data = getResults();
+      list.innerHTML = '';
+      if (!data.length) { list.innerHTML = '<p class="empty-state">No hay resultados registrados.</p>'; return; }
+      const labels = { win: 'Victoria local', draw: 'Empate', loss: 'Victoria visitante' };
+      const colors = { win: 'var(--success)', draw: 'var(--warning)', loss: 'var(--error)' };
+      data.forEach((r, idx) => {
+        const card = document.createElement('div');
+        card.className = 'data-card';
+        card.innerHTML = `
+          <div class="data-card-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <span class="matchup">${formatFecha(r.fecha)} · ${teamCrest(r.home, 20)}${r.home} <span class="vs-sep">vs</span> ${teamCrest(r.away, 20)}${r.away}</span>
+            <button class="btn btn-danger btn-sm" onclick="deleteResult(${idx})"><i class="fas fa-trash"></i></button>
+          </div>
+          <div class="data-card-content">
+            <div style="text-align:center; font-size:2rem; font-weight:700; color:${colors[r.tipo] || 'var(--primary)'}; margin-bottom:8px;">${r.marcador}</div>
+            <div style="text-align:center; color:var(--text-secondary);">${labels[r.tipo] || ''}</div>
+          </div>`;
+        list.appendChild(card);
+      });
+    }
+    function deleteResult(idx) {
+      const data = getResults();
+      data.splice(idx, 1);
+      saveResults(data);
+      renderResultsList();
+    }
+
+    /* ---------- Eliminatorias (bracket) ---------- */
+    function getKnockout() {
+      const saved = JSON.parse(localStorage.getItem('knockout') || 'null');
+      if (saved) return saved;
+      return {
+        cuartos: Array.from({ length: 4 }, () => ({ a: '', b: '', sa: null, sb: null })),
+        semis: Array.from({ length: 2 }, () => ({ a: '', b: '', sa: null, sb: null })),
+        final: [{ a: '', b: '', sa: null, sb: null }]
+      };
+    }
+    function saveKnockout(data) { localStorage.setItem('knockout', JSON.stringify(data)); }
+
+    function initKnockout() {
+      renderBracket();
+    }
+
+    function bracketTeamOptions(selected) {
+      const roster = getRoster();
+      const opts = ['<option value="">Por definir</option>'];
+      roster.forEach(t => opts.push(`<option value="${t}" ${t === selected ? 'selected' : ''}>${t}</option>`));
+      return opts.join('');
+    }
+
+    function renderBracket() {
+      const data = getKnockout();
+      const container = document.getElementById('bracketContainer');
+      container.innerHTML = '';
+
+      const roundDefs = [
+        { key: 'cuartos', label: 'Cuartos de Final' },
+        { key: 'semis', label: 'Semifinal' },
+        { key: 'final', label: 'Final' }
+      ];
+
+      roundDefs.forEach(({ key, label }) => {
+        const col = document.createElement('div');
+        col.className = 'bracket-round';
+        col.innerHTML = `<div class="bracket-round-title">${label}</div>`;
+
+        data[key].forEach((match, idx) => {
+          const winnerA = match.sa !== null && match.sb !== null && match.sa > match.sb;
+          const winnerB = match.sa !== null && match.sb !== null && match.sb > match.sa;
+
+          const card = document.createElement('div');
+          card.className = 'bracket-match';
+          card.innerHTML = `
+            <div class="bracket-slot${winnerA ? ' winner' : ''}">
+              <span class="slot-team"><select data-round="${key}" data-idx="${idx}" data-side="a">${bracketTeamOptions(match.a)}</select></span>
+              <input type="number" min="0" class="slot-score" data-round="${key}" data-idx="${idx}" data-side="sa" value="${match.sa ?? ''}" placeholder="-">
+            </div>
+            <div class="bracket-slot${winnerB ? ' winner' : ''}">
+              <span class="slot-team"><select data-round="${key}" data-idx="${idx}" data-side="b">${bracketTeamOptions(match.b)}</select></span>
+              <input type="number" min="0" class="slot-score" data-round="${key}" data-idx="${idx}" data-side="sb" value="${match.sb ?? ''}" placeholder="-">
+            </div>
+          `;
+          col.appendChild(card);
+        });
+
+        container.appendChild(col);
+
+        if (key === 'final') {
+          const trophyCol = document.createElement('div');
+          trophyCol.className = 'bracket-final-trophy';
+          trophyCol.innerHTML = `<div class="trophy-badge"><i class="fas fa-trophy"></i></div>`;
+          container.appendChild(trophyCol);
+        }
+      });
+
+      container.querySelectorAll('select, input').forEach(el => {
+        const evt = el.tagName === 'SELECT' ? 'change' : 'input';
+        el.addEventListener(evt, () => {
+          const round = el.dataset.round, idx = parseInt(el.dataset.idx), side = el.dataset.side;
+          const current = getKnockout();
+          if (side === 'sa' || side === 'sb') {
+            const val = el.value === '' ? null : parseInt(el.value) || 0;
+            current[round][idx][side] = val;
+          } else {
+            current[round][idx][side] = el.value;
+          }
+          saveKnockout(current);
+          renderBracket();
+        });
+      });
+
+      renderChampionBanner(data);
+    }
+
+    function renderChampionBanner(data) {
+      const banner = document.getElementById('championBanner');
+      const f = data.final[0];
+      if (f.sa !== null && f.sb !== null && f.sa !== f.sb) {
+        const champion = f.sa > f.sb ? f.a : f.b;
+        if (champion) {
+          banner.innerHTML = `<div class="bracket-champion-banner"><i class="fas fa-trophy"></i> Campeón: ${champion}</div>`;
+          return;
+        }
+      }
+      banner.innerHTML = '';
+    }
+
+    /* ---------- Plantillas (jugadores por puesto + DT) ---------- */
+    const SQUAD_POSITIONS = ['Portero', 'Defensa', 'Mediocampista', 'Delantero'];
+
+    function getSquads() {
+      return JSON.parse(localStorage.getItem('squads') || 'null') || {};
+    }
+    function saveSquads(data) { localStorage.setItem('squads', JSON.stringify(data)); }
+    function getTeamSquad(team) {
+      const squads = getSquads();
+      return squads[team] || { dt: '', players: [] };
+    }
+
+    let currentSquadTeam = null;
+
+    function initSquads() {
+      const select = document.getElementById('squadTeamSelect');
+      select.addEventListener('change', () => {
+        currentSquadTeam = select.value;
+        renderSquadEditor();
+      });
+
+      document.getElementById('squadDtInput').addEventListener('blur', function () {
+        if (!currentSquadTeam) return;
+        const squads = getSquads();
+        if (!squads[currentSquadTeam]) squads[currentSquadTeam] = { dt: '', players: [] };
+        squads[currentSquadTeam].dt = this.value.trim();
+        saveSquads(squads);
+      });
+
+      document.getElementById('squadPlayerForm').addEventListener('submit', e => {
+        e.preventDefault();
+        if (!currentSquadTeam) return;
+        const nameInput = document.getElementById('squadPlayerName');
+        const posSelect = document.getElementById('squadPlayerPosition');
+        const name = nameInput.value.trim();
+        if (!name) return;
+        const squads = getSquads();
+        if (!squads[currentSquadTeam]) squads[currentSquadTeam] = { dt: '', players: [] };
+        squads[currentSquadTeam].players.push({ name, position: posSelect.value });
+        saveSquads(squads);
+        nameInput.value = '';
+        nameInput.focus();
+        renderSquadPositions();
+      });
+
+      refreshSquadTeamSelect();
+    }
+
+    function refreshSquadTeamSelect() {
+      const select = document.getElementById('squadTeamSelect');
+      const roster = getRoster();
+      const emptyState = document.getElementById('squadEmptyState');
+      const editor = document.getElementById('squadEditor');
+
+      if (!roster.length) {
+        select.innerHTML = '';
+        emptyState.style.display = 'block';
+        editor.style.display = 'none';
+        currentSquadTeam = null;
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      editor.style.display = 'block';
+      const previousValue = currentSquadTeam && roster.includes(currentSquadTeam) ? currentSquadTeam : roster[0];
+      select.innerHTML = roster.map(t => `<option value="${t}" ${t === previousValue ? 'selected' : ''}>${t}</option>`).join('');
+      currentSquadTeam = previousValue;
+      renderSquadEditor();
+    }
+
+    function renderSquadEditor() {
+      if (!currentSquadTeam) return;
+      const squad = getTeamSquad(currentSquadTeam);
+      document.getElementById('squadDtInput').value = squad.dt || '';
+      renderSquadPositions();
+    }
+
+    function renderSquadPositions() {
+      const squad = getTeamSquad(currentSquadTeam);
+      const box = document.getElementById('squadPositions');
+      box.innerHTML = '';
+      SQUAD_POSITIONS.forEach(position => {
+        const players = squad.players
+          .map((p, idx) => ({ ...p, idx }))
+          .filter(p => p.position === position);
+
+        const group = document.createElement('div');
+        group.className = 'squad-group';
+        group.innerHTML = `
+          <div class="squad-group-header"><span>${position}</span><span class="squad-count">${players.length}</span></div>
+          ${players.length
+            ? `<ul class="squad-player-list">${players.map(p => `
+                <li><span>${p.name}</span>
+                  <button title="Quitar jugador" onclick="removeSquadPlayer(${p.idx})"><i class="fas fa-xmark"></i></button>
+                </li>`).join('')}</ul>`
+            : `<div class="squad-empty-group">Sin jugadores en este puesto.</div>`}
+        `;
+        box.appendChild(group);
+      });
+    }
+
+    function removeSquadPlayer(idx) {
+      if (!currentSquadTeam) return;
+      const squads = getSquads();
+      if (!squads[currentSquadTeam]) return;
+      squads[currentSquadTeam].players.splice(idx, 1);
+      saveSquads(squads);
+      renderSquadPositions();
+    }
+
+    /* ---------- Excel: importación inteligente ---------- */
+    const STANDINGS_COLUMN_ALIASES = {
+      team: ['equipo', 'team', 'club'],
+      g: ['g', 'ganados', 'victorias', 'pg'],
+      e: ['e', 'empates', 'pe'],
+      p: ['p', 'perdidos', 'derrotas', 'pp'],
+      gf: ['gf', 'goles a favor', 'golesafavor', 'gol favor'],
+      gc: ['gc', 'goles en contra', 'golesencontra', 'gol contra']
+    };
+
+    function normalizeHeader(text) {
+      return String(text || '').toLowerCase().trim()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function detectStandingsColumns(headerRow) {
+      const map = {};
+      headerRow.forEach((cell, idx) => {
+        const norm = normalizeHeader(cell);
+        for (const field in STANDINGS_COLUMN_ALIASES) {
+          if (STANDINGS_COLUMN_ALIASES[field].includes(norm) && map[field] === undefined) {
+            map[field] = idx;
+          }
+        }
+      });
+      const requiredFields = ['team', 'g', 'e', 'p', 'gf', 'gc'];
+      const complete = requiredFields.every(f => map[f] !== undefined);
+      return complete ? map : null;
+    }
+
+    function initExcel() {
+      let currentExcelData = {};
+
+      function createTable(sheet, sheetName) {
+        const table = document.createElement('table');
+        table.className = 'modern-table';
+        const header = table.insertRow();
+        if (sheet.length) {
+          sheet[0].forEach(cell => {
+            const th = document.createElement('th');
+            th.textContent = cell;
+            header.appendChild(th);
+          });
+        }
+        for (let r = 1; r < sheet.length; r++) {
+          const row = table.insertRow();
+          sheet[r].forEach(cell => {
+            const td = row.insertCell();
+            td.textContent = cell;
+            td.contentEditable = true;
+            td.addEventListener('input', () => {
+              currentExcelData[sheetName][r][td.cellIndex] = td.textContent;
+              localStorage.setItem('excelData', JSON.stringify(currentExcelData));
+            });
+          });
+        }
+        return table;
+      }
+
+      function applySheetToStandings(sheet, colMap) {
+        const rows = [];
+        for (let r = 1; r < sheet.length; r++) {
+          const raw = sheet[r];
+          if (!raw || !raw[colMap.team]) continue;
+          rows.push({
+            team: String(raw[colMap.team]).trim(),
+            g: parseInt(raw[colMap.g]) || 0,
+            e: parseInt(raw[colMap.e]) || 0,
+            p: parseInt(raw[colMap.p]) || 0,
+            gf: parseInt(raw[colMap.gf]) || 0,
+            gc: parseInt(raw[colMap.gc]) || 0
+          });
+        }
+        if (!rows.length) { alert('No se encontraron filas de datos en esta hoja.'); return; }
+
+        const roster = getRoster();
+        rows.forEach(r => {
+          if (!roster.some(t => t.toLowerCase() === r.team.toLowerCase())) roster.push(r.team);
+        });
+        saveRoster(roster);
+        saveStandings(rows);
+        renderRoster();
+        refreshAllTeamSelects();
+        renderStandings();
+        alert(`Se aplicaron ${rows.length} equipos a la tabla de posiciones. Ya puedes verla en Competencias.`);
+      }
+
+      function distributeData(data) {
+        const container = document.getElementById('tablesContainer');
+        container.innerHTML = '';
+        for (const sheetName in data) {
+          const sheet = data[sheetName];
+          const title = document.createElement('h3');
+          title.textContent = sheetName;
+          title.style.cssText = 'color: var(--primary); margin: 24px 0 12px 0;';
+          container.appendChild(title);
+
+          const colMap = sheet.length ? detectStandingsColumns(sheet[0]) : null;
+          if (colMap) {
+            const banner = document.createElement('div');
+            banner.className = 'import-match-banner';
+            banner.innerHTML = `<span><i class="fas fa-circle-check" style="color:#059669;"></i> <strong>Esta hoja coincide</strong> con el formato de tabla de posiciones.</span>`;
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-primary btn-sm';
+            btn.innerHTML = '<i class="fas fa-bolt"></i> Aplicar a la tabla de posiciones';
+            btn.addEventListener('click', () => applySheetToStandings(sheet, colMap));
+            banner.appendChild(btn);
+            container.appendChild(banner);
+          }
+
+          container.appendChild(createTable(sheet, sheetName));
+        }
+      }
+
+      const saved = localStorage.getItem('excelData');
+      if (saved) {
+        try { currentExcelData = JSON.parse(saved); distributeData(currentExcelData); }
+        catch (e) { console.error('Error al leer datos de Excel guardados', e); }
+      }
+
+      document.getElementById('excelInput').addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = evt => {
+          const data = new Uint8Array(evt.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const result = {};
+          workbook.SheetNames.forEach(name => {
+            result[name] = XLSX.utils.sheet_to_json(workbook.Sheets[name], { header: 1 });
+          });
+          currentExcelData = result;
+          localStorage.setItem('excelData', JSON.stringify(result));
+          distributeData(result);
+        };
+        reader.readAsArrayBuffer(file);
+      });
+    }
+
+    /* ---------- Configuración de apariencia (tema) ---------- */
+    function hexToRgb(hex) {
+      hex = hex.replace('#', '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const num = parseInt(hex, 16) || 0;
+      return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+    }
+    function rgbToHex(r, g, b) {
+      return '#' + [r, g, b].map(x => Math.max(0, Math.min(255, Math.round(x))).toString(16).padStart(2, '0')).join('');
+    }
+    function mixColor(hex, targetHex, weight) {
+      const c1 = hexToRgb(hex), c2 = hexToRgb(targetHex);
+      return rgbToHex(
+        c1.r * (1 - weight) + c2.r * weight,
+        c1.g * (1 - weight) + c2.g * weight,
+        c1.b * (1 - weight) + c2.b * weight
+      );
+    }
+    function getThemeSettings() {
+      return JSON.parse(localStorage.getItem('themeSettings') || 'null') || { dark: false, primary: '#2563eb' };
+    }
+    function saveThemeSettings(s) { localStorage.setItem('themeSettings', JSON.stringify(s)); }
+
+    function applyTheme(settings) {
+      const root = document.documentElement;
+      const { r, g, b } = hexToRgb(settings.primary);
+      root.style.setProperty('--primary', settings.primary);
+      root.style.setProperty('--primary-dark', mixColor(settings.primary, '#000000', 0.18));
+      root.style.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
+      const lightTint = settings.dark ? `rgba(${r}, ${g}, ${b}, 0.16)` : mixColor(settings.primary, '#ffffff', 0.88);
+      root.style.setProperty('--primary-light', lightTint);
+      if (document.body) document.body.classList.toggle('dark-mode', !!settings.dark);
+    }
+
+    // Aplicar de inmediato para evitar parpadeo al cargar
+    applyTheme(getThemeSettings());
+
+    const THEME_COLORS = ['#2563eb', '#7c3aed', '#059669', '#dc2626', '#ea580c', '#0891b2', '#db2777', '#65a30d'];
+
+    function initTheme() {
+      const settings = getThemeSettings();
+      const darkToggle = document.getElementById('darkModeToggle');
+      const customInput = document.getElementById('customColorInput');
+      const swatchBox = document.getElementById('colorSwatches');
+
+      darkToggle.checked = !!settings.dark;
+      darkToggle.addEventListener('change', () => {
+        const s = getThemeSettings();
+        s.dark = darkToggle.checked;
+        saveThemeSettings(s);
+        applyTheme(s);
+      });
+
+      function renderSwatches() {
+        const current = getThemeSettings().primary.toLowerCase();
+        swatchBox.innerHTML = '';
+        THEME_COLORS.forEach(color => {
+          const el = document.createElement('div');
+          el.className = 'color-swatch' + (color.toLowerCase() === current ? ' active' : '');
+          el.style.background = color;
+          el.title = color;
+          el.addEventListener('click', () => {
+            const s = getThemeSettings();
+            s.primary = color;
+            saveThemeSettings(s);
+            applyTheme(s);
+            customInput.value = color;
+            renderSwatches();
+          });
+          swatchBox.appendChild(el);
+        });
+      }
+      renderSwatches();
+
+      customInput.value = settings.primary;
+      customInput.addEventListener('input', () => {
+        const s = getThemeSettings();
+        s.primary = customInput.value;
+        saveThemeSettings(s);
+        applyTheme(s);
+        renderSwatches();
+      });
+
+      document.getElementById('resetThemeBtn').addEventListener('click', () => {
+        const s = { dark: false, primary: '#2563eb' };
+        saveThemeSettings(s);
+        applyTheme(s);
+        darkToggle.checked = false;
+        customInput.value = '#2563eb';
+        renderSwatches();
+      });
+    }
+  </script>
+</body>
+</html>
