@@ -378,12 +378,72 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script>
+    const SUPABASE_URL = 'https://naxujfmgdoezzhyyfmhf.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_-7X2KTKass1QILgLM10luA_XbXOLY8j';
+    const SYNCED_KEYS = [
+      'heroBg', 'heroTitle', 'heroSubtitle', 'statJornadas', 'text-inicio', 'text-equipos',
+      'text-eventos', 'teamsRoster', 'standings', 'topScorers', 'topAssists', 'discipline',
+      'upcomingMatches', 'recentResults', 'knockout', 'squads', 'excelData', 'themeSettings'
+    ];
+    let isLoadingRemoteState = false;
+    let syncTimer;
+
+    function getSyncedState() {
+      return Object.fromEntries(SYNCED_KEYS
+        .filter(key => localStorage.getItem(key) !== null)
+        .map(key => [key, localStorage.getItem(key)]));
+    }
+
+    async function loadRemoteState() {
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/app_state?id=eq.futivo&select=data`, {
+          headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const rows = await response.json();
+        isLoadingRemoteState = true;
+        Object.entries(rows[0]?.data || {}).forEach(([key, value]) => localStorage.setItem(key, value));
+      } catch (error) {
+        console.warn('No se pudo cargar la información compartida.', error);
+      } finally {
+        isLoadingRemoteState = false;
+      }
+    }
+
+    async function saveRemoteState() {
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/app_state?on_conflict=id`, {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+            Prefer: 'resolution=merge-duplicates,return=minimal'
+          },
+          body: JSON.stringify({ id: 'futivo', data: getSyncedState(), updated_at: new Date().toISOString() })
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      } catch (error) {
+        console.warn('No se pudo guardar la información compartida.', error);
+      }
+    }
+
+    const originalSetItem = localStorage.setItem.bind(localStorage);
+    localStorage.setItem = (key, value) => {
+      originalSetItem(key, value);
+      if (!isLoadingRemoteState && SYNCED_KEYS.includes(key)) {
+        clearTimeout(syncTimer);
+        syncTimer = setTimeout(saveRemoteState, 300);
+      }
+    };
+
     /* ---------- Acceso ---------- */
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       if (localStorage.getItem('role') !== 'admin') {
         window.location.href = 'login.html';
         return;
       }
+      await loadRemoteState();
       initHero();
       initEditableTexts();
       initRoster();
