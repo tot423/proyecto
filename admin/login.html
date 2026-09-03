@@ -38,7 +38,7 @@
           <span>Correo electrónico</span>
           <div class="input-icon">
             <i class="fas fa-envelope"></i>
-            <input type="email" name="email" placeholder="usuario@correo.com" required>
+            <input type="email" name="email" placeholder="usuario@correo.com" required autocomplete="username">
           </div>
         </label>
 
@@ -46,7 +46,7 @@
           <span>Contraseña</span>
           <div class="input-icon">
             <i class="fas fa-lock"></i>
-            <input type="password" name="password" placeholder="••••••••" required>
+            <input type="password" name="password" placeholder="••••••••" required autocomplete="current-password">
             <button type="button" class="toggle-pass" id="togglePass" aria-label="Mostrar contraseña">
               <i class="far fa-eye"></i>
             </button>
@@ -56,12 +56,12 @@
         <div class="options-row">
           <label class="remember-me">
             <input type="checkbox" name="remember">
-            <span>Recordarme</span>
+            <span>Recordarme en este dispositivo</span>
           </label>
           <a href="#">¿Olvidaste tu contraseña?</a>
         </div>
 
-        <button type="submit" class="login-btn">
+        <button type="submit" class="login-btn" id="loginSubmitBtn">
           <i class="fas fa-sign-in-alt"></i>
           Entrar al panel
         </button>
@@ -72,6 +72,73 @@
   </div>
 
   <script>
+    /* =========================================================
+       Acceso de administrador.
+       IMPORTANTE: esta app no tiene servidor, así que esta
+       verificación ocurre en el navegador. No es una seguridad
+       infranqueable frente a alguien con conocimientos técnicos,
+       pero sí evita el acceso casual y los intentos automáticos.
+
+       Credencial por defecto:
+         correo:     admin@torneofutbol.com
+         contraseña: Torneo2026!
+
+       Para cambiarla: reemplaza ADMIN_EMAIL, y genera un nuevo
+       hash para ADMIN_PASSWORD_HASH ejecutando esto en la consola
+       del navegador (F12 → Console) con tu nueva contraseña:
+
+         crypto.subtle.digest('SHA-256', new TextEncoder().encode('TU_NUEVA_CONTRASEÑA'))
+           .then(b => console.log([...new Uint8Array(b)].map(x => x.toString(16).padStart(2,'0')).join('')))
+
+       Copia el resultado y pégalo como valor de ADMIN_PASSWORD_HASH.
+    ========================================================= */
+    const ADMIN_EMAIL = 'admin@torneofutbol.com';
+    const ADMIN_PASSWORD_HASH = 'f8520e8d6fa2eb53146893b27e0a8429c86a84012e0a58d9143c3cb1f2973f1d';
+
+    const MAX_ATTEMPTS = 5;
+    const BASE_LOCK_SECONDS = 60;
+
+    async function sha256Hex(text) {
+      const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+      return [...new Uint8Array(buffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function getAttemptState() {
+      return JSON.parse(localStorage.getItem('loginAttempts') || 'null') || { count: 0, lockUntil: 0, lockRounds: 0 };
+    }
+    function saveAttemptState(state) { localStorage.setItem('loginAttempts', JSON.stringify(state)); }
+
+    function remainingLockSeconds(state) {
+      return Math.max(0, Math.ceil((state.lockUntil - Date.now()) / 1000));
+    }
+
+    function showError(msg) {
+      const errorEl = document.getElementById('loginError');
+      errorEl.textContent = msg;
+      errorEl.style.display = 'block';
+    }
+
+    function updateLockUI() {
+      const state = getAttemptState();
+      const remaining = remainingLockSeconds(state);
+      const btn = document.getElementById('loginSubmitBtn');
+      if (remaining > 0) {
+        btn.disabled = true;
+        btn.style.opacity = '0.6';
+        btn.style.cursor = 'not-allowed';
+        showError(`Demasiados intentos fallidos. Intenta de nuevo en ${remaining} segundo${remaining === 1 ? '' : 's'}.`);
+        setTimeout(updateLockUI, 1000);
+      } else {
+        btn.disabled = false;
+        btn.style.opacity = '';
+        btn.style.cursor = '';
+        if (document.getElementById('loginError').textContent.startsWith('Demasiados intentos')) {
+          document.getElementById('loginError').style.display = 'none';
+        }
+      }
+    }
+    updateLockUI();
+
     const togglePass = document.getElementById('togglePass');
     const passInput = document.querySelector('input[name="password"]');
     togglePass.addEventListener('click', () => {
@@ -80,21 +147,44 @@
       togglePass.innerHTML = isHidden ? '<i class="far fa-eye-slash"></i>' : '<i class="far fa-eye"></i>';
     });
 
-    document.getElementById('loginForm').addEventListener('submit', function (event) {
+    document.getElementById('loginForm').addEventListener('submit', async function (event) {
       event.preventDefault();
+
+      const state = getAttemptState();
+      if (remainingLockSeconds(state) > 0) return;
+
       const data = new FormData(this);
-      const email = data.get('email').trim();
+      const email = data.get('email').trim().toLowerCase();
       const password = data.get('password');
-      const errorEl = document.getElementById('loginError');
+      const remember = data.get('remember') === 'on';
 
       if (!email || !password) {
-        errorEl.textContent = 'Ingresa tu correo y contraseña.';
-        errorEl.style.display = 'block';
+        showError('Ingresa tu correo y contraseña.');
         return;
       }
 
-      localStorage.setItem('role', 'admin');
-      localStorage.setItem('userEmail', email);
+      const passwordHash = await sha256Hex(password);
+      const isValid = email === ADMIN_EMAIL.toLowerCase() && passwordHash === ADMIN_PASSWORD_HASH;
+
+      if (!isValid) {
+        state.count = (state.count || 0) + 1;
+        if (state.count >= MAX_ATTEMPTS) {
+          state.lockRounds = (state.lockRounds || 0) + 1;
+          state.lockUntil = Date.now() + BASE_LOCK_SECONDS * 1000 * state.lockRounds;
+          state.count = 0;
+        }
+        saveAttemptState(state);
+        showError('Correo o contraseña incorrectos.');
+        updateLockUI();
+        return;
+      }
+
+      // Login correcto: se reinician los intentos fallidos
+      saveAttemptState({ count: 0, lockUntil: 0, lockRounds: 0 });
+
+      const storage = remember ? localStorage : sessionStorage;
+      storage.setItem('role', 'admin');
+      storage.setItem('userEmail', email);
       window.location.href = 'admin.html';
     });
   </script>
