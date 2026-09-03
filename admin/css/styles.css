@@ -1348,3 +1348,272 @@ body.dark-mode .bracket-slot.winner { color: #6ee7b7; }
 @media (max-width: 900px) {
   .bracket-round { min-width: 210px; }
 }
+
+/* ============ Formulario de agregar jugador ============ */
+.squad-add-card {
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  margin-bottom: 24px;
+}
+.squad-add-card h4 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.squad-add-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  align-items: end;
+}
+.squad-add-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.squad-add-grid input,
+.squad-add-grid select {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.87rem;
+  background: var(--surface);
+  color: var(--text-primary);
+}
+.squad-add-grid input:focus,
+.squad-add-grid select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+/* ============ Mini-fichas de jugador ============ */
+.player-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 10px;
+  padding: 14px;
+}
+.player-mini-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  position: relative;
+}
+.player-mini-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+.player-avatar-img {
+  width: var(--avatar-size, 46px);
+  height: var(--avatar-size, 46px);
+  border-radius: 50%;
+  object-fit: cover;
+  flex: 0 0 auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.player-avatar-fallback {
+  width: var(--avatar-size, 46px);
+  height: var(--avatar-size, 46px);
+  min-width: var(--avatar-size, 46px);
+  border-radius: 50%;
+  background: var(--crest-color, var(--primary));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: calc(var(--avatar-size, 46px) * 0.34);
+  flex: 0 0 auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.player-mini-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.player-mini-name {
+  font-weight: 600;
+  font-size: 0.87rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.player-mini-no {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+.player-mini-remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  border: none;
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--error);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.7rem;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.player-mini-card:hover .player-mini-remove { opacity: 1; }
+
+/* ============ Carné de jugador ============ */
+.carnet-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.carnet-modal.open { display: flex; }
+.carnet-modal-inner {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  max-width: 480px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+}
+.carnet-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.carnet-card {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  background: white;
+}
+.carnet-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px 8px;
+}
+.carnet-brand div {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.carnet-brand small {
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.carnet-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+.carnet-team-banner {
+  background: var(--carnet-color, var(--primary));
+  color: white;
+  font-weight: 800;
+  font-size: 1.15rem;
+  text-align: center;
+  padding: 10px 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.carnet-content {
+  display: flex;
+  gap: 16px;
+  padding: 18px;
+}
+.carnet-photo {
+  width: 110px;
+  height: 130px;
+  flex: 0 0 auto;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: 2.4rem;
+}
+.carnet-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.carnet-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.carnet-field {
+  display: flex;
+  flex-direction: column;
+}
+.cf-label {
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+.cf-value {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.carnet-row-split {
+  display: flex;
+  gap: 18px;
+}
+
+@media print {
+  body * { visibility: hidden; }
+  .carnet-modal, .carnet-modal * { visibility: visible; }
+  .carnet-modal {
+    position: absolute;
+    inset: 0;
+    background: white;
+    padding: 0;
+  }
+  .carnet-modal-actions { display: none; }
+  .carnet-modal-inner { box-shadow: none; max-width: none; }
+}
