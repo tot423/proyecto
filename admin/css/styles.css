@@ -4,6 +4,7 @@
   --primary-light: #eff6ff;
   --primary-rgb: 37, 99, 235;
   --ink: #0f172a;
+  --surface-translucent: rgba(255, 255, 255, 0.9);
   --secondary: #64748b;
   --accent: #f59e0b;
   --success: #10b981;
@@ -180,7 +181,7 @@ body {
 
 .topbar {
   height: 66px;
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--surface-translucent);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border);
   display: flex;
@@ -671,7 +672,7 @@ body {
   box-shadow: inset 0 0 0 1px var(--border);
 }
 .modern-table td[contenteditable="true"]:focus {
-  background-color: white;
+  background-color: var(--surface);
   box-shadow: inset 0 0 0 2px var(--primary);
 }
 .table-toolbar {
@@ -817,7 +818,7 @@ body {
 .modern-table select:hover,
 .modern-table select:focus {
   border-color: var(--border);
-  background: white;
+  background: var(--surface);
   outline: none;
 }
 .cell-computed {
@@ -932,6 +933,7 @@ body.dark-mode {
   --text-primary: #e8ecf4;
   --text-secondary: #93a1bb;
   --border: #283349;
+  --surface-translucent: rgba(21, 31, 50, 0.88);
   --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.25), 0 1px 3px 0 rgb(0 0 0 / 0.3);
   --shadow-lg: 0 10px 26px -6px rgb(0 0 0 / 0.45), 0 4px 10px -4px rgb(0 0 0 / 0.35);
 }
@@ -1616,4 +1618,10 @@ body.dark-mode .bracket-slot.winner { color: #6ee7b7; }
   }
   .carnet-modal-actions { display: none; }
   .carnet-modal-inner { box-shadow: none; max-width: none; }
+}
+
+/* ============ Iconos de selectores nativos en modo oscuro ============ */
+body.dark-mode input[type="date"]::-webkit-calendar-picker-indicator,
+body.dark-mode input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
 }

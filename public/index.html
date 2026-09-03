@@ -250,7 +250,29 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    const SUPABASE_URL = 'https://naxujfmgdoezzhyyfmhf.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_-7X2KTKass1QILgLM10luA_XbXOLY8j';
+    const SYNCED_KEYS = [
+      'heroBg', 'heroTitle', 'heroSubtitle', 'statJornadas', 'text-inicio', 'text-equipos',
+      'text-eventos', 'teamsRoster', 'standings', 'topScorers', 'topAssists', 'discipline',
+      'upcomingMatches', 'recentResults', 'knockout', 'squads', 'excelData', 'themeSettings'
+    ];
+
+    async function loadRemoteState() {
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/app_state?id=eq.futivo&select=data`, {
+          headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const rows = await response.json();
+        Object.entries(rows[0]?.data || {}).forEach(([key, value]) => localStorage.setItem(key, value));
+      } catch (error) {
+        console.warn('No se pudo cargar la información compartida.', error);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadRemoteState();
       initAccessUI();
       loadHero();
       loadStats();
@@ -264,10 +286,8 @@
     });
 
     /* ---------- Acceso: navegar aquí no requiere iniciar sesión ---------- */
-    function getStoredRole() { return sessionStorage.getItem('role') || localStorage.getItem('role'); }
-
     function initAccessUI() {
-      const isAdmin = getStoredRole() === 'admin';
+      const isAdmin = localStorage.getItem('role') === 'admin';
       const footer = document.getElementById('sidebarFooter');
       const badge = document.getElementById('userInfoBadge');
 
@@ -290,8 +310,6 @@
     }
 
     function logout() {
-      sessionStorage.removeItem('role');
-      sessionStorage.removeItem('userEmail');
       localStorage.removeItem('role');
       localStorage.removeItem('userEmail');
       window.location.reload();
@@ -686,14 +704,6 @@
       renderSquadView(squads, roster[0]);
     }
 
-    function playerAvatar(p, size) {
-      size = size || 44;
-      if (p.photo) {
-        return `<img src="${p.photo}" class="player-avatar-img" style="--avatar-size:${size}px;" alt="${p.name}">`;
-      }
-      return `<span class="player-avatar-fallback" style="--avatar-size:${size}px; --crest-color:${teamColor(p.name)}">${teamInitials(p.name)}</span>`;
-    }
-
     function renderSquadView(squads, team) {
       const squad = squads[team] || { dt: '', players: [] };
       document.getElementById('squadDtDisplay').textContent = squad.dt || 'Sin asignar';
@@ -706,11 +716,7 @@
         group.innerHTML = `
           <div class="squad-group-header"><span>${position}</span><span class="squad-count">${players.length}</span></div>
           ${players.length
-            ? `<div class="player-mini-grid">${players.map(p => `
-                <div class="player-mini-card" style="cursor:default;">
-                  ${playerAvatar(p)}
-                  <div class="player-mini-info"><span class="player-mini-name">${p.name}</span></div>
-                </div>`).join('')}</div>`
+            ? `<ul class="squad-player-list">${players.map(p => `<li><span>${p.name}</span></li>`).join('')}</ul>`
             : `<div class="squad-empty-group">Sin jugadores en este puesto.</div>`}
         `;
         box.appendChild(group);
