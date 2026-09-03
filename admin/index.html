@@ -296,16 +296,41 @@
                   <input type="text" id="squadDtInput" placeholder="Nombre del director técnico" class="form-inline-single">
                 </label>
 
-                <form id="squadPlayerForm" class="form-inline">
-                  <input type="text" id="squadPlayerName" placeholder="Nombre del jugador" required>
-                  <select id="squadPlayerPosition">
-                    <option value="Portero">Portero</option>
-                    <option value="Defensa">Defensa</option>
-                    <option value="Mediocampista">Mediocampista</option>
-                    <option value="Delantero">Delantero</option>
-                  </select>
-                  <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar jugador</button>
-                </form>
+                <div class="squad-add-card">
+                  <h4><i class="fas fa-user-plus"></i> Agregar jugador</h4>
+                  <form id="squadPlayerForm" class="squad-add-grid">
+                    <label>Nombre completo
+                      <input type="text" id="squadPlayerName" placeholder="Nombre y apellidos" required>
+                    </label>
+                    <label>Puesto
+                      <select id="squadPlayerPosition">
+                        <option value="Portero">Portero</option>
+                        <option value="Defensa">Defensa</option>
+                        <option value="Mediocampista">Mediocampista</option>
+                        <option value="Delantero">Delantero</option>
+                      </select>
+                    </label>
+                    <label>No. Documento
+                      <input type="text" id="squadPlayerDoc" placeholder="Ej. 1.234.567">
+                    </label>
+                    <label>Fecha de nacimiento
+                      <input type="date" id="squadPlayerBirth">
+                    </label>
+                    <label>Grupo sanguíneo
+                      <select id="squadPlayerBlood">
+                        <option value="">Sin definir</option>
+                        <option>O+</option><option>O-</option>
+                        <option>A+</option><option>A-</option>
+                        <option>B+</option><option>B-</option>
+                        <option>AB+</option><option>AB-</option>
+                      </select>
+                    </label>
+                    <label>Foto (opcional)
+                      <input type="file" id="squadPlayerPhoto" accept="image/*">
+                    </label>
+                    <button type="submit" class="btn btn-primary" style="align-self:end;"><i class="fas fa-plus"></i> Agregar jugador</button>
+                  </form>
+                </div>
 
                 <div class="squad-positions" id="squadPositions"></div>
               </div>
@@ -371,79 +396,70 @@
               </div>
             </div>
           </div>
+
+          <div class="section-card">
+            <div class="card-header">
+              <h2><i class="fas fa-shield-halved"></i> Seguridad</h2>
+              <p>Cambia tu contraseña y tu código de recuperación — se guardan solo en este navegador</p>
+            </div>
+            <div class="card-content">
+              <form id="changePasswordForm" class="squad-add-grid" style="margin-bottom:26px;">
+                <label>Contraseña actual
+                  <input type="password" id="curPassword" required autocomplete="current-password">
+                </label>
+                <label>Nueva contraseña
+                  <input type="password" id="newPassword" required minlength="8" autocomplete="new-password">
+                </label>
+                <label>Confirmar nueva contraseña
+                  <input type="password" id="confirmNewPassword" required minlength="8" autocomplete="new-password">
+                </label>
+                <button type="submit" class="btn btn-primary" style="align-self:end;"><i class="fas fa-key"></i> Cambiar contraseña</button>
+              </form>
+              <p id="passwordMsg" class="empty-state" style="display:none; text-align:left; padding:0 0 20px;"></p>
+
+              <div class="theme-toggle-row" style="border-top:1px solid var(--border); padding-top:20px;">
+                <div>
+                  <div class="theme-toggle-label"><i class="fas fa-key"></i> Código de recuperación</div>
+                  <div class="theme-toggle-desc">Lo necesitarás si olvidas tu contraseña. Guárdalo en un lugar seguro — solo se muestra una vez al generarlo.</div>
+                </div>
+                <button class="btn btn-outline btn-sm" id="regenerateCodeBtn"><i class="fas fa-arrows-rotate"></i> Generar nuevo código</button>
+              </div>
+              <p id="recoveryCodeMsg" class="empty-state" style="display:none; text-align:left; padding-top:14px;"></p>
+            </div>
+          </div>
         </section>
       </div>
     </main>
   </div>
 
+  <!-- Carné de jugador -->
+  <div class="carnet-modal" id="carnetModal">
+    <div class="carnet-modal-inner">
+      <div class="carnet-modal-actions">
+        <button class="btn btn-outline btn-sm" onclick="printCarnet()"><i class="fas fa-print"></i> Imprimir / Guardar PDF</button>
+        <button class="btn btn-danger btn-sm" onclick="closeCarnet()"><i class="fas fa-xmark"></i> Cerrar</button>
+      </div>
+      <div id="carnetBody"></div>
+    </div>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script>
-    const SUPABASE_URL = 'https://naxujfmgdoezzhyyfmhf.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_-7X2KTKass1QILgLM10luA_XbXOLY8j';
-    const SYNCED_KEYS = [
-      'heroBg', 'heroTitle', 'heroSubtitle', 'statJornadas', 'text-inicio', 'text-equipos',
-      'text-eventos', 'teamsRoster', 'standings', 'topScorers', 'topAssists', 'discipline',
-      'upcomingMatches', 'recentResults', 'knockout', 'squads', 'excelData', 'themeSettings'
-    ];
-    let isLoadingRemoteState = false;
-    let syncTimer;
-
-    function getSyncedState() {
-      return Object.fromEntries(SYNCED_KEYS
-        .filter(key => localStorage.getItem(key) !== null)
-        .map(key => [key, localStorage.getItem(key)]));
-    }
-
-    async function loadRemoteState() {
-      try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/app_state?id=eq.futivo&select=data`, {
-          headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
-        });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const rows = await response.json();
-        isLoadingRemoteState = true;
-        Object.entries(rows[0]?.data || {}).forEach(([key, value]) => localStorage.setItem(key, value));
-      } catch (error) {
-        console.warn('No se pudo cargar la información compartida.', error);
-      } finally {
-        isLoadingRemoteState = false;
-      }
-    }
-
-    async function saveRemoteState() {
-      try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/app_state?on_conflict=id`, {
-          method: 'POST',
-          headers: {
-            apikey: SUPABASE_KEY,
-            Authorization: `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json',
-            Prefer: 'resolution=merge-duplicates,return=minimal'
-          },
-          body: JSON.stringify({ id: 'futivo', data: getSyncedState(), updated_at: new Date().toISOString() })
-        });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      } catch (error) {
-        console.warn('No se pudo guardar la información compartida.', error);
-      }
-    }
-
-    const originalSetItem = localStorage.setItem.bind(localStorage);
-    localStorage.setItem = (key, value) => {
-      originalSetItem(key, value);
-      if (!isLoadingRemoteState && SYNCED_KEYS.includes(key)) {
-        clearTimeout(syncTimer);
-        syncTimer = setTimeout(saveRemoteState, 300);
-      }
-    };
-
     /* ---------- Acceso ---------- */
-    document.addEventListener('DOMContentLoaded', async () => {
-      if (localStorage.getItem('role') !== 'admin') {
+    function getStoredRole() { return sessionStorage.getItem('role') || localStorage.getItem('role'); }
+    function getStoredEmail() { return sessionStorage.getItem('userEmail') || localStorage.getItem('userEmail'); }
+    function clearAuth() {
+      sessionStorage.removeItem('role');
+      sessionStorage.removeItem('userEmail');
+      localStorage.removeItem('role');
+      localStorage.removeItem('userEmail');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (getStoredRole() !== 'admin') {
         window.location.href = 'login.html';
         return;
       }
-      await loadRemoteState();
       initHero();
       initEditableTexts();
       initRoster();
@@ -455,14 +471,35 @@
       initExcel();
       initTheme();
       refreshHomeStats();
+      initInactivityLogout();
+      initSecurityPanel();
     });
 
     function logout() {
       if (confirm('¿Deseas cerrar sesión?')) {
-        localStorage.removeItem('role');
-        localStorage.removeItem('userEmail');
+        clearAuth();
         window.location.href = 'index.html';
       }
+    }
+
+    /* ---------- Cierre de sesión por inactividad (20 min) ---------- */
+    const INACTIVITY_LIMIT_MS = 20 * 60 * 1000;
+    let inactivityTimer = null;
+
+    function initInactivityLogout() {
+      resetInactivityTimer();
+      ['click', 'keydown', 'mousemove', 'scroll', 'touchstart'].forEach(evt => {
+        document.addEventListener(evt, resetInactivityTimer, { passive: true });
+      });
+    }
+
+    function resetInactivityTimer() {
+      clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(() => {
+        clearAuth();
+        alert('Tu sesión se cerró automáticamente por inactividad.');
+        window.location.href = 'login.html';
+      }, INACTIVITY_LIMIT_MS);
     }
 
     /* ---------- Navegación ---------- */
@@ -1209,7 +1246,7 @@
       banner.innerHTML = '';
     }
 
-    /* ---------- Plantillas (jugadores por puesto + DT) ---------- */
+    /* ---------- Plantillas (jugadores por puesto + DT + carné) ---------- */
     const SQUAD_POSITIONS = ['Portero', 'Defensa', 'Mediocampista', 'Delantero'];
 
     function getSquads() {
@@ -1219,6 +1256,13 @@
     function getTeamSquad(team) {
       const squads = getSquads();
       return squads[team] || { dt: '', players: [] };
+    }
+
+    function nextCarnetNo() {
+      const current = parseInt(localStorage.getItem('carnetCounter') || '0', 10);
+      const next = current + 1;
+      localStorage.setItem('carnetCounter', String(next));
+      return next;
     }
 
     let currentSquadTeam = null;
@@ -1243,15 +1287,38 @@
         if (!currentSquadTeam) return;
         const nameInput = document.getElementById('squadPlayerName');
         const posSelect = document.getElementById('squadPlayerPosition');
+        const docInput = document.getElementById('squadPlayerDoc');
+        const birthInput = document.getElementById('squadPlayerBirth');
+        const bloodSelect = document.getElementById('squadPlayerBlood');
+        const photoInput = document.getElementById('squadPlayerPhoto');
         const name = nameInput.value.trim();
         if (!name) return;
-        const squads = getSquads();
-        if (!squads[currentSquadTeam]) squads[currentSquadTeam] = { dt: '', players: [] };
-        squads[currentSquadTeam].players.push({ name, position: posSelect.value });
-        saveSquads(squads);
-        nameInput.value = '';
-        nameInput.focus();
-        renderSquadPositions();
+
+        const addPlayer = (photoDataUrl) => {
+          const squads = getSquads();
+          if (!squads[currentSquadTeam]) squads[currentSquadTeam] = { dt: '', players: [] };
+          squads[currentSquadTeam].players.push({
+            name,
+            position: posSelect.value,
+            documento: docInput.value.trim(),
+            nacimiento: birthInput.value,
+            gs: bloodSelect.value,
+            carnetNo: nextCarnetNo(),
+            photo: photoDataUrl || ''
+          });
+          saveSquads(squads);
+          e.target.reset();
+          renderSquadPositions();
+        };
+
+        const file = photoInput.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = evt => addPlayer(evt.target.result);
+          reader.readAsDataURL(file);
+        } else {
+          addPlayer('');
+        }
       });
 
       refreshSquadTeamSelect();
@@ -1286,6 +1353,14 @@
       renderSquadPositions();
     }
 
+    function playerAvatar(p, size) {
+      size = size || 46;
+      if (p.photo) {
+        return `<img src="${p.photo}" class="player-avatar-img" style="--avatar-size:${size}px;" alt="${p.name}">`;
+      }
+      return `<span class="player-avatar-fallback" style="--avatar-size:${size}px; --crest-color:${teamColor(p.name)}">${teamInitials(p.name)}</span>`;
+    }
+
     function renderSquadPositions() {
       const squad = getTeamSquad(currentSquadTeam);
       const box = document.getElementById('squadPositions');
@@ -1300,10 +1375,15 @@
         group.innerHTML = `
           <div class="squad-group-header"><span>${position}</span><span class="squad-count">${players.length}</span></div>
           ${players.length
-            ? `<ul class="squad-player-list">${players.map(p => `
-                <li><span>${p.name}</span>
-                  <button title="Quitar jugador" onclick="removeSquadPlayer(${p.idx})"><i class="fas fa-xmark"></i></button>
-                </li>`).join('')}</ul>`
+            ? `<div class="player-mini-grid">${players.map(p => `
+                <div class="player-mini-card" onclick="openCarnet('${currentSquadTeam.replace(/'/g, "\\'")}', ${p.idx})">
+                  ${playerAvatar(p)}
+                  <div class="player-mini-info">
+                    <span class="player-mini-name">${p.name}</span>
+                    <span class="player-mini-no">Carné #${p.carnetNo ?? '—'}</span>
+                  </div>
+                  <button class="player-mini-remove" title="Quitar jugador" onclick="event.stopPropagation(); removeSquadPlayer(${p.idx})"><i class="fas fa-xmark"></i></button>
+                </div>`).join('')}</div>`
             : `<div class="squad-empty-group">Sin jugadores en este puesto.</div>`}
         `;
         box.appendChild(group);
@@ -1317,6 +1397,59 @@
       squads[currentSquadTeam].players.splice(idx, 1);
       saveSquads(squads);
       renderSquadPositions();
+    }
+
+    /* ---------- Carné de jugador ---------- */
+    function formatFechaLarga(iso) {
+      if (!iso) return 'Sin registrar';
+      const [y, m, d] = iso.split('-');
+      if (!y || !m || !d) return iso;
+      const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+      return `${parseInt(d, 10)} de ${meses[parseInt(m, 10) - 1]} de ${y}`;
+    }
+
+    function openCarnet(team, idx) {
+      const squad = getTeamSquad(team);
+      const p = squad.players[idx];
+      if (!p) return;
+      const modal = document.getElementById('carnetModal');
+      const color = teamColor(team);
+      document.getElementById('carnetBody').innerHTML = `
+        <div class="carnet-card" style="--carnet-color:${color};">
+          <div class="carnet-top">
+            <div class="carnet-brand">
+              <div>Torneo Fútbol</div>
+              <small>Carné de jugador</small>
+            </div>
+            <div class="carnet-logo"><i class="fas fa-trophy"></i></div>
+          </div>
+          <div class="carnet-team-banner">${team}</div>
+          <div class="carnet-content">
+            <div class="carnet-photo">
+              ${p.photo ? `<img src="${p.photo}" alt="${p.name}">` : `<i class="fas fa-user"></i>`}
+            </div>
+            <div class="carnet-fields">
+              <div class="carnet-field"><span class="cf-label">Nombre completo</span><span class="cf-value">${p.name}</span></div>
+              <div class="carnet-field"><span class="cf-label">Posición</span><span class="cf-value">${p.position}</span></div>
+              <div class="carnet-field"><span class="cf-label">No. Documento</span><span class="cf-value">${p.documento || 'Sin registrar'}</span></div>
+              <div class="carnet-field"><span class="cf-label">Fecha de nacimiento</span><span class="cf-value">${formatFechaLarga(p.nacimiento)}</span></div>
+              <div class="carnet-row-split">
+                <div class="carnet-field"><span class="cf-label">G.S Rh</span><span class="cf-value">${p.gs || '—'}</span></div>
+                <div class="carnet-field"><span class="cf-label">Carné No.</span><span class="cf-value">${p.carnetNo ?? '—'}</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      modal.classList.add('open');
+    }
+
+    function closeCarnet() {
+      document.getElementById('carnetModal').classList.remove('open');
+    }
+
+    function printCarnet() {
+      window.print();
     }
 
     /* ---------- Excel: importación inteligente ---------- */
@@ -1548,6 +1681,91 @@
         darkToggle.checked = false;
         customInput.value = '#2563eb';
         renderSwatches();
+      });
+    }
+
+    /* ---------- Seguridad: cambiar contraseña y código de recuperación ----------
+       Debe coincidir con la lógica de login.html: mismas constantes de fábrica,
+       mismo mecanismo de "adminAuthOverride" guardado en localStorage. */
+    const ADMIN_EMAIL = 'admin@torneofutbol.com';
+    const ADMIN_PASSWORD_HASH = 'f8520e8d6fa2eb53146893b27e0a8429c86a84012e0a58d9143c3cb1f2973f1d';
+    const ADMIN_RECOVERY_HASH = 'e92f8eae13b01d0e0b0d2a641e4b8fb9568405e068986ac5af81f2ca782f2e4b';
+
+    async function sha256Hex(text) {
+      const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+      return [...new Uint8Array(buffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+    function getAuthOverride() {
+      return JSON.parse(localStorage.getItem('adminAuthOverride') || 'null') || {};
+    }
+    function saveAuthOverride(o) { localStorage.setItem('adminAuthOverride', JSON.stringify(o)); }
+    function currentPasswordHash() { return getAuthOverride().passwordHash || ADMIN_PASSWORD_HASH; }
+
+    function generateRecoveryCode() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      const block = () => Array.from({ length: 4 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+      return `TORNEO-${block()}-${block()}`;
+    }
+
+    function initSecurityPanel() {
+      document.getElementById('changePasswordForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        const msg = document.getElementById('passwordMsg');
+        const cur = document.getElementById('curPassword').value;
+        const next = document.getElementById('newPassword').value;
+        const confirm = document.getElementById('confirmNewPassword').value;
+
+        const curHash = await sha256Hex(cur);
+        if (curHash !== currentPasswordHash()) {
+          msg.textContent = 'La contraseña actual no es correcta.';
+          msg.style.color = 'var(--error)';
+          msg.style.display = 'block';
+          return;
+        }
+        if (next.length < 8) {
+          msg.textContent = 'La nueva contraseña debe tener al menos 8 caracteres.';
+          msg.style.color = 'var(--error)';
+          msg.style.display = 'block';
+          return;
+        }
+        if (next !== confirm) {
+          msg.textContent = 'Las contraseñas nuevas no coinciden.';
+          msg.style.color = 'var(--error)';
+          msg.style.display = 'block';
+          return;
+        }
+
+        const newHash = await sha256Hex(next);
+        const override = getAuthOverride();
+        override.passwordHash = newHash;
+        saveAuthOverride(override);
+
+        msg.textContent = '¡Contraseña actualizada correctamente!';
+        msg.style.color = 'var(--success)';
+        msg.style.display = 'block';
+        e.target.reset();
+      });
+
+      document.getElementById('regenerateCodeBtn').addEventListener('click', async () => {
+        const curPassword = prompt('Para generar un nuevo código, confirma tu contraseña actual:');
+        if (curPassword === null) return;
+        const curHash = await sha256Hex(curPassword);
+        const codeMsg = document.getElementById('recoveryCodeMsg');
+        if (curHash !== currentPasswordHash()) {
+          codeMsg.textContent = 'Contraseña incorrecta. No se generó ningún código nuevo.';
+          codeMsg.style.color = 'var(--error)';
+          codeMsg.style.display = 'block';
+          return;
+        }
+        const newCode = generateRecoveryCode();
+        const newCodeHash = await sha256Hex(newCode);
+        const override = getAuthOverride();
+        override.recoveryHash = newCodeHash;
+        saveAuthOverride(override);
+
+        codeMsg.innerHTML = `Tu nuevo código de recuperación es: <strong style="font-size:1.05rem; letter-spacing:0.05em;">${newCode}</strong><br>Guárdalo ahora — no se volverá a mostrar.`;
+        codeMsg.style.color = 'var(--success)';
+        codeMsg.style.display = 'block';
       });
     }
   </script>

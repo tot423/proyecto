@@ -28,72 +28,136 @@
         </div>
       </div>
 
-      <div class="login-header">
-        <h1>Iniciar sesión</h1>
-        <p>Este acceso es solo para quienes gestionan el torneo. Si solo quieres ver la tabla de posiciones, resultados o equipos, no necesitas iniciar sesión.</p>
-      </div>
-
-      <form id="loginForm" class="login-form">
-        <label class="field">
-          <span>Correo electrónico</span>
-          <div class="input-icon">
-            <i class="fas fa-envelope"></i>
-            <input type="email" name="email" placeholder="usuario@correo.com" required autocomplete="username">
-          </div>
-        </label>
-
-        <label class="field">
-          <span>Contraseña</span>
-          <div class="input-icon">
-            <i class="fas fa-lock"></i>
-            <input type="password" name="password" placeholder="••••••••" required autocomplete="current-password">
-            <button type="button" class="toggle-pass" id="togglePass" aria-label="Mostrar contraseña">
-              <i class="far fa-eye"></i>
-            </button>
-          </div>
-        </label>
-
-        <div class="options-row">
-          <label class="remember-me">
-            <input type="checkbox" name="remember">
-            <span>Recordarme en este dispositivo</span>
-          </label>
-          <a href="#">¿Olvidaste tu contraseña?</a>
+      <!-- Vista: Iniciar sesión -->
+      <div id="loginView">
+        <div class="login-header">
+          <h1>Iniciar sesión</h1>
+          <p>Este acceso es solo para quienes gestionan el torneo. Si solo quieres ver la tabla de posiciones, resultados o equipos, no necesitas iniciar sesión.</p>
         </div>
 
-        <button type="submit" class="login-btn" id="loginSubmitBtn">
-          <i class="fas fa-sign-in-alt"></i>
-          Entrar al panel
-        </button>
-      </form>
+        <form id="loginForm" class="login-form">
+          <label class="field">
+            <span>Correo electrónico</span>
+            <div class="input-icon">
+              <i class="fas fa-envelope"></i>
+              <input type="email" name="email" placeholder="usuario@correo.com" required autocomplete="username">
+            </div>
+          </label>
 
-      <p id="loginError" class="login-error"></p>
+          <label class="field">
+            <span>Contraseña</span>
+            <div class="input-icon">
+              <i class="fas fa-lock"></i>
+              <input type="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+              <button type="button" class="toggle-pass" id="togglePass" aria-label="Mostrar contraseña">
+                <i class="far fa-eye"></i>
+              </button>
+            </div>
+          </label>
+
+          <div class="options-row">
+            <label class="remember-me">
+              <input type="checkbox" name="remember">
+              <span>Recordarme en este dispositivo</span>
+            </label>
+            <a href="#" id="forgotLink">¿Olvidaste tu contraseña?</a>
+          </div>
+
+          <button type="submit" class="login-btn" id="loginSubmitBtn">
+            <i class="fas fa-sign-in-alt"></i>
+            Entrar al panel
+          </button>
+        </form>
+
+        <p id="loginError" class="login-error"></p>
+      </div>
+
+      <!-- Vista: Recuperar contraseña -->
+      <div id="recoveryView" style="display:none;">
+        <div class="login-header">
+          <h1>Recuperar acceso</h1>
+          <p>Esta app no tiene servidor de correo, así que no se envían emails. En su lugar, necesitas el <strong>código de recuperación</strong> que te haya entregado quien administra el torneo.</p>
+        </div>
+
+        <form id="recoveryForm" class="login-form">
+          <label class="field">
+            <span>Correo electrónico</span>
+            <div class="input-icon">
+              <i class="fas fa-envelope"></i>
+              <input type="email" name="email" placeholder="usuario@correo.com" required autocomplete="username">
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Código de recuperación</span>
+            <div class="input-icon">
+              <i class="fas fa-key"></i>
+              <input type="text" name="code" placeholder="TORNEO-XXXX-XXXX" required autocomplete="off" style="text-transform:uppercase;">
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Nueva contraseña</span>
+            <div class="input-icon">
+              <i class="fas fa-lock"></i>
+              <input type="password" name="newPassword" placeholder="Mínimo 8 caracteres" required minlength="8" autocomplete="new-password">
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Confirmar nueva contraseña</span>
+            <div class="input-icon">
+              <i class="fas fa-lock"></i>
+              <input type="password" name="confirmPassword" placeholder="Repite la contraseña" required minlength="8" autocomplete="new-password">
+            </div>
+          </label>
+
+          <button type="submit" class="login-btn" id="recoverySubmitBtn">
+            <i class="fas fa-rotate"></i>
+            Restablecer contraseña
+          </button>
+
+          <button type="button" class="admin-toggle" id="backToLoginLink">
+            <i class="fas fa-arrow-left"></i>
+            <span>Volver a iniciar sesión</span>
+          </button>
+        </form>
+
+        <p id="recoveryError" class="login-error"></p>
+        <p id="recoverySuccess" class="login-error" style="color:#6ee7b7; display:none;"></p>
+      </div>
     </div>
   </div>
 
   <script>
     /* =========================================================
-       Acceso de administrador.
-       IMPORTANTE: esta app no tiene servidor, así que esta
-       verificación ocurre en el navegador. No es una seguridad
-       infranqueable frente a alguien con conocimientos técnicos,
-       pero sí evita el acceso casual y los intentos automáticos.
+       Acceso de administrador — SIN backend ni envío de correos.
+       Todo ocurre en el navegador, así que no es infranqueable
+       frente a alguien con conocimientos técnicos, pero sí evita
+       el acceso casual, los intentos automáticos y el auto-registro.
 
-       Credencial por defecto:
-         correo:     admin@torneofutbol.com
-         contraseña: Torneo2026!
+       CREDENCIALES DE FÁBRICA (úsalas la primera vez):
+         correo:              admin@torneofutbol.com
+         contraseña:          Torneo2026!
+         código recuperación: TORNEO-TA8N-VPH8
 
-       Para cambiarla: reemplaza ADMIN_EMAIL, y genera un nuevo
-       hash para ADMIN_PASSWORD_HASH ejecutando esto en la consola
-       del navegador (F12 → Console) con tu nueva contraseña:
+       Una vez dentro del panel, ve a Configuración → Seguridad
+       para cambiar tu contraseña y tu código de recuperación por
+       unos que solo tú conozcas. Quedan guardados en este
+       navegador (localStorage), no en este archivo.
 
-         crypto.subtle.digest('SHA-256', new TextEncoder().encode('TU_NUEVA_CONTRASEÑA'))
+       Si prefieres cambiarlos manualmente aquí en el código:
+       genera un hash ejecutando esto en la consola del navegador
+       (F12 → Console):
+
+         crypto.subtle.digest('SHA-256', new TextEncoder().encode('TU_TEXTO'))
            .then(b => console.log([...new Uint8Array(b)].map(x => x.toString(16).padStart(2,'0')).join('')))
 
-       Copia el resultado y pégalo como valor de ADMIN_PASSWORD_HASH.
+       y pega el resultado en ADMIN_PASSWORD_HASH o ADMIN_RECOVERY_HASH.
     ========================================================= */
     const ADMIN_EMAIL = 'admin@torneofutbol.com';
     const ADMIN_PASSWORD_HASH = 'f8520e8d6fa2eb53146893b27e0a8429c86a84012e0a58d9143c3cb1f2973f1d';
+    const ADMIN_RECOVERY_HASH = 'e92f8eae13b01d0e0b0d2a641e4b8fb9568405e068986ac5af81f2ca782f2e4b';
 
     const MAX_ATTEMPTS = 5;
     const BASE_LOCK_SECONDS = 60;
@@ -103,54 +167,93 @@
       return [...new Uint8Array(buffer)].map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    function getAttemptState() {
-      return JSON.parse(localStorage.getItem('loginAttempts') || 'null') || { count: 0, lockUntil: 0, lockRounds: 0 };
+    /* El panel admin puede sobrescribir estas credenciales desde
+       Configuración → Seguridad; si existe, se usa en vez de la de fábrica. */
+    function getAuthOverride() {
+      return JSON.parse(localStorage.getItem('adminAuthOverride') || 'null') || {};
     }
-    function saveAttemptState(state) { localStorage.setItem('loginAttempts', JSON.stringify(state)); }
+    function currentPasswordHash() { return getAuthOverride().passwordHash || ADMIN_PASSWORD_HASH; }
+    function currentRecoveryHash() { return getAuthOverride().recoveryHash || ADMIN_RECOVERY_HASH; }
 
-    function remainingLockSeconds(state) {
-      return Math.max(0, Math.ceil((state.lockUntil - Date.now()) / 1000));
+    function getAttemptState(key) {
+      return JSON.parse(localStorage.getItem(key) || 'null') || { count: 0, lockUntil: 0, lockRounds: 0 };
     }
+    function saveAttemptState(key, state) { localStorage.setItem(key, JSON.stringify(state)); }
+    function remainingLockSeconds(state) { return Math.max(0, Math.ceil((state.lockUntil - Date.now()) / 1000)); }
 
-    function showError(msg) {
-      const errorEl = document.getElementById('loginError');
-      errorEl.textContent = msg;
-      errorEl.style.display = 'block';
+    function showMsg(elId, msg) {
+      const el = document.getElementById(elId);
+      el.textContent = msg;
+      el.style.display = 'block';
     }
+    function hideMsg(elId) { document.getElementById(elId).style.display = 'none'; }
 
+    /* ---------- Bloqueo por intentos (login) ---------- */
     function updateLockUI() {
-      const state = getAttemptState();
+      const state = getAttemptState('loginAttempts');
       const remaining = remainingLockSeconds(state);
       const btn = document.getElementById('loginSubmitBtn');
       if (remaining > 0) {
         btn.disabled = true;
         btn.style.opacity = '0.6';
         btn.style.cursor = 'not-allowed';
-        showError(`Demasiados intentos fallidos. Intenta de nuevo en ${remaining} segundo${remaining === 1 ? '' : 's'}.`);
+        showMsg('loginError', `Demasiados intentos fallidos. Intenta de nuevo en ${remaining} segundo${remaining === 1 ? '' : 's'}.`);
         setTimeout(updateLockUI, 1000);
       } else {
         btn.disabled = false;
         btn.style.opacity = '';
         btn.style.cursor = '';
-        if (document.getElementById('loginError').textContent.startsWith('Demasiados intentos')) {
-          document.getElementById('loginError').style.display = 'none';
-        }
+        if (document.getElementById('loginError').textContent.startsWith('Demasiados intentos')) hideMsg('loginError');
       }
     }
     updateLockUI();
 
+    /* ---------- Bloqueo por intentos (recuperación) ---------- */
+    function updateRecoveryLockUI() {
+      const state = getAttemptState('recoveryAttempts');
+      const remaining = remainingLockSeconds(state);
+      const btn = document.getElementById('recoverySubmitBtn');
+      if (remaining > 0) {
+        btn.disabled = true;
+        btn.style.opacity = '0.6';
+        btn.style.cursor = 'not-allowed';
+        showMsg('recoveryError', `Demasiados intentos fallidos. Intenta de nuevo en ${remaining} segundo${remaining === 1 ? '' : 's'}.`);
+        setTimeout(updateRecoveryLockUI, 1000);
+      } else {
+        btn.disabled = false;
+        btn.style.opacity = '';
+        btn.style.cursor = '';
+        if (document.getElementById('recoveryError').textContent.startsWith('Demasiados intentos')) hideMsg('recoveryError');
+      }
+    }
+
+    /* ---------- Cambiar entre vistas ---------- */
+    document.getElementById('forgotLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('loginView').style.display = 'none';
+      document.getElementById('recoveryView').style.display = 'block';
+      hideMsg('recoverySuccess');
+      updateRecoveryLockUI();
+    });
+    document.getElementById('backToLoginLink').addEventListener('click', () => {
+      document.getElementById('recoveryView').style.display = 'none';
+      document.getElementById('loginView').style.display = 'block';
+      document.getElementById('recoveryForm').reset();
+      hideMsg('recoveryError');
+    });
+
     const togglePass = document.getElementById('togglePass');
-    const passInput = document.querySelector('input[name="password"]');
+    const passInput = document.querySelector('#loginForm input[name="password"]');
     togglePass.addEventListener('click', () => {
       const isHidden = passInput.type === 'password';
       passInput.type = isHidden ? 'text' : 'password';
       togglePass.innerHTML = isHidden ? '<i class="far fa-eye-slash"></i>' : '<i class="far fa-eye"></i>';
     });
 
+    /* ---------- Envío: iniciar sesión ---------- */
     document.getElementById('loginForm').addEventListener('submit', async function (event) {
       event.preventDefault();
-
-      const state = getAttemptState();
+      const state = getAttemptState('loginAttempts');
       if (remainingLockSeconds(state) > 0) return;
 
       const data = new FormData(this);
@@ -158,13 +261,10 @@
       const password = data.get('password');
       const remember = data.get('remember') === 'on';
 
-      if (!email || !password) {
-        showError('Ingresa tu correo y contraseña.');
-        return;
-      }
+      if (!email || !password) { showMsg('loginError', 'Ingresa tu correo y contraseña.'); return; }
 
       const passwordHash = await sha256Hex(password);
-      const isValid = email === ADMIN_EMAIL.toLowerCase() && passwordHash === ADMIN_PASSWORD_HASH;
+      const isValid = email === ADMIN_EMAIL.toLowerCase() && passwordHash === currentPasswordHash();
 
       if (!isValid) {
         state.count = (state.count || 0) + 1;
@@ -173,19 +273,76 @@
           state.lockUntil = Date.now() + BASE_LOCK_SECONDS * 1000 * state.lockRounds;
           state.count = 0;
         }
-        saveAttemptState(state);
-        showError('Correo o contraseña incorrectos.');
+        saveAttemptState('loginAttempts', state);
+        showMsg('loginError', 'Correo o contraseña incorrectos.');
         updateLockUI();
         return;
       }
 
-      // Login correcto: se reinician los intentos fallidos
-      saveAttemptState({ count: 0, lockUntil: 0, lockRounds: 0 });
-
+      saveAttemptState('loginAttempts', { count: 0, lockUntil: 0, lockRounds: 0 });
       const storage = remember ? localStorage : sessionStorage;
       storage.setItem('role', 'admin');
       storage.setItem('userEmail', email);
       window.location.href = 'admin.html';
+    });
+
+    /* ---------- Envío: recuperar contraseña ---------- */
+    document.getElementById('recoveryForm').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      const state = getAttemptState('recoveryAttempts');
+      if (remainingLockSeconds(state) > 0) return;
+      hideMsg('recoverySuccess');
+
+      const data = new FormData(this);
+      const email = data.get('email').trim().toLowerCase();
+      const code = data.get('code').trim().toUpperCase();
+      const newPassword = data.get('newPassword');
+      const confirmPassword = data.get('confirmPassword');
+
+      if (!email || !code || !newPassword || !confirmPassword) {
+        showMsg('recoveryError', 'Completa todos los campos.');
+        return;
+      }
+      if (newPassword !== confirmPassword) {
+        showMsg('recoveryError', 'Las contraseñas nuevas no coinciden.');
+        return;
+      }
+      if (newPassword.length < 8) {
+        showMsg('recoveryError', 'La nueva contraseña debe tener al menos 8 caracteres.');
+        return;
+      }
+
+      const codeHash = await sha256Hex(code);
+      const isValid = email === ADMIN_EMAIL.toLowerCase() && codeHash === currentRecoveryHash();
+
+      if (!isValid) {
+        state.count = (state.count || 0) + 1;
+        if (state.count >= MAX_ATTEMPTS) {
+          state.lockRounds = (state.lockRounds || 0) + 1;
+          state.lockUntil = Date.now() + BASE_LOCK_SECONDS * 1000 * state.lockRounds;
+          state.count = 0;
+        }
+        saveAttemptState('recoveryAttempts', state);
+        showMsg('recoveryError', 'Correo o código de recuperación incorrectos.');
+        updateRecoveryLockUI();
+        return;
+      }
+
+      // Código válido: se guarda la nueva contraseña (sobrescribe la de fábrica)
+      const newHash = await sha256Hex(newPassword);
+      const override = getAuthOverride();
+      override.passwordHash = newHash;
+      localStorage.setItem('adminAuthOverride', JSON.stringify(override));
+      saveAttemptState('recoveryAttempts', { count: 0, lockUntil: 0, lockRounds: 0 });
+
+      hideMsg('recoveryError');
+      showMsg('recoverySuccess', '¡Listo! Tu contraseña fue actualizada. Ya puedes iniciar sesión con ella.');
+      this.reset();
+      setTimeout(() => {
+        document.getElementById('recoveryView').style.display = 'none';
+        document.getElementById('loginView').style.display = 'block';
+        document.querySelector('#loginForm input[name="email"]').value = email;
+      }, 2200);
     });
   </script>
 </body>
