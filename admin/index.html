@@ -400,10 +400,11 @@
           <div class="section-card">
             <div class="card-header">
               <h2><i class="fas fa-shield-halved"></i> Seguridad</h2>
-              <p>Cambia tu contraseña y tu código de recuperación — se guardan solo en este navegador</p>
+              <p>Cambia la contraseña de tu cuenta — se guarda solo en este navegador</p>
             </div>
             <div class="card-content">
-              <form id="changePasswordForm" class="squad-add-grid" style="margin-bottom:26px;">
+              <p class="empty-state" style="text-align:left; padding:0 0 18px;">Sesión actual: <strong id="currentAccountEmail" style="color:var(--text-primary);"></strong></p>
+              <form id="changePasswordForm" class="squad-add-grid">
                 <label>Contraseña actual
                   <input type="password" id="curPassword" required autocomplete="current-password">
                 </label>
@@ -415,16 +416,10 @@
                 </label>
                 <button type="submit" class="btn btn-primary" style="align-self:end;"><i class="fas fa-key"></i> Cambiar contraseña</button>
               </form>
-              <p id="passwordMsg" class="empty-state" style="display:none; text-align:left; padding:0 0 20px;"></p>
-
-              <div class="theme-toggle-row" style="border-top:1px solid var(--border); padding-top:20px;">
-                <div>
-                  <div class="theme-toggle-label"><i class="fas fa-key"></i> Código de recuperación</div>
-                  <div class="theme-toggle-desc">Lo necesitarás si olvidas tu contraseña. Guárdalo en un lugar seguro — solo se muestra una vez al generarlo.</div>
-                </div>
-                <button class="btn btn-outline btn-sm" id="regenerateCodeBtn"><i class="fas fa-arrows-rotate"></i> Generar nuevo código</button>
-              </div>
-              <p id="recoveryCodeMsg" class="empty-state" style="display:none; text-align:left; padding-top:14px;"></p>
+              <p id="passwordMsg" class="empty-state" style="display:none; text-align:left; padding-top:16px;"></p>
+              <p class="empty-state" style="text-align:left; padding-top:16px; border-top:1px solid var(--border); margin-top:16px;">
+                Para crear más cuentas de administrador se usa el <strong>código de acceso</strong> desde la pantalla de login (opción "¿No tienes cuenta?"). Ese código está fijo en <code>login.html</code> y no se cambia desde aquí.
+              </p>
             </div>
           </div>
         </section>
@@ -445,48 +440,6 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script>
-    const SUPABASE_URL = 'https://naxujfmgdoezzhyyfmhf.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_-7X2KTKass1QILgLM10luA_XbXOLY8j';
-    const SYNCED_KEYS = new Set([
-      'heroBg', 'heroTitle', 'heroSubtitle', 'statJornadas', 'text-inicio', 'text-equipos',
-      'text-eventos', 'teamsRoster', 'standings', 'topScorers', 'topAssists', 'discipline',
-      'upcomingMatches', 'recentResults', 'knockout', 'squads', 'excelData', 'themeSettings'
-    ]);
-    let syncTimer;
-
-    function getSyncedState() {
-      return Object.fromEntries([...SYNCED_KEYS]
-        .filter(key => localStorage.getItem(key) !== null)
-        .map(key => [key, localStorage.getItem(key)]));
-    }
-
-    async function uploadSyncedState() {
-      try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/app_state`, {
-          method: 'POST',
-          headers: {
-            apikey: SUPABASE_KEY,
-            Authorization: `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json',
-            Prefer: 'resolution=merge-duplicates'
-          },
-          body: JSON.stringify({ id: 'futivo', data: getSyncedState(), updated_at: new Date().toISOString() })
-        });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      } catch (error) {
-        console.warn('No se pudo sincronizar con Supabase.', error);
-      }
-    }
-
-    const originalSetItem = localStorage.setItem.bind(localStorage);
-    localStorage.setItem = (key, value) => {
-      originalSetItem(key, value);
-      if (SYNCED_KEYS.has(key)) {
-        clearTimeout(syncTimer);
-        syncTimer = setTimeout(uploadSyncedState, 300);
-      }
-    };
-
     /* ---------- Acceso ---------- */
     function getStoredRole() { return sessionStorage.getItem('role') || localStorage.getItem('role'); }
     function getStoredEmail() { return sessionStorage.getItem('userEmail') || localStorage.getItem('userEmail'); }
@@ -497,7 +450,7 @@
       localStorage.removeItem('userEmail');
     }
 
-    document.addEventListener('DOMContentLoaded', async () => {
+    document.addEventListener('DOMContentLoaded', () => {
       if (getStoredRole() !== 'admin') {
         window.location.href = 'login.html';
         return;
@@ -513,7 +466,6 @@
       initExcel();
       initTheme();
       refreshHomeStats();
-      await uploadSyncedState();
       initInactivityLogout();
       initSecurityPanel();
     });
@@ -1727,12 +1679,12 @@
       });
     }
 
-    /* ---------- Seguridad: cambiar contraseña y código de recuperación ----------
-       Debe coincidir con la lógica de login.html: mismas constantes de fábrica,
-       mismo mecanismo de "adminAuthOverride" guardado en localStorage. */
+    /* ---------- Seguridad: cambiar contraseña ----------
+       Debe coincidir con la lógica de login.html: misma cuenta de
+       fábrica, mismo mecanismo de "adminAuthOverride" y de la
+       lista "adminAccounts" guardados en localStorage. */
     const ADMIN_EMAIL = 'admin@torneofutbol.com';
     const ADMIN_PASSWORD_HASH = 'f8520e8d6fa2eb53146893b27e0a8429c86a84012e0a58d9143c3cb1f2973f1d';
-    const ADMIN_RECOVERY_HASH = 'e92f8eae13b01d0e0b0d2a641e4b8fb9568405e068986ac5af81f2ca782f2e4b';
 
     async function sha256Hex(text) {
       const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
@@ -1742,15 +1694,34 @@
       return JSON.parse(localStorage.getItem('adminAuthOverride') || 'null') || {};
     }
     function saveAuthOverride(o) { localStorage.setItem('adminAuthOverride', JSON.stringify(o)); }
-    function currentPasswordHash() { return getAuthOverride().passwordHash || ADMIN_PASSWORD_HASH; }
+    function factoryPasswordHash() { return getAuthOverride().passwordHash || ADMIN_PASSWORD_HASH; }
 
-    function generateRecoveryCode() {
-      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-      const block = () => Array.from({ length: 4 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-      return `TORNEO-${block()}-${block()}`;
+    function getAccounts() {
+      return JSON.parse(localStorage.getItem('adminAccounts') || 'null') || [];
+    }
+    function saveAccounts(list) { localStorage.setItem('adminAccounts', JSON.stringify(list)); }
+
+    function findPasswordHash(email) {
+      if (email === ADMIN_EMAIL.toLowerCase()) return factoryPasswordHash();
+      const account = getAccounts().find(a => a.email === email);
+      return account ? account.passwordHash : null;
+    }
+    function updatePasswordHash(email, newHash) {
+      if (email === ADMIN_EMAIL.toLowerCase()) {
+        const override = getAuthOverride();
+        override.passwordHash = newHash;
+        saveAuthOverride(override);
+        return;
+      }
+      const accounts = getAccounts();
+      const account = accounts.find(a => a.email === email);
+      if (account) { account.passwordHash = newHash; saveAccounts(accounts); }
     }
 
     function initSecurityPanel() {
+      const email = (getStoredEmail() || '').toLowerCase();
+      document.getElementById('currentAccountEmail').textContent = email || 'Sin identificar';
+
       document.getElementById('changePasswordForm').addEventListener('submit', async e => {
         e.preventDefault();
         const msg = document.getElementById('passwordMsg');
@@ -1759,7 +1730,8 @@
         const confirm = document.getElementById('confirmNewPassword').value;
 
         const curHash = await sha256Hex(cur);
-        if (curHash !== currentPasswordHash()) {
+        const storedHash = findPasswordHash(email);
+        if (!storedHash || curHash !== storedHash) {
           msg.textContent = 'La contraseña actual no es correcta.';
           msg.style.color = 'var(--error)';
           msg.style.display = 'block';
@@ -1779,36 +1751,12 @@
         }
 
         const newHash = await sha256Hex(next);
-        const override = getAuthOverride();
-        override.passwordHash = newHash;
-        saveAuthOverride(override);
+        updatePasswordHash(email, newHash);
 
         msg.textContent = '¡Contraseña actualizada correctamente!';
         msg.style.color = 'var(--success)';
         msg.style.display = 'block';
         e.target.reset();
-      });
-
-      document.getElementById('regenerateCodeBtn').addEventListener('click', async () => {
-        const curPassword = prompt('Para generar un nuevo código, confirma tu contraseña actual:');
-        if (curPassword === null) return;
-        const curHash = await sha256Hex(curPassword);
-        const codeMsg = document.getElementById('recoveryCodeMsg');
-        if (curHash !== currentPasswordHash()) {
-          codeMsg.textContent = 'Contraseña incorrecta. No se generó ningún código nuevo.';
-          codeMsg.style.color = 'var(--error)';
-          codeMsg.style.display = 'block';
-          return;
-        }
-        const newCode = generateRecoveryCode();
-        const newCodeHash = await sha256Hex(newCode);
-        const override = getAuthOverride();
-        override.recoveryHash = newCodeHash;
-        saveAuthOverride(override);
-
-        codeMsg.innerHTML = `Tu nuevo código de recuperación es: <strong style="font-size:1.05rem; letter-spacing:0.05em;">${newCode}</strong><br>Guárdalo ahora — no se volverá a mostrar.`;
-        codeMsg.style.color = 'var(--success)';
-        codeMsg.style.display = 'block';
       });
     }
   </script>
